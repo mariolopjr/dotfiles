@@ -1,0 +1,24 @@
+[user]
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLW/ZvXc3A4Y1RXENFhlgWgMHZJjJZhshg7+8yDBM2B
+	email = mario@techmunchies.net
+	name = Mario Lopez
+[gpg]
+	format = ssh
+[gpg "ssh"]
+{{- if eq .chezmoi.os "windows" }}
+	program = C:\\Users\\mario\\AppData\\Local\\1Password\\app\\8\\op-ssh-sign.exe
+{{- else }}
+	program = /usr/local/bin/op-ssh-sign
+{{- end }}
+	allowedSignersFile = ~/.ssh/authorized_keys
+[commit]
+	gpgsign = true
+{{- if eq .chezmoi.os "windows" }}
+[core]
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+	autocrlf = true
+{{- end }}
+[init]
+        defaultBranch = main
+[push]
+        autoSetupRemote = true

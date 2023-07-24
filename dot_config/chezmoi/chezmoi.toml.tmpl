@@ -1,0 +1,11 @@
+[cd]
+{{- if eq .chezmoi.os "windows" }}
+    command = "pwsh"
+{{- else }}
+    command = "zsh"
+{{- end }}
+{{- if eq .chezmoi.os "windows" }}
+[interpreters.ps1]
+    command = "pwsh"
+    args = ["-NoLogo"]
+{{- end }}
