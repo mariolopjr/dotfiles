@@ -9,3 +9,10 @@
     command = "pwsh"
     args = ["-NoLogo"]
 {{- end }}
+
+[data]
+{{- if eq .chezmoi.os "windows" }}
+    is_wsl = false
+{{- else }}
+    is_wsl = {{- (.chezmoi.kernel.osrelease | regexMatch "-microsoft-standard$") }}
+{{- end }}
