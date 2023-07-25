@@ -1,3 +1,6 @@
 {
-    "json.format.keepLines": true
+    "json.format.keepLines": true,
+    "files.associations": {
+        "*.sh.tmpl": "shellscript"
+    }
 }

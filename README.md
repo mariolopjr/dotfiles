@@ -10,7 +10,11 @@ TBD
 
 ## WSL
 
-TBD
+```
+~> sudo zypper update
+~> sudo zypper install -y git chezmoi
+~> chezmoi --init --apply mariolopjr
+```
 
 ## DevContainer
 
