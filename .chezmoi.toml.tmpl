@@ -2,7 +2,7 @@
 {{- if eq .chezmoi.os "windows" }}
     command = "pwsh"
 {{- else }}
-    command = "zsh"
+    command = "fish"
 {{- end }}
 {{- if eq .chezmoi.os "windows" }}
 [interpreters.ps1]
@@ -11,7 +11,7 @@
 {{- end }}
 
 [data]
-{{- if eq .chezmoi.os "windows" }}
+{{- if or (eq .chezmoi.os "windows") (eq .chezmoi.os "darwin") }}
     is_wsl = false
 {{- else }}
     is_wsl = {{ (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}

@@ -1,0 +1,6 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/fish
+
+fisher update
+
+{{ end -}}

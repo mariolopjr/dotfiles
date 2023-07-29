@@ -5,13 +5,10 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
-{{- if eq .chezmoi.os "windows" }}
-	program = C:\\Users\\mario\\AppData\\Local\\1Password\\app\\8\\op-ssh-sign.exe
-{{- else }}
-	program = /usr/local/bin/op-ssh-sign
-{{- end }}
 	allowedSignersFile = ~/.ssh/allowed_signers
 [commit]
+	gpgsign = true
+[tag]
 	gpgsign = true
 {{- if eq .chezmoi.os "windows" }}
 [core]

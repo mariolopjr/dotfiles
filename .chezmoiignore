@@ -2,3 +2,6 @@ README.md
 {{- if ne .chezmoi.os "windows" }}
 AppData
 {{- end }}
+{{- if ne .chezmoi.os "darwin" }}
+private_Library
+{{- end }}
