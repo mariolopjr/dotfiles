@@ -8,6 +8,8 @@
 	allowedSignersFile = ~/.ssh/allowed_signers
 [commit]
 	gpgsign = true
+[pull]
+	rebase = true
 [tag]
 	gpgsign = true
 {{- if eq .chezmoi.os "windows" }}
