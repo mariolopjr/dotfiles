@@ -9,6 +9,7 @@ As you can tell from the dotfiles, my main setup is macOS. I use Docker and DevC
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install chezmoi
 chezmoi --init --apply mariolopjr
+git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
 ## Windows
