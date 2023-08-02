@@ -7,6 +7,11 @@ for file in $__fish_config_dir/custom.d/*.fish
   source $file
 end
 
+## Launch homebrew
+if type -q /opt/homebrew/bin/brew
+  eval (/opt/homebrew/bin/brew shellenv fish)
+end
+
 ## Launch The Fuck
 if type -q thefuck
   thefuck --alias | source
@@ -24,5 +29,5 @@ end
 
 ## Load asdf
 if type -q asdf
-  source "(brew --prefix asdf)"/libexec/asdf.fish
+  source /opt/homebrew/opt/asdf/libexec/asdf.fish
 end
