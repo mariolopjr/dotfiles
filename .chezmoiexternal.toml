@@ -1,6 +1,4 @@
 [".intellimacs"]
-    type = "archive"
-    url = "https://github.com/mariolopjr/intellimacs/archive/main.tar.gz"
-    exact = true
-    stripComponents = 1
+    type = "git-repo"
+    url = "https://github.com/mariolopjr/intellimacs"
     refreshPeriod = "168h"

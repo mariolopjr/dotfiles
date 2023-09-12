@@ -42,12 +42,11 @@
     {
         "defaults":
         {
-            "colorScheme": "One Half Dark",
+            "colorScheme": "Solarized Dark",
             "font":
             {
-                "face": "JetBrains Mono",
-                "size": 14.0,
-                "weight": "extra-light"
+                "face": "Victor Mono",
+                "size": 14.0
             },
             "opacity": 80,
             "useAcrylic": true
@@ -61,12 +60,13 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "commandline": "C:\\Windows\\system32\\wsl.exe -d openSUSE-Tumbleweed",
-                "guid": "{c5ff849b-a004-47a2-add4-7b3e24dd45c4}",
+                "commandline": "ubuntupreview.exe",
+                "cursorShape": "filledBox",
+                "guid": "{fb4d2a8a-a8fc-4329-9f32-f036e35d8a95}",
                 "hidden": false,
-                "icon": "ms-appx:///ProfileIcons/{9acb9455-ca41-5af7-950f-6bca1bc9722f}.png",
-                "name": "openSUSE Tumbleweed",
-                "startingDirectory": "~"
+                "icon": "https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png",
+                "name": "Ubuntu (Preview)",
+                "tabTitle": "Ubuntu (Preview)"
             },
             {
                 "commandline": "\"C:\\Users\\mario\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe\"",
