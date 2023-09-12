@@ -6,5 +6,8 @@
         "twpayne",
         "winget",
         "winterfell"
+    ],
+    "Lua.diagnostics.globals": [
+        "vim"
     ]
 }
