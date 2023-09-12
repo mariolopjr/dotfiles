@@ -4,6 +4,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 {{- end }}
 
 {{- if and (eq .chezmoi.os "linux") (.is_wsl) (eq .chezmoi.osRelease.id "ubuntu") -}}
-export ASDF_DIR=/asdf
-. /asdf/asdf.sh
+export ASDF_DIR=/home/default/.asdf
+. ~/.asdf/asdf.sh
 {{- end }}
