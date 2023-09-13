@@ -9,5 +9,8 @@
     ],
     "Lua.diagnostics.globals": [
         "vim"
-    ]
+    ],
+    "[json]": {
+        "editor.formatOnSave": false
+    }
 }
