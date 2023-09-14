@@ -1,13 +1,35 @@
-{{ if and (eq .chezmoi.os "linux") (.is_wsl) (eq .chezmoi.osRelease.id "ubuntu") -}}
+{{ if and (eq .chezmoi.os "linux") (.is_wsl) -}}
 #!/bin/bash
-set -e
 
-# Add 1Password Repo
-if !zypper lr | grep 1password 2>&1 > /dev/null; then
-    sudo rpm --import https://downloads.1password.com/linux/keys/1password.asc
-    sudo zypper ar https://downloads.1password.com/linux/rpm/stable/x86_64 1password
-fi
+# Install brew packages
+brew bundle --no-lock --file=/dev/stdin <<EOF
+tap "homebrew/aliases"
+tap "homebrew/bundle"
+tap "qmk/qmk"
+brew "asdf"
+brew "bat"
+brew "bottom"
+brew "ctop"
+brew "curl"
+brew "direnv"
+brew "exa"
+brew "fd"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "git-lfs"
+brew "git-delta"
+brew "macchina"
+brew "ncdu"
+brew "neovim"
+brew "qmk"
+brew "starship"
+brew "thefuck"
+brew "wget"
+brew "zoxide"
+brew "zsh"
+EOF
 
-# Install packages
-sudo zypper install -y 1password neovim zsh
-{{- end }}
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+chsh -s $(which zsh)
+{{ end -}}

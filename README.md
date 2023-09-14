@@ -25,6 +25,7 @@ PS C:\Users\mario> git remote set-url origin git@github.com:mariolopjr/dotfiles.
 ```bash
 mario@winterfell:~$ sudo apt update && sudo apt install build-essential procps curl file git
 mario@winterfell:~$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+mario@winterfell:~$ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 mario@winterfell:~$ brew install chezmoi
 mario@winterfell:~$ chezmoi init --apply mariolopjr
 ```
@@ -62,3 +63,8 @@ TBD
   - Install packages with winget configuration file (sadly requires preview winget which won't automatically update)
   - git aliases for powershell/zsh
   - move from fish to zsh on macOS
+- WSL
+  - alias certain brew commands to match winget
+  - setup completions for zsh
+- neovim
+  - clipboard and default register sync

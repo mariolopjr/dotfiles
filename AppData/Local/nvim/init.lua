@@ -8,5 +8,6 @@ require 'keybindings.shared'.setup()
 if not vim.g.vscode then
     -- TBD
 else
-    -- TBD
+    -- https://github.com/vscode-neovim/vscode-neovim/issues/298
+    vim.opt.clipboard:append("unnamedplus")
 end

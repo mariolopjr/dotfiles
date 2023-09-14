@@ -3,7 +3,13 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 {{- end }}
 
-{{- if and (eq .chezmoi.os "linux") (.is_wsl) (eq .chezmoi.osRelease.id "ubuntu") -}}
-export ASDF_DIR=/home/default/.asdf
-. ~/.asdf/asdf.sh
+{{- if and (eq .chezmoi.os "linux") (.is_wsl) -}}
+# Add homebrew to PATH
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Setup ASDF
+. $(brew --prefix asdf)/libexec/asdf.sh
 {{- end }}
+
+# Add starship to zsh
+eval "$(starship init zsh)"
