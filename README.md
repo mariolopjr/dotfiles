@@ -8,23 +8,38 @@ As you can tell from the dotfiles, my main setup is Windows and WSL. I use Docke
 
 ### winterfell
 
-```
-winget install twpayne.chezmoi
-chezmoi init --apply mariolopjr
-git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+#### Setup Windows dotfiles
+
+```powershell
+PS C:\Users\mario> winget install twpayne.chezmoi
+PS C:\Users\mario> chezmoi init --apply mariolopjr
+PS C:\Users\mario> git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
-## WSL (Ubuntu Preview)
+## WSL
+
+### Ubuntu (Preview)
+
+#### Setup WSL dotfiles
+
+```bash
+mario@winterfell:~$ sudo apt update && sudo apt install build-essential procps curl file git
+mario@winterfell:~$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+mario@winterfell:~$ brew install chezmoi
+mario@winterfell:~$ chezmoi init --apply mariolopjr
+```
+
+#### Upgrade release
 
 ```zsh
-~> sudo apt update
-~> sudo apt install -y git chezmoi
-~> chezmoi init --apply mariolopjr
+sudo apt update && sudo do-release-upgrade
 ```
 
 ## macOS
 
 ### targaryen
+
+#### Setup macOS dotfiles
 
 ```zsh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -43,4 +58,7 @@ TBD
 
 ## Todo
 
-- For Windows, opt-out of telemetry `DOTNET_CLI_TELEMETRY_OPTOUT`
+- Windows
+  - Install packages with winget configuration file (sadly requires preview winget which won't automatically update)
+  - git aliases for powershell/zsh
+  - move from fish to zsh on macOS
