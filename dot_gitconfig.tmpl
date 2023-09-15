@@ -1,5 +1,9 @@
 [user]
+	{{ if and (eq .chezmoi.os "linux") (.is_wsl) -}}
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+RlSav1/qs905tuVJpOo5zfLe2AfF5cg/cG27pnp8n
+	{{- else }}
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLW/ZvXc3A4Y1RXENFhlgWgMHZJjJZhshg7+8yDBM2B
+	{{- end }}
 	email = mario@techmunchies.net
 	name = Mario Lopez
 [gpg]
