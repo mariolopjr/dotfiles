@@ -9,6 +9,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Setup ASDF
 . $(brew --prefix asdf)/libexec/asdf.sh
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
 {{- end }}
 
 # Add starship to zsh
