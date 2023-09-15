@@ -1,0 +1,7 @@
+{{ if and (eq .chezmoi.os "linux") (.is_wsl) -}}
+#!/bin/bash
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+asdf plugin-add python
+asdf plugin-add direnv
+{{ end -}}

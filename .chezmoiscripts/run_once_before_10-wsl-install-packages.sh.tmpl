@@ -24,14 +24,16 @@ brew "neovim"
 brew "starship"
 brew "thefuck"
 brew "wget"
-brew "xclip"
 brew "zoxide"
 brew "zsh"
 EOF
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# set zsh as default shell
-sudo command -v zsh | sudo tee -a /etc/shells
-sudo chsh -s "$(command -v zsh)" "${USER}"
+# set zsh as default shell once
+if [[ -z "${ZSH_VERSION}" ]]
+then
+    sudo command -v zsh | sudo tee -a /etc/shells
+    sudo chsh -s "$(command -v zsh)" "${USER}"
+fi
 {{ end -}}
