@@ -2,11 +2,25 @@
 
 My personal dotfiles repo, managed by the wonderful [chezmoi](https://github.com/twpayne/chezmoi)
 
-As you can tell from the dotfiles, my main setup is Windows and WSL. I use Docker and DevContainers heavily, so having Windows, WSL, macOS, DevContainers, Linux, and all my servers use the same dotfiles makes my life easier. It's taken me a long time to finally get to the point of just sitting down and doing this.
+As you can tell from the dotfiles, my main setup is macOS. I also use Docker when it makes sense, so having macOS, Linux, Containers, Windows, WSL, and all my servers use the same dotfiles makes my life easier. It's taken me a long time to finally get to the point of just sitting down and doing this.
 
 ## Windows
 
-### winterfell
+## macOS
+
+### targaryen (laptop)
+
+#### Setup macOS dotfiles
+
+```zsh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install chezmoi
+chezmoi init --apply mariolopjr
+chezmoi cd
+git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+```
+
+### winterfell (desktop)
 
 #### Setup Windows dotfiles
 
@@ -34,19 +48,6 @@ mario@winterfell:~$ chezmoi init --apply mariolopjr
 
 ```zsh
 sudo apt update && sudo do-release-upgrade
-```
-
-## macOS
-
-### targaryen
-
-#### Setup macOS dotfiles
-
-```zsh
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install chezmoi
-chezmoi init --apply mariolopjr
-git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
 ## DevContainer
