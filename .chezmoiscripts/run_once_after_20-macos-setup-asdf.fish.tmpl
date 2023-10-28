@@ -1,0 +1,12 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/opt/homebrew/bin/fish
+
+if type -q /opt/homebrew/bin/brew
+  eval (/opt/homebrew/bin/brew shellenv fish)
+end
+
+if type -q asdf
+  asdf plugin-add python
+  asdf plugin-add pipenv https://github.com/and-semakin/asdf-pipenv.git
+end
+{{ end -}}
