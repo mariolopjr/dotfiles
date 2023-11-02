@@ -9,7 +9,7 @@ print () {
 }
 
 # Prepare system for install
-bash <(curl -sL git.io/JMnfF)
+bash <(curl -sL https://raw.githubusercontent.com/mariolopjr/easy-arch/main/easy-arch.sh)
 
 # Enable multilib repo
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf

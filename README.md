@@ -4,7 +4,21 @@ My personal dotfiles repo, managed by the wonderful [chezmoi](https://github.com
 
 As you can tell from the dotfiles, my main setup is macOS. I also use Docker when it makes sense, so having macOS, Linux, Containers, Windows, WSL, and all my servers use the same dotfiles makes my life easier. It's taken me a long time to finally get to the point of just sitting down and doing this.
 
-## Windows
+## Linux
+
+### winterfell (desktop)
+
+#### Bootstrap system
+
+First, load up Arch Linux on a USB drive and disable Secure Boot. Boot up USB, set root password, connect via SSH, and run this command `bash <(curl -sL https://raw.githubusercontent.com/mariolopjr/dotfiles/main/bootstrap.sh)` to bootstrap the system.
+TODO: Figure out Secure Boot
+
+Once logged in, use chezmoi to bootstrap dotfiles
+
+```bash
+chezmoi init --apply mariolopjr
+git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+```
 
 ## macOS
 
@@ -17,20 +31,6 @@ As you can tell from the dotfiles, my main setup is macOS. I also use Docker whe
 brew install chezmoi
 chezmoi init --apply mariolopjr
 chezmoi cd
-git remote set-url origin git@github.com:mariolopjr/dotfiles.git
-```
-
-### winterfell (desktop)
-
-#### Bootstrap system
-
-First, load up Arch Linux on a USB drive and disable Secure Boot. Boot up USB, set root password, connect via SSH, and run this command `bash <(curl -sL git.io/JMnGu)` to bootstrap the system.
-TODO: Figure out Secure Boot
-
-Once logged in, use chezmoi to bootstrap dotfiles
-
-```bash
-chezmoi init --apply mariolopjr
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
