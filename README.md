@@ -22,12 +22,16 @@ git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 
 ### winterfell (desktop)
 
-#### Setup Windows dotfiles
+#### Bootstrap system
 
-```powershell
-PS C:\Users\mario> winget install twpayne.chezmoi
-PS C:\Users\mario> chezmoi init --apply mariolopjr
-PS C:\Users\mario> git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+First, load up Arch Linux on a USB drive and disable Secure Boot. Boot up USB, set root password, connect via SSH, and run this command `bash <(curl -sL git.io/JMnGu)` to bootstrap the system.
+TODO: Figure out Secure Boot
+
+Once logged in, use chezmoi to bootstrap dotfiles
+
+```bash
+chezmoi init --apply mariolopjr
+git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
 ## WSL

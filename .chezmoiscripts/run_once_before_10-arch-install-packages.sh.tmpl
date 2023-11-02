@@ -1,0 +1,15 @@
+{{ if and (eq .chezmoi.os "linux") (ne .is_wsl) -}}
+#!/bin/bash
+
+# Install additional packages
+sudo pacman -Syu --needed \
+	starship neovim bat ripgrep fd fzf ncdu dialog ddcutil \
+	pv watchexec wl-clipboard git-delta jq ddrescue bottom ctop tealdeer \
+	lsof bind-tools mtr socat htop iotop openbsd-netcat strace whois \
+	exfat-utils f2fs-tools ddrescue \
+	podman podman-dnsname buildah virt-install vagrant \
+	clang shellcheck \
+	firefox evince \
+	rng-tools redshift scrot arandr \
+	steam mgba-qt ppsspp pcsx2 discord
+{{ end -}}
