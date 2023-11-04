@@ -4,5 +4,8 @@
 . "$HOME/.asdf/asdf.sh"
 
 asdf plugin-add python
+asdf plugin-add direnv
 asdf plugin-add pipenv https://github.com/and-semakin/asdf-pipenv.git
+
+asdf direnv setup --shell zsh --version system
 {{ end -}}

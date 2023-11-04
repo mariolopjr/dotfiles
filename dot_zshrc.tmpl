@@ -7,6 +7,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Setup asdf
 . "$HOME/.asdf/asdf.sh"
 
+# Setup direnv
+eval "$(direnv hook zsh)"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+
 # Add starship to zsh
 eval "$(starship init zsh)"
 {{- end }}

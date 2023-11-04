@@ -15,3 +15,9 @@ Library
 .local/share/fish
 .zshrc
 {{- end }}
+.asdf/downloads
+.asdf/installs
+.asdf/plugins
+.asdf/repository
+.asdf/shims
+.asdf/tmp
