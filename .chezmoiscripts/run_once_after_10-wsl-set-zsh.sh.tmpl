@@ -2,5 +2,5 @@
 #!/bin/bash
 
 # set zsh as default shell
-chsh -s "$(command -v zsh)"
+sudo chsh -s "$(which zsh)" "$USER"
 {{ end -}}
