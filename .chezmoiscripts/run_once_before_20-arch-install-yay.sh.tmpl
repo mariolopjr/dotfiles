@@ -1,4 +1,4 @@
-{{ if and (eq .chezmoi.os "linux") (ne .is_wsl) -}}
+{{ if and (eq .chezmoi.os "linux") (not .is_wsl) -}}
 #!/bin/bash
 
 # Install yay
