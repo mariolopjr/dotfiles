@@ -25,6 +25,8 @@ PS C:\Users\mario> git remote set-url origin git@github.com:mariolopjr/dotfiles.
 ```bash
 mario@winterfell:~$ sudo zypper install git chezmoi
 mario@winterfell:~$ chezmoi init --apply mariolopjr
+mario@winterfell:~$ chezmoi cd
+mario@winterfell:~$ git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
 #### Upgrade release
