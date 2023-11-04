@@ -2,7 +2,7 @@
 {{- if eq .chezmoi.os "windows" }}
     command = "pwsh"
 {{- else }}
-    command = "fish"
+    command = "zsh"
 {{- end }}
 {{- if eq .chezmoi.os "windows" }}
 [interpreters.ps1]
