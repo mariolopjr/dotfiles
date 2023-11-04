@@ -2,23 +2,44 @@
 
 My personal dotfiles repo, managed by the wonderful [chezmoi](https://github.com/twpayne/chezmoi)
 
-As you can tell from the dotfiles, my main setup is macOS. I also use Docker when it makes sense, so having macOS, Linux, Containers, Windows, WSL, and all my servers use the same dotfiles makes my life easier. It's taken me a long time to finally get to the point of just sitting down and doing this.
+As you can tell from the dotfiles, my main setup is Windows. I also use DevContainers/Docker when it makes sense, so having everything use the same dotfiles makes my life easier. It's taken me a long time to finally get to the point of just sitting down and doing this.
 
-## Linux
+## Windows
 
 ### winterfell (desktop)
 
-#### Bootstrap system
+#### Setup dotfiles
 
-First, load up Arch Linux on a USB drive and disable Secure Boot. Boot up USB, set root password, connect via SSH, and run this command `bash <(curl -sL https://raw.githubusercontent.com/mariolopjr/dotfiles/main/bootstrap.sh)` to bootstrap the system.
-TODO: Figure out Secure Boot
+```powershell
+PS C:\Users\mario> winget install twpayne.chezmoi
+PS C:\Users\mario> chezmoi init --apply mariolopjr
+PS C:\Users\mario> git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+```
 
-Once logged in, use chezmoi to bootstrap dotfiles
+## WSL
+
+### OpenSUSE Tumbleweed
+
+#### Setup WSL dotfiles
 
 ```bash
-chezmoi init --apply mariolopjr
-git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+mario@winterfell:~$ sudo zypper install git chezmoi
+mario@winterfell:~$ chezmoi init --apply mariolopjr
 ```
+
+#### Upgrade release
+
+```zsh
+sudo zypper ref -b && sudo zypper dup
+```
+
+## DevContainer
+
+TBD
+
+## Linux
+
+TBD
 
 ## macOS
 
@@ -33,34 +54,6 @@ chezmoi init --apply mariolopjr
 chezmoi cd
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
-
-## WSL
-
-### Ubuntu (Preview)
-
-#### Setup WSL dotfiles
-
-```bash
-mario@winterfell:~$ sudo apt update && sudo apt install build-essential procps curl file git
-mario@winterfell:~$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-mario@winterfell:~$ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-mario@winterfell:~$ brew install chezmoi
-mario@winterfell:~$ chezmoi init --apply mariolopjr
-```
-
-#### Upgrade release
-
-```zsh
-sudo apt update && sudo do-release-upgrade
-```
-
-## DevContainer
-
-TBD
-
-## Linux
-
-TBD
 
 ## Todo
 

@@ -4,12 +4,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 {{- end }}
 
 {{- if and (eq .chezmoi.os "linux") (.is_wsl) -}}
-# Add homebrew to PATH
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Setup ASDF
-. $(brew --prefix asdf)/libexec/asdf.sh
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+# Setup asdf
+. "$HOME/.asdf/asdf.sh"
 
 # Add starship to zsh
 eval "$(starship init zsh)"
