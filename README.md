@@ -2,11 +2,25 @@
 
 My personal dotfiles repo, managed by the wonderful [chezmoi](https://github.com/twpayne/chezmoi)
 
-As you can tell from the dotfiles, my main setup is Windows. I also use DevContainers/Docker when it makes sense, so having everything use the same dotfiles makes my life easier. It's taken me a long time to finally get to the point of just sitting down and doing this.
+As you can tell from the dotfiles, my main setup is macOS. I mainly use `asdf` for managing dependencies (having moved away from a mostly Docker-based workflow). I do have a gaming desktop (for now), will need to tweak it for streaming.
+
+## macOS
+
+### targaryen (laptop, mbp m1 pro 14")
+
+#### Setup macOS dotfiles
+
+```zsh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install chezmoi
+chezmoi init --apply mariolopjr
+chezmoi cd
+git remote set-url origin git@github.com:mariolopjr/dotfiles.git
+```
 
 ## Windows
 
-### winterfell (desktop)
+### winterfell (desktop, custom)
 
 #### Setup dotfiles
 
@@ -42,20 +56,6 @@ TBD
 ## Linux
 
 TBD
-
-## macOS
-
-### targaryen (laptop)
-
-#### Setup macOS dotfiles
-
-```zsh
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install chezmoi
-chezmoi init --apply mariolopjr
-chezmoi cd
-git remote set-url origin git@github.com:mariolopjr/dotfiles.git
-```
 
 ## Todo
 
