@@ -1,0 +1,4 @@
+# fish abbreviations
+
+# git
+gsurm git submodule update --recursive --remote --merge
