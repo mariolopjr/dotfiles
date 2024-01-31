@@ -69,9 +69,8 @@
                 "cursorShape": "filledBox",
                 "guid": "{bc2da056-dd06-5879-b969-1dfcefc8d2c7}",
                 "hidden": false,
-                "name": "openSUSE-Tumbleweed",
+                "name": "openSUSE Tumbleweed",
                 "source": "Windows.Terminal.Wsl",
-                "tabTitle": "openSUSE Tumbleweed"
             },
             {
                 "commandline": "\"C:\\Users\\mario\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe\"",
