@@ -15,16 +15,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Check versions of pre-installed software/system
+      - name: Install brew
+        if: startsWith(matrix.os, 'windows')
+        run: choco install brew
+      - name: Install brew
+        if: startsWith(matrix.os, 'windows') != true
         run: |
-          brew --version
-          sw_vers
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       - name: Install dotfiles
         run: |
           brew install chezmoi
           chezmoi init --apply mariolopjr
       - name: Check installed versions
         run: |
+          brew --version
           brew list --versions
           brew list --cask --versions
           mas list
