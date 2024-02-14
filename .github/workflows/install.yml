@@ -1,0 +1,34 @@
+name: install
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 13 * * 6"
+
+jobs:
+  install_dots:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install brew
+        if: startsWith(matrix.os, 'windows')
+        run: choco install brew
+      - name: Install brew
+        if: startsWith(matrix.os, 'windows') != true
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - name: Install dotfiles
+        run: |
+          brew install chezmoi
+          chezmoi init --apply mariolopjr
+      - name: Check installed versions
+        run: |
+          brew --version
+          brew list --versions
+          brew list --cask --versions
+          mas list
