@@ -1,21 +1,30 @@
 name: install
 
-on: 
+on:
   pull_request:
   schedule:
-    - cron:  '0 13 * * 6'
+    - cron: "0 13 * * 6"
 
 jobs:
-  build:
-  runs-on: ${{ matrix.os }}
-  strategy:
-    matrix:
-    os: [macos-14] 
-  steps:
-    - uses: actions/checkout@v1
-    - name: Check versions of pre-installed software/system
-      run: ./.cisupport/pre.sh
-    - name: Execute full install
-      run:  ./setup.sh
-    - name: Check installed versions 
-      run: ./.cisupport/post.sh
+  install_dots:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Check versions of pre-installed software/system
+        run: |
+          brew --version
+          sw_vers
+      - name: Install dotfiles
+        run: |
+          brew install chezmoi
+          chezmoi init --apply mariolopjr
+      - name: Check installed versions
+        run: |
+          brew list --versions
+          brew list --cask --versions
+          mas list

@@ -1,5 +1,7 @@
 -- set initial config
 vim.g.mapleader = " "
 
-require 'plugins'.setup()
-require 'keybindings.shared'.setup()
+if vim.g.vscode then
+    -- https://github.com/vscode-neovim/vscode-neovim/issues/298
+    vim.opt.clipboard:append("unnamedplus")
+end
