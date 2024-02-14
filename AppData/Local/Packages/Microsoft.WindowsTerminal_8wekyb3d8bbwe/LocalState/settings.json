@@ -7,11 +7,11 @@
                 "action": "copy",
                 "singleLine": false
             },
-            "keys": "ctrl+c"
+            "keys": "ctrl+shift+c"
         },
         {
             "command": "paste",
-            "keys": "ctrl+v"
+            "keys": "ctrl+shift+v"
         },
         {
             "command": "find",
@@ -24,6 +24,20 @@
                 "splitMode": "duplicate"
             },
             "keys": "alt+shift+d"
+        },
+        {
+            "command": {
+                "action": "sendInput",
+                "input": "\u001bOH"
+            },
+            "keys": "ctrl+a"
+        },
+        {
+            "command": {
+                "action": "sendInput",
+                "input": "\u001bOF"
+            },
+            "keys": "ctrl+e"
         }
     ],
     "copyFormatting": "none",
@@ -52,13 +66,11 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "commandline": "ubuntupreview.exe",
                 "cursorShape": "filledBox",
-                "guid": "{fb4d2a8a-a8fc-4329-9f32-f036e35d8a95}",
+                "guid": "{bc2da056-dd06-5879-b969-1dfcefc8d2c7}",
                 "hidden": false,
-                "icon": "https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png",
-                "name": "Ubuntu (Preview)",
-                "tabTitle": "Ubuntu (Preview)"
+                "name": "openSUSE Tumbleweed",
+                "source": "Windows.Terminal.Wsl",
             },
             {
                 "commandline": "\"C:\\Users\\mario\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.PowerShell_8wekyb3d8bbwe\\pwsh.exe\"",
@@ -78,6 +90,18 @@
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": true,
                 "name": "Command Prompt"
+            },
+            {
+                "guid": "{1e5a4ab0-102f-5a08-af47-ea9965336f1f}",
+                "hidden": true,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{8555273d-ce28-5038-b625-d51ac0a67fc5}",
+                "hidden": true,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
             }
         ]
     },
