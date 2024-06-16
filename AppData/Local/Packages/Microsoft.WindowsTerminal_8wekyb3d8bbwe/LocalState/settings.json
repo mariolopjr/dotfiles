@@ -52,7 +52,7 @@
         "defaults": {
             "colorScheme": "One Half Dark",
             "font": {
-                "face": "Victor Mono",
+                "face": "Cascadia Code NF",
                 "size": 14.0
             },
             "opacity": 80,
