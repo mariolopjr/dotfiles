@@ -49,22 +49,13 @@ mario@winterfell:~$ git remote set-url origin git@github.com:mariolopjr/dotfiles
 sudo zypper ref -b && sudo zypper dup
 ```
 
-## DevContainer
-
-TBD
-
 ## Linux
 
 TBD
 
 ## Todo
 
-- Windows
-  - Install packages with winget configuration file (sadly requires preview winget which won't automatically update)
-  - git aliases for powershell/zsh
-  - move from fish to zsh on macOS
 - WSL
-  - alias certain brew commands to match winget
-  - setup completions for zsh
+  - move to fish
 - neovim
   - clipboard and default register sync
