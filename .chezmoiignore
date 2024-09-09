@@ -1,19 +1,6 @@
 README.md
-{{- if ne .chezmoi.os "windows" }}
-AppData
-Documents
-{{- end }}
 {{- if ne .chezmoi.os "darwin" }}
 Library
-{{- end }}
-{{- if eq .chezmoi.os "darwin" }}
-.config/starship.toml
-{{- end }}
-{{- if eq .chezmoi.os "windows" }}
-.config/direnv
-.config/fish
-.local/share/fish
-.zshrc
 {{- end }}
 {{- if or (eq .chezmoi.os "windows") (eq .chezmoi.os "linux") }}
 .asdf/downloads
