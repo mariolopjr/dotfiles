@@ -15,7 +15,8 @@ Function Add-ToPathVariable {
     $env:Path = ($CurrentPathArray + $NewPath) -join ";"
 }
 
-Add-ToPathVariable "C:\Users\mario\AppData\Roaming\Python\Python311\Scripts"
+# Not necessary since installer adds to env vars
+#Add-ToPathVariable "C:\Users\mario\AppData\Roaming\Python\Python312\Scripts"
 
 # Disable powershell telemetry
 $env:POWERSHELL_TELEMETRY_OPTOUT = $true
