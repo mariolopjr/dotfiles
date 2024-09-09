@@ -1,7 +1,0 @@
-{{ if and (eq .chezmoi.os "linux") (not .is_wsl) -}}
-#!/bin/bash
-
-# Install additional packages from AUR
-yay -Syu opensnitch bitwig-studio bottles protonup-git protonup-qt macchina ttf-victor-mono \
-			 mesen-x-git bsnes-qt5 melonds citra-qt-git yuzu-mainline-bin rpcs3-bin
-{{ end -}}

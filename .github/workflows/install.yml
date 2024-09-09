@@ -1,0 +1,31 @@
+name: install
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 13 * * 6"
+
+jobs:
+  install_dots:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # once linux support is added for servers, update this
+        # os: [macos-latest, ubuntu-latest]
+        os: [macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install brew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - name: Install dotfiles
+        run: |
+          brew install chezmoi
+          chezmoi init --apply mariolopjr
+      - name: Check installed versions
+        run: |
+          brew --version
+          brew list --versions
+          brew list --cask --versions

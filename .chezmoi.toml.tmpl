@@ -1,23 +1,8 @@
 [cd]
-{{- if eq .chezmoi.os "windows" }}
-    command = "pwsh"
-{{- else }}
     command = "fish"
-{{- end }}
-{{- if eq .chezmoi.os "windows" }}
-[interpreters.ps1]
-    command = "pwsh"
-    args = ["-NoLogo"]
-{{- end }}
 {{- if eq .chezmoi.os "darwin" }}
 [[textconv]]
     pattern = "**/*.plist"
     command = "plutil"
     args = ["-convert", "xml1", "-o", "-", "-"]
-{{- end }}
-[data]
-{{- if or (eq .chezmoi.os "windows") (eq .chezmoi.os "darwin") }}
-    is_wsl = false
-{{- else }}
-    is_wsl = {{ (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 {{- end }}

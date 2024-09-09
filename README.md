@@ -6,7 +6,7 @@ As you can tell from the dotfiles, my main setup is macOS. I mainly use `asdf` f
 
 ## macOS
 
-### targaryen (laptop, mbp m1 pro 14")
+### targaryen (laptop)
 
 #### Setup macOS dotfiles
 
@@ -18,53 +18,12 @@ chezmoi cd
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
-## Windows
-
-### winterfell (desktop, custom)
-
-#### Setup dotfiles
-
-```powershell
-PS C:\Users\mario> winget install twpayne.chezmoi
-PS C:\Users\mario> chezmoi init --apply mariolopjr
-PS C:\Users\mario> git remote set-url origin git@github.com:mariolopjr/dotfiles.git
-```
-
-## WSL
-
-### OpenSUSE Tumbleweed
-
-#### Setup WSL dotfiles
-
-```bash
-mario@winterfell:~$ sudo zypper install git chezmoi
-mario@winterfell:~$ chezmoi init --apply mariolopjr
-mario@winterfell:~$ chezmoi cd
-mario@winterfell:~$ git remote set-url origin git@github.com:mariolopjr/dotfiles.git
-```
-
-#### Upgrade release
-
-```zsh
-sudo zypper ref -b && sudo zypper dup
-```
-
-## DevContainer
-
-TBD
-
 ## Linux
 
 TBD
 
 ## Todo
 
-- Windows
-  - Install packages with winget configuration file (sadly requires preview winget which won't automatically update)
-  - git aliases for powershell/zsh
-  - move from fish to zsh on macOS
-- WSL
-  - alias certain brew commands to match winget
-  - setup completions for zsh
+- linux configuration for nas
 - neovim
   - clipboard and default register sync

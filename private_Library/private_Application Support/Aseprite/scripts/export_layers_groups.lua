@@ -10,25 +10,25 @@ Groups mod by Adam Younis.
 --]]
 
 -- Auxiliar functions.
-function getPath(str,sep)
+local function getPath(str, sep)
     -- Source: https://stackoverflow.com/questions/9102126/lua-return-directory-path-from-path
-    sep=sep or'/'
-    return str:match("(.*"..sep..")")
+    sep = sep or '/'
+    return str:match("(.*" .. sep .. ")")
 end
 
-function getFileName(str,sep)
+local function getFileName(str, sep)
     --[[ Sources:
     - https://codereview.stackexchange.com/questions/90177/get-file-name-with-extension-and-get-only-extension
     - https://stackoverflow.com/questions/18884396/extracting-filename-only-with-pattern-matching
     --]]
-    str = str:match("^.+"..sep.."(.+)$")
+    str = str:match("^.+" .. sep .. "(.+)$")
     return str:match("(.+)%..+")
 end
 
 -- Hides all layers and sublayers inside a group, returning a list with all initial states of each layer's visibility.
-function hideLayers(sprite)
+local function hideLayers(sprite)
     local layerVisibility = {}
-    for i,layer in ipairs(sprite.layers) do
+    for i, layer in ipairs(sprite.layers) do
         layerVisibility[i] = layer.isVisible
         layer.isVisible = false
         if (layer.isGroup) then
@@ -39,8 +39,8 @@ function hideLayers(sprite)
 end
 
 -- Restore layers visibility.
-function restoreLayersVisibility(layerVisibility, sprite)
-    for i,layer in ipairs(sprite.layers) do
+local function restoreLayersVisibility(layerVisibility, sprite)
+    for i, layer in ipairs(sprite.layers) do
         -- Avoid group layers.
         layer.isVisible = layerVisibility[i]
         if (layer.isGroup) then
@@ -50,8 +50,8 @@ function restoreLayersVisibility(layerVisibility, sprite)
 end
 
 -- Save the root layers as individual sprites.
-function exportLayers(sprite, rootLayer, pathPrefix, pathSufix)
-    for i,layer in ipairs(rootLayer.layers) do
+local function exportLayers(sprite, rootLayer, pathPrefix, pathSufix)
+    for _, layer in ipairs(rootLayer.layers) do
         if (layer.isEditable) then
             if (not layer.isGroup) then
                 -- Individual layer. Save it.
@@ -63,21 +63,21 @@ function exportLayers(sprite, rootLayer, pathPrefix, pathSufix)
                 -- Root Groups. Save them too.
                 layer.isVisible = true
 
-for i, layer2 in ipairs(layer.layers) do
-    if(layer2.isEditable) then
-        layer2.isVisible = true;
-    end
-end
-local layerName = "_" .. string.lower(layer.name)
-sprite:saveCopyAs(pathPrefix .. layerName .. pathSufix .. ".png")
-layer.isVisible = false
+                for _, layer2 in ipairs(layer.layers) do
+                    if (layer2.isEditable) then
+                        layer2.isVisible = true;
+                    end
+                end
+                local layerName = "_" .. string.lower(layer.name)
+                sprite:saveCopyAs(pathPrefix .. layerName .. pathSufix .. ".png")
+                layer.isVisible = false
 
-for i, layer2 in ipairs(layer.layers) do
-    layer2.isVisible = false;
-end
-end
-end
-end
+                for _, layer2 in ipairs(layer.layers) do
+                    layer2.isVisible = false;
+                end
+            end
+        end
+    end
 end
 
 -- Identify current sprite.
@@ -85,18 +85,18 @@ local sprite = app.activeSprite
 if (sprite == nil) then
     -- Show error, no sprite active.
     local dlg = Dialog("Error")
-    dlg:label{  id = 0,
-    text = "No sprite is currently active. Please, open a sprite first and run the script with it active."
-}
-dlg:newrow()
-dlg:button{ id = 1,
-text = "Close",
-onclick = function()
-    dlg:close()
-end
-}
-dlg:show()
-return
+    dlg:label { id = 0,
+        text = "No sprite is currently active. Please, open a sprite first and run the script with it active."
+    }
+    dlg:newrow()
+    dlg:button { id = 1,
+        text = "Close",
+        onclick = function()
+            dlg:close()
+        end
+    }
+    dlg:show()
+    return
 end
 
 -- Path where sprites are saved.

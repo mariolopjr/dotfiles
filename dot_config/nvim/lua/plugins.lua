@@ -19,6 +19,14 @@ function M.setup()
     require("lazy").setup({
         --"terrortylor/nvim-comment",
         "tpope/vim-commentary",
+        "tpope/vim-repeat",
+        {
+            "ggandor/leap.nvim",
+            depedencies = { "tpope/vim-repeat" },
+            config = function()
+                require("leap").create_default_mappings()
+            end,
+        },
     })
 end
 

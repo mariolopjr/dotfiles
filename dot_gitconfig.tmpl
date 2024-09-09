@@ -1,10 +1,8 @@
 [user]
 	{{ if eq .chezmoi.os "darwin" -}}
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAipRk9CK71BwC7DtnYAsMX5CsuCbnq03YaOL7ZKX+bn
-	{{ else if and (eq .chezmoi.os "linux") (.is_wsl) -}}
+	{{ else if eq .chezmoi.os "linux" -}}
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+RlSav1/qs905tuVJpOo5zfLe2AfF5cg/cG27pnp8n
-	{{- else }}
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLW/ZvXc3A4Y1RXENFhlgWgMHZJjJZhshg7+8yDBM2B
 	{{- end }}
 	email = mario@techmunchies.net
 	name = Mario Lopez
@@ -12,20 +10,12 @@
 	format = ssh
 [gpg "ssh"]
 	allowedSignersFile = ~/.ssh/allowed_signers
-	{{- if eq .chezmoi.os "windows" }}
-	program = "C:/Users/mario/AppData/Local/1Password/app/8/op-ssh-sign.exe"
-	{{- end }}
 [commit]
 	gpgsign = true
 [pull]
 	rebase = true
 [tag]
 	gpgsign = true
-{{- if eq .chezmoi.os "windows" }}
-[core]
-	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
-	autocrlf = true
-{{- end }}
 [init]
         defaultBranch = main
 [push]

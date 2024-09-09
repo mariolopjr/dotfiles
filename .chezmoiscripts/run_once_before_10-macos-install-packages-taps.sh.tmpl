@@ -1,0 +1,13 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+# Install brew taps
+brew bundle --no-lock --file=/dev/stdin <<EOF
+tap "homebrew/aliases"
+tap "homebrew/bundle"
+tap "homebrew/services"
+tap "osx-cross/arm"
+tap "osx-cross/avr"
+tap "qmk/qmk"
+EOF
+{{ end -}}
