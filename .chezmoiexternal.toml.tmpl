@@ -1,4 +1,4 @@
-{{- if or (eq .chezmoi.os "windows") (eq .chezmoi.os "linux") }}
+{{- if eq .chezmoi.os "linux" }}
 [".asdf"]
 type = "archive"
 url = "https://github.com/asdf-vm/asdf/archive/refs/tags/v0.14.0.tar.gz"

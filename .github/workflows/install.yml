@@ -11,16 +11,13 @@ jobs:
 
     strategy:
       matrix:
-        # os: [macos-latest, ubuntu-latest, windows-latest]
+        # once linux support is added for servers, update this
+        # os: [macos-latest, ubuntu-latest]
         os: [macos-latest]
 
     steps:
       - uses: actions/checkout@v1
       - name: Install brew
-        if: startsWith(matrix.os, 'windows')
-        run: choco install brew
-      - name: Install brew
-        if: startsWith(matrix.os, 'windows') != true
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       - name: Install dotfiles
@@ -32,4 +29,3 @@ jobs:
           brew --version
           brew list --versions
           brew list --cask --versions
-          mas list

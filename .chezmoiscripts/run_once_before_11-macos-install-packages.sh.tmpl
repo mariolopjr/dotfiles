@@ -1,0 +1,36 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+# Install brew packages
+brew bundle --no-lock --file=/dev/stdin <<EOF
+brew "asdf"
+brew "bat"
+brew "bottom"
+brew "ctop"
+brew "curl"
+brew "direnv"
+brew "f3"
+brew "fd"
+brew "fish"
+brew "fisher"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "git-lfs"
+brew "git-delta"
+brew "jq"
+brew "macchina"
+brew "m1ddc"
+brew "mas"
+brew "ncdu"
+brew "neovim"
+brew "qmk/qmk/qmk"
+brew "silicon", link: false
+brew "smartmontools"
+brew "terminal-notifier"
+brew "tmux"
+brew "wakeonlan"
+brew "wget"
+brew "zoxide"
+EOF
+{{ end -}}
