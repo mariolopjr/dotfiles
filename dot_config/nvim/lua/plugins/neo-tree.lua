@@ -18,7 +18,7 @@ return {
         hide_dotfiles = false,
         hide_gitignored = true,
       },
-      hijack_netrw_behavior = 'open_current',
+      -- hijack_netrw_behavior = 'open_default',
       window = {
         mappings = {
           ['\\'] = 'close_window',
