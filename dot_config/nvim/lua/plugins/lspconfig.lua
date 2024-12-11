@@ -109,6 +109,7 @@ return {
       -- Enable the following language servers
       local servers = {
         clangd = {},
+        gopls = {},
         pyright = {},
         lua_ls = {
           settings = {
