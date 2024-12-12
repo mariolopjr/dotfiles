@@ -32,6 +32,7 @@ return {
         }
       end,
       formatters_by_ft = {
+        css = { "stylelint" },
         lua = { "stylua" },
         golang = { "gofmt" },
         -- Conform can also run multiple formatters sequentially
