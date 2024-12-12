@@ -2,3 +2,6 @@
 
 # git
 gsurm git submodule update --recursive --remote --merge
+
+# other
+n nvim
