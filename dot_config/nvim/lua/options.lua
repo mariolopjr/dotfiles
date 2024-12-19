@@ -5,12 +5,12 @@ function M.setup()
   vim.opt.number = true
   vim.opt.relativenumber = true
 
-  vim.opt.mouse = 'a'
+  vim.opt.mouse = "a"
 
   vim.opt.showmode = false
 
   vim.schedule(function()
-    vim.opt.clipboard = 'unnamedplus'
+    vim.opt.clipboard = "unnamedplus"
   end)
 
   -- enable modelines
@@ -18,4 +18,3 @@ function M.setup()
 end
 
 return M
--- vim: ts=2 sts=2 sw=2 et
