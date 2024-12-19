@@ -1,6 +1,7 @@
 local M = {}
 
 local wez = require("wezterm")
+local act = wez.action
 
 local function is_nvim(pane)
   -- this is set by the plugin, and unset on ExitPre in Neovim
@@ -17,12 +18,12 @@ local direction_keys = {
 local function split_nav(resize_or_move, key)
   return {
     key = key,
-    mods = resize_or_move == "resize" and "SUPER" or "CTRL",
+    mods = resize_or_move == "resize" and "META" or "CTRL",
     action = wez.action_callback(function(win, pane)
       if is_nvim(pane) then
         -- pass the keys through to nvim
         win:perform_action({
-          SendKey = { key = key, mods = resize_or_move == "resize" and "SUPER" or "CTRL" },
+          SendKey = { key = key, mods = resize_or_move == "resize" and "META" or "CTRL" },
         }, pane)
       else
         if resize_or_move == "resize" then
@@ -52,13 +53,23 @@ function M.apply_to_config(config)
     -- split panes
     {
       key = "-",
-      mods = "SUPER",
-      action = wez.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+      mods = "META",
+      action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
     },
     {
       key = "\\",
+      mods = "META",
+      action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+    },
+
+    -- remap clear viewport
+    {
+      key = "l",
       mods = "SUPER",
-      action = wez.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+      action = act.Multiple({
+        act.ClearScrollback("ScrollbackAndViewport"),
+        act.SendKey({ key = "L", mods = "CTRL" }),
+      }),
     },
   }
 end
