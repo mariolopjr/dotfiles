@@ -3,8 +3,7 @@ local wezterm = require("wezterm")
 local mux = wezterm.mux
 local action = wezterm.action
 
--- plugins TODO: somehow not load this from the web?
-local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
+local keymap = require("keymap")
 
 -- config
 local config = wezterm.config_builder()
@@ -30,7 +29,7 @@ config.font_size = 16
 -- set default shell to fish
 config.default_prog = { "/opt/homebrew/bin/fish", "-l" }
 
--- apply smart splits config
-smart_splits.apply_to_config(config)
+-- apply keyamp
+keymap.apply_to_config(config)
 
 return config
