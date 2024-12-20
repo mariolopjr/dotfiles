@@ -1,11 +1,19 @@
 local M = {}
 
-local wez = require("wezterm")
-local act = wez.action
+local wezterm = require("wezterm")
+local action = wezterm.action
 
 local function is_nvim(pane)
   -- this is set by the plugin, and unset on ExitPre in Neovim
   return pane:get_user_vars().IS_NVIM == "true"
+end
+
+local function find_nvim_pane(tab)
+  for _, pane in ipairs(tab:panes()) do
+    if is_nvim(pane) then
+      return pane
+    end
+  end
 end
 
 local direction_keys = {
@@ -19,7 +27,7 @@ local function split_nav(resize_or_move, key)
   return {
     key = key,
     mods = resize_or_move == "resize" and "META" or "CTRL",
-    action = wez.action_callback(function(win, pane)
+    action = wezterm.action_callback(function(win, pane)
       if is_nvim(pane) then
         -- pass the keys through to nvim
         win:perform_action({
@@ -54,21 +62,49 @@ function M.apply_to_config(config)
     {
       key = "-",
       mods = "META",
-      action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
+      action = action.SplitVertical({ domain = "CurrentPaneDomain" }),
     },
     {
       key = "\\",
       mods = "META",
-      action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+      action = action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+    },
+    {
+      key = ";",
+      mods = "CTRL",
+      action = wezterm.action_callback(function(window, pane)
+        local tab = window:active_tab()
+
+        -- Open pane below if current pane is nvim
+        if is_nvim(pane) then
+          if (#tab:panes()) == 1 then
+            -- Open pane below if when there is only one pane and it is nvim
+            pane:split({ direction = "Bottom" })
+          else
+            -- Send `CTRL-; to vim`, navigate to bottom pane from nvim
+            window:perform_action({
+              SendKey = { key = ";", mods = "CTRL" },
+            }, pane)
+          end
+          return
+        end
+
+        -- Zoom to nvim pane if it exists
+        local nvim_pane = find_nvim_pane(tab)
+        if nvim_pane then
+          nvim_pane:activate()
+          tab:set_zoomed(true)
+        end
+      end),
     },
 
     -- remap clear viewport
     {
       key = "l",
       mods = "SUPER",
-      action = act.Multiple({
-        act.ClearScrollback("ScrollbackAndViewport"),
-        act.SendKey({ key = "L", mods = "CTRL" }),
+      action = action.Multiple({
+        action.ClearScrollback("ScrollbackAndViewport"),
+        action.SendKey({ key = "L", mods = "CTRL" }),
       }),
     },
   }

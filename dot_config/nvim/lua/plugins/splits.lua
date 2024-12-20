@@ -25,6 +25,9 @@ return {
       map("n", "<leader><leader>k", smart_splits.swap_buf_up, opts)
       map("n", "<leader><leader>l", smart_splits.swap_buf_right, opts)
 
+      -- move to bottom pop up terminal
+      map("n", "<C-;>", smart_splits.move_cursor_down, opts)
+
       -- creating splits
       -- map("n", "<A-->", smart_splits.resize_right, opts)
     end,
