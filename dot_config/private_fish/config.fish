@@ -31,3 +31,9 @@ end
 if type -q asdf
   source /opt/homebrew/opt/asdf/libexec/asdf.fish
 end
+
+## Add rust to path
+if not contains "$HOME/.cargo/bin" $PATH
+  fish_add_path $HOME/.cargo/bin
+end
+
