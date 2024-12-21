@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- if and (eq .chezmoi.os "darwin") (not (env "GITHUB_ACTION")) -}}
 #!/bin/bash
 
 # Install brew cask packages
@@ -13,10 +13,6 @@ cask "crossover"
 cask "discord"
 cask "docker"
 cask "fission"
-cask "font-cascadia-code"
-cask "font-cascadia-code-nf"
-cask "font-cascadia-mono"
-cask "font-cascadia-mono-nf"
 cask "font-iosevka-nerd-font"
 cask "hammerspoon"
 cask "jordanbaird-ice"
