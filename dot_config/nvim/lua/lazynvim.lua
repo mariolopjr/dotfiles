@@ -28,11 +28,11 @@ function M.setup()
 
   -- ensure lazy lock file is synced with chezmoi
   vim.api.nvim_create_autocmd("User", {
-    pattern = "LazySyncPost",
+    pattern = { "LazyInstall", "LazySync" },
     callback = function()
       -- run chezmoi add after lockfile update
-      local lockfile = require("lazy.core.config").options.lockfile
-      local command = "chezmoi add " .. lockfile
+      local lock_file = require("lazy.core.config").options.lockfile
+      local command = "chezmoi add " .. lock_file
       vim.fn.system(command)
 
       -- print a message

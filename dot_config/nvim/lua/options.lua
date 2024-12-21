@@ -7,6 +7,7 @@ function M.setup()
   vim.opt.mouse = "a"
   vim.opt.showmode = false
   vim.opt.cursorline = true
+  vim.opt.termguicolors = true
 
   vim.schedule(function()
     vim.opt.clipboard = "unnamedplus"
