@@ -61,14 +61,29 @@ function M.apply_to_config(config)
     -- split panes
     {
       key = "-",
-      mods = "META",
+      mods = "CTRL",
       action = action.SplitVertical({ domain = "CurrentPaneDomain" }),
     },
     {
       key = "\\",
-      mods = "META",
+      mods = "CTRL",
       action = action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
     },
+    -- will use a key table for this instead
+    -- {
+    --   key = "w",
+    --   mods = "CTRL",
+    --   action = wezterm.action_callback(function(window, pane)
+    --     if is_nvim(pane) then
+    --       -- pass the keys through to nvim
+    --       window:perform_action({
+    --         SendKey = { key = "w", mods = "CTRL" },
+    --       }, pane)
+    --     else
+    --       action.CloseCurrentPane({ confirm = false })
+    --     end
+    --   end),
+    -- },
     {
       key = ";",
       mods = "CTRL",
@@ -80,11 +95,11 @@ function M.apply_to_config(config)
           if (#tab:panes()) == 1 then
             -- Open pane below if when there is only one pane and it is nvim
             pane:split({ direction = "Bottom" })
-          else
-            -- Send `CTRL-; to vim`, navigate to bottom pane from nvim
-            window:perform_action({
-              SendKey = { key = ";", mods = "CTRL" },
-            }, pane)
+            -- else
+            --   -- Send `CTRL-; to vim`, navigate to bottom pane from nvim
+            --   window:perform_action({
+            --     SendKey = { key = ";", mods = "CTRL" },
+            --   }, pane)
           end
           return
         end
