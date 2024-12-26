@@ -1,6 +1,7 @@
 return {
   {
     "mrjones2014/smart-splits.nvim",
+    cond = not vim.g.vscode,
     config = function()
       local smart_splits = require("smart-splits")
       local map = vim.keymap.set

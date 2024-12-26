@@ -3,6 +3,7 @@ return {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
     "folke/lazydev.nvim",
+    cond = not vim.g.vscode,
     ft = "lua",
     opts = {
       library = {
@@ -15,6 +16,7 @@ return {
   { "Bilal2453/luvit-meta", lazy = true },
   {
     "mrcjkb/rustaceanvim",
+    cond = not vim.g.vscode,
     version = "^5",
     lazy = false,
     config = function()
@@ -32,12 +34,13 @@ return {
   {
     -- main LSP configuration
     "neovim/nvim-lspconfig",
+    cond = not vim.g.vscode,
     dependencies = {
       { "williamboman/mason.nvim", config = true }, -- must be loaded before dependants
       "williamboman/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
 
-      { "j-hui/fidget.nvim", opts = {} }, -- Useful status updates for LSP.
+      { "j-hui/fidget.nvim",       opts = {} }, -- Useful status updates for LSP.
       "hrsh7th/cmp-nvim-lsp",
 
       -- setup dap with lsp
@@ -188,11 +191,11 @@ return {
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if
-            client
-            and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight)
+              client
+              and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight)
           then
             local highlight_augroup =
-              vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+                vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -230,7 +233,7 @@ return {
       -- LSP servers and clients are able to communicate to each other what features they support.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities =
-        vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+          vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
       -- Enable the following language servers
       local servers = {
@@ -277,7 +280,7 @@ return {
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities =
-              vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+                vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
             require("lspconfig")[server_name].setup(server)
           end,
         },

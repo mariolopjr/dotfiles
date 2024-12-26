@@ -1,6 +1,7 @@
 return {
   {
     'folke/which-key.nvim',
+    cond = not vim.g.vscode,
     event = 'VimEnter',
     opts = {
       icons = {
@@ -42,7 +43,7 @@ return {
 
       -- Document existing key chains
       spec = {
-        { '<leader>b', group = '[B]uffer',     mode = { 'n', 'x' } },
+        { '<leader>b', group = '[B]uffer',   mode = { 'n', 'x' } },
         { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>f', group = '[F]iles' },

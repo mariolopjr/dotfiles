@@ -1,3 +1,6 @@
 return {
-  "rcarriga/nvim-notify",
+  {
+    "rcarriga/nvim-notify",
+    cond = not vim.g.vscode,
+  },
 }

@@ -1,6 +1,7 @@
 return {
   { -- fuzzy Finder (files, lsp, etc)
     "nvim-telescope/telescope.nvim",
+    cond = not vim.g.vscode,
     event = "VimEnter",
     branch = "0.1.x",
     dependencies = {
@@ -13,7 +14,7 @@ return {
         end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
-      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons",               enabled = vim.g.have_nerd_font },
       { "nvim-telescope/telescope-file-browser.nvim" },
     },
     config = function()
