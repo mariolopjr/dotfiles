@@ -1,0 +1,43 @@
+# ghostty +show-config --default --docs
+# ghostty +show-config --default | grep {option-name}
+# ghostty +list-themes
+# code: language=toml insertSpaces=true tabSize=4
+
+# Font
+# font-family                    = Symbols Nerd Font Mono
+font-family                    = Cascadia NF Regular Regular
+# font-family                    = SF Mono
+# font-family                    = Iosevka Custom
+# window-title-font-family       = Iosevka Custom
+font-feature                   = calt,dlig,ss05
+font-thicken                   = false
+font-size                      = 14
+
+# Look and Feel
+adjust-cursor-thickness        = 10
+adjust-underline-position      = 3
+bold-is-bright                 = true
+mouse-hide-while-typing        = true
+theme                          = catppuccin-macchiato
+
+# Other
+command                        = /opt/homebrew/bin/fish -l
+copy-on-select                 = true
+
+# Key bindings
+## splits
+keybind                        = ctrl+h=goto_split:left
+keybind                        = ctrl+j=goto_split:bottom
+keybind                        = ctrl+k=goto_split:top
+keybind                        = ctrl+l=goto_split:right
+keybind                        = ctrl+shift+h=new_split:left
+keybind                        = ctrl+shift+j=new_split:down
+keybind                        = ctrl+shift+k=new_split:up
+keybind                        = ctrl+shift+l=new_split:right
+keybind                        = ctrl+alt+h=resize_split:left,10
+keybind                        = ctrl+alt+j=resize_split:down,10
+keybind                        = ctrl+alt+k=resize_split:up,10
+keybind                        = ctrl+alt+l=resize_split:right,10
+
+## other
+keybind                        = super+alt+enter=new_split:auto

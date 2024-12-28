@@ -29,7 +29,7 @@ config.font_size = 16
 -- set default shell to fish
 config.default_prog = { "/opt/homebrew/bin/fish", "-l" }
 
--- apply keyamp
+-- apply keymap
 keymap.apply_to_config(config)
 
 return config
