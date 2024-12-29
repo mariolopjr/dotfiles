@@ -1,11 +1,11 @@
 # ghostty +show-config --default --docs
 # ghostty +show-config --default | grep {option-name}
 # ghostty +list-themes
-# code: language=toml insertSpaces=true tabSize=4
+# code: language=ini insertSpaces=true tabSize=4
 
 # Font
 # font-family                    = Symbols Nerd Font Mono
-font-family                    = Cascadia NF Regular Regular
+# font-family                    = Cascadia NF Regular Regular
 # font-family                    = SF Mono
 # font-family                    = Iosevka Custom
 # window-title-font-family       = Iosevka Custom

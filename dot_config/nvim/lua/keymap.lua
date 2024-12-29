@@ -50,6 +50,11 @@ function M.setup()
       vim.highlight.on_yank()
     end,
   })
+
+  -- set keybinds for vscode
+  if vim.g.vscode then
+    keymap.set({ "n", "v" }, "<leader>", "<Cmd>call VSCodeNotify('whichkey.show')<CR>")
+  end
 end
 
 -- Add autosaving and saving with <leader>fw
