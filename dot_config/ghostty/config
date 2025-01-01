@@ -19,7 +19,7 @@ theme                          = catppuccin-macchiato
 # Other
 command                        = /opt/homebrew/bin/fish -l
 copy-on-select                 = true
-auto-update                    = false
+auto-update                    = off
 
 # Key bindings
 ## splits
