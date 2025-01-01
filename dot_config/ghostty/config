@@ -4,11 +4,7 @@
 # code: language=ini insertSpaces=true tabSize=4
 
 # Font
-# font-family                    = Symbols Nerd Font Mono
-# font-family                    = Cascadia NF Regular Regular
-# font-family                    = SF Mono
-# font-family                    = Iosevka Custom
-# window-title-font-family       = Iosevka Custom
+font-family                    = Cascadia NF Regular Regular
 font-feature                   = calt,dlig,ss05
 font-thicken                   = false
 font-size                      = 14
@@ -23,6 +19,7 @@ theme                          = catppuccin-macchiato
 # Other
 command                        = /opt/homebrew/bin/fish -l
 copy-on-select                 = true
+auto-update                    = false
 
 # Key bindings
 ## splits
