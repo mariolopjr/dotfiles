@@ -1,7 +1,6 @@
 # ghostty +show-config --default --docs
 # ghostty +show-config --default | grep {option-name}
 # ghostty +list-themes
-# code: language=ini insertSpaces=true tabSize=4
 
 # Font
 font-family                    = Cascadia NF Regular Regular
@@ -31,10 +30,10 @@ keybind                        = ctrl+shift+h=new_split:left
 keybind                        = ctrl+shift+j=new_split:down
 keybind                        = ctrl+shift+k=new_split:up
 keybind                        = ctrl+shift+l=new_split:right
-keybind                        = ctrl+alt+h=resize_split:left,10
-keybind                        = ctrl+alt+j=resize_split:down,10
-keybind                        = ctrl+alt+k=resize_split:up,10
-keybind                        = ctrl+alt+l=resize_split:right,10
+keybind                        = ctrl+alt+h=resize_split:left,30
+keybind                        = ctrl+alt+j=resize_split:down,30
+keybind                        = ctrl+alt+k=resize_split:up,30
+keybind                        = ctrl+alt+l=resize_split:right,30
 
 ## other
 keybind                        = super+alt+enter=new_split:auto

@@ -1,0 +1,30 @@
+[[language]]
+name = "rust"
+formatter = { command = "rustfmt" }
+
+[language-server.rust-analyzer.config]
+cargo = { allFeatures = true }
+
+[language-server.rust-analyzer.config.check]
+command = "clippy"
+
+[[language]]
+name = "bash"
+indent = { tab-width = 4, unit = "    " }
+formatter = { command = 'shfmt', args = ["-i", "4"] }
+
+[[language]]
+name = "toml"
+formatter = { command = "taplo", args = ["fmt", "-"] }
+
+[[language]]
+name = "ghostty"
+scope = "source.ghostty"
+injection-regex = "ghostty"
+file-types = [{ glob = "*ghostty/config*" }, { glob = "*ghostty/themes/*" }]
+grammar = "ghostty"
+comment-tokens = "#"
+
+[[grammar]]
+name = "ghostty"
+source = { git = "https://github.com/bezhermoso/tree-sitter-ghostty", rev = "e1a73c6231b9d760cd01204f9467d82a9d46bcb9" }
