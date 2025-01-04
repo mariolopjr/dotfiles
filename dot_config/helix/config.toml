@@ -17,14 +17,13 @@ soft-wrap.max-indent-retain=80
 hidden = false
 
 [editor.statusline]
-left = ["mode", "spinner", "file-modification-indicator", "read-only-indicator"]
+left = ["mode", "spacer", "version-control", "spinner", "file-modification-indicator", "read-only-indicator"]
 center = ["file-name"]
 right = ["diagnostics", "register", "selections", "position", "file-encoding", "file-line-ending", "file-type"]
-# separator = "│"
 
 [editor.lsp]
 enable=true
-auto-signature-help=true
+auto-signature-help = true
 display-messages = true
 
 [editor.cursor-shape]

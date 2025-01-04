@@ -11,7 +11,7 @@ command = "clippy"
 [[language]]
 name = "bash"
 indent = { tab-width = 4, unit = "    " }
-formatter = { command = 'shfmt', args = ["-i", "4"] }
+file-types = [ "sh", "bash", { glob = "*.sh.tmpl" } ]
 
 [[language]]
 name = "toml"
