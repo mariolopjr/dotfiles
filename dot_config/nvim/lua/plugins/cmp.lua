@@ -2,7 +2,11 @@ return {
   {
     "saghen/blink.cmp",
     -- optional: provides snippets for the snippet source
-    dependencies = { "rafamadriz/friendly-snippets", { "L3MON4D3/LuaSnip", version = "v2.*" } },
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      { "L3MON4D3/LuaSnip", version = "v2.*" },
+      "xzbdmw/colorful-menu.nvim",
+    },
 
     -- use a release tag to download pre-built binaries
     version = "*",
@@ -51,6 +55,46 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
+      },
+
+      -- add colorful-menu to blink
+      completion = {
+        menu = {
+          draw = {
+            components = {
+              label = {
+                width = { fill = true, max = 60 },
+                text = function(ctx)
+                  local highlights_info =
+                    require("colorful-menu").highlights(ctx.item, vim.bo.filetype)
+                  if highlights_info ~= nil then
+                    return highlights_info.text
+                  else
+                    return ctx.label
+                  end
+                end,
+                highlight = function(ctx)
+                  local highlights_info =
+                    require("colorful-menu").highlights(ctx.item, vim.bo.filetype)
+                  local highlights = {}
+                  if highlights_info ~= nil then
+                    for _, info in ipairs(highlights_info.highlights) do
+                      table.insert(highlights, {
+                        info.range[1],
+                        info.range[2],
+                        group = ctx.deprecated and "BlinkCmpLabelDeprecated" or info[1],
+                      })
+                    end
+                  end
+                  for _, idx in ipairs(ctx.label_matched_indices) do
+                    table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                  end
+                  return highlights
+                end,
+              },
+            },
+          },
+        },
       },
     },
     opts_extend = { "sources.default" },

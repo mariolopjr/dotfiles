@@ -41,6 +41,9 @@ return {
       -- "hrsh7th/cmp-nvim-lsp",
       "saghen/blink.cmp",
 
+      -- add neoconf support
+      "folke/neoconf.nvim",
+
       -- setup dap with lsp
       {
         "mfussenegger/nvim-dap",
@@ -83,6 +86,8 @@ return {
       },
     },
     config = function()
+      require("neoconf").setup()
+
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
         callback = function(event)
