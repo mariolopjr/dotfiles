@@ -1,16 +1,15 @@
 return {
-  'nvim-neo-tree/neo-tree.nvim',
-  cond = not vim.g.vscode,
-  version = '*',
+  "nvim-neo-tree/neo-tree.nvim",
+  version = "*",
   dependencies = {
-    'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons',
-    'MunifTanjim/nui.nvim',
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons",
+    "MunifTanjim/nui.nvim",
     "3rd/image.nvim",
   },
-  cmd = 'Neotree',
+  cmd = "Neotree",
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { "\\", ":Neotree reveal<CR>", desc = "NeoTree reveal", silent = true },
   },
   opts = {
     filesystem = {
@@ -22,10 +21,9 @@ return {
       -- hijack_netrw_behavior = 'open_default',
       window = {
         mappings = {
-          ['\\'] = 'close_window',
+          ["\\"] = "close_window",
         },
       },
     },
   },
 }
--- vim: ts=2 sts=2 sw=2 et

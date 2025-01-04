@@ -1,7 +1,6 @@
 return {
   { -- fuzzy Finder (files, lsp, etc)
     "nvim-telescope/telescope.nvim",
-    cond = not vim.g.vscode,
     event = "VimEnter",
     branch = "0.1.x",
     dependencies = {
@@ -65,6 +64,7 @@ return {
 
       -- See `:help telescope.builtin`
       local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[S] existing Buffers" })
       vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
       vim.keymap.set("n", "<leader>sf", function()
@@ -80,12 +80,6 @@ return {
         "<leader>s.",
         builtin.oldfiles,
         { desc = '[S]earch Recent Files ("." for repeat)' }
-      )
-      vim.keymap.set(
-        "n",
-        "<leader><leader>",
-        builtin.buffers,
-        { desc = "[ ] Find existing buffers" }
       )
 
       vim.keymap.set("n", "<leader>/", function()

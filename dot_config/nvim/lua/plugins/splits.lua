@@ -1,7 +1,6 @@
 return {
   {
     "mrjones2014/smart-splits.nvim",
-    cond = not vim.g.vscode,
     config = function()
       local smart_splits = require("smart-splits")
       local map = vim.keymap.set
@@ -21,13 +20,13 @@ return {
       map("n", "<C-\\>", smart_splits.move_cursor_previous, opts)
 
       -- swapping buffers between windows
-      map("n", "<leader><leader>h", smart_splits.swap_buf_left, opts)
-      map("n", "<leader><leader>j", smart_splits.swap_buf_down, opts)
-      map("n", "<leader><leader>k", smart_splits.swap_buf_up, opts)
-      map("n", "<leader><leader>l", smart_splits.swap_buf_right, opts)
+      -- map("n", "<leader><leader>h", smart_splits.swap_buf_left, opts)
+      -- map("n", "<leader><leader>j", smart_splits.swap_buf_down, opts)
+      -- map("n", "<leader><leader>k", smart_splits.swap_buf_up, opts)
+      -- map("n", "<leader><leader>l", smart_splits.swap_buf_right, opts)
 
       -- move to bottom pop up terminal
-      map("n", "<C-;>", smart_splits.move_cursor_down, opts)
+      -- map("n", "<C-;>", smart_splits.move_cursor_down, opts)
 
       -- creating splits
       -- map("n", "<A-->", smart_splits.resize_right, opts)

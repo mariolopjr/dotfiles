@@ -3,7 +3,6 @@ return {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
     "folke/lazydev.nvim",
-    cond = not vim.g.vscode,
     ft = "lua",
     opts = {
       library = {
@@ -16,7 +15,6 @@ return {
   { "Bilal2453/luvit-meta", lazy = true },
   {
     "mrcjkb/rustaceanvim",
-    cond = not vim.g.vscode,
     version = "^5",
     lazy = false,
     config = function()
@@ -34,7 +32,6 @@ return {
   {
     -- main LSP configuration
     "neovim/nvim-lspconfig",
-    cond = not vim.g.vscode,
     dependencies = {
       { "williamboman/mason.nvim", config = true }, -- must be loaded before dependants
       "williamboman/mason-lspconfig.nvim",
@@ -127,7 +124,7 @@ return {
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+          map("<leader>a", vim.lsp.buf.code_action, "Code [A]ction", { "n", "x" })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
