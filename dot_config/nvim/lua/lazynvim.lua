@@ -25,24 +25,6 @@ function M.setup()
     -- keymap
     vim.keymap.set("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" }),
   })
-
-  -- ensure lazy lock file is synced with chezmoi
-  vim.api.nvim_create_autocmd("User", {
-    pattern = { "LazyInstall", "LazySync" },
-    callback = function()
-      -- run chezmoi add after lockfile update
-      local lock_file = require("lazy.core.config").options.lockfile
-      local command = "chezmoi add " .. lock_file
-      vim.fn.system(command)
-
-      -- print a message
-      if vim.v.shell_error == 0 then
-        vim.notify("updated chezmoi with lazy-lock.json", vim.log.levels.INFO)
-      else
-        vim.notify("failed to update chezmoi", vim.log.levels.ERROR)
-      end
-    end,
-  })
 end
 
 return M

@@ -1,15 +1,17 @@
 return {
   {
-    'nvim-lualine/lualine.nvim',
+    "nvim-lualine/lualine.nvim",
     cond = not vim.g.vscode,
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      local lualine = require('lualine')
-      local lazy_status = require('lazy.status') -- to configure lazy pending updates count
+      local lualine = require("lualine")
+      local lazy_status = require("lazy.status") -- to configure lazy pending updates count
 
       lualine.setup({
         options = {
-          theme = 'catppuccin-macchiato',
+          theme = "catppuccin-macchiato",
+          component_separators = "",
+          section_separators = "",
         },
         sections = {
           lualine_x = {
@@ -24,5 +26,5 @@ return {
         },
       })
     end,
-  }
+  },
 }
