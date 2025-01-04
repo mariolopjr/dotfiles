@@ -31,7 +31,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 -- ensure lazy lock file is synced with chezmoi
 vim.api.nvim_create_autocmd("User", {
-  pattern = { "LazyInstall", "LazySync" },
+  pattern = { "LazyInstall", "LazySync", "LazyUpdate", "LazyClean" },
   callback = function()
     -- run chezmoi add after lockfile update
     local lock_file = require("lazy.core.config").options.lockfile
