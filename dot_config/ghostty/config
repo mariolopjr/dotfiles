@@ -1,12 +1,13 @@
 # ghostty +show-config --default --docs
 # ghostty +show-config --default | grep {option-name}
 # ghostty +list-themes
+# ghostty +list-fonts
 
 # Font
-font-family                    = Cascadia NF Regular Regular
+font-family                    = JetBrainsMonoNL NFM Light
 font-feature                   = calt,dlig,ss05
 font-thicken                   = false
-font-size                      = 14
+font-size                      = 13
 
 # Look and Feel
 adjust-cursor-thickness        = 10

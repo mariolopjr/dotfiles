@@ -108,20 +108,20 @@ return {
 
           -- Jump to the type of the word under your cursor.
           --  the definition of its *type*, not where it was *defined*.
-          map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
+          map(
+            "<leader>cd",
+            require("telescope.builtin").lsp_type_definitions,
+            "[C]ode Type [D]efinition"
+          )
 
           -- Fuzzy find all the symbols in your current document.
-          map(
-            "<leader>ds",
-            require("telescope.builtin").lsp_document_symbols,
-            "[D]ocument [S]ymbols"
-          )
+          map("<leader>cs", require("telescope.builtin").lsp_document_symbols, "[C]ode [S]ymbols")
 
           -- Fuzzy find all the symbols in your current workspace.
           map(
-            "<leader>ws",
+            "<leader>cw",
             require("telescope.builtin").lsp_dynamic_workspace_symbols,
-            "[W]orkspace [S]ymbols"
+            "[C]ode Workspace [S]ymbols"
           )
 
           -- Rename the variable under your cursor.
@@ -129,63 +129,23 @@ return {
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map("<leader>a", vim.lsp.buf.code_action, "Code [A]ction", { "n", "x" })
+          map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
           map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
           -- map debugging keys
-          -- {
-          --   "<F5>",
-          --   function()
-          --     require("dap").continue()
-          --   end,
-          --   desc = "Debug: Start/Continue",
-          -- },
-          -- {
-          --   "<F1>",
-          --   function()
-          --     require("dap").step_into()
-          --   end,
-          --   desc = "Debug: Step Into",
-          -- },
-          -- {
-          --   "<F2>",
-          --   function()
-          --     require("dap").step_over()
-          --   end,
-          --   desc = "Debug: Step Over",
-          -- },
-          -- {
-          --   "<F3>",
-          --   function()
-          --     require("dap").step_out()
-          --   end,
-          --   desc = "Debug: Step Out",
-          -- },
-          -- {
-          --   "<leader>b",
-          --   function()
-          --     require("dap").toggle_breakpoint()
-          --   end,
-          --   desc = "Debug: Toggle Breakpoint",
-          -- },
-          -- {
-          --   "<leader>B",
-          --   function()
-          --     require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
-          --   end,
-          --   desc = "Debug: Set Breakpoint",
-          -- },
-          -- -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-          -- {
-          --   "<F7>",
-          --   function()
-          --     require("dapui").toggle()
-          --   end,
-          --   desc = "Debug: See last session result.",
-          -- },
+          local dap = require("dap")
+          map("<F1>", dap.step_into, "Debug: Step Into")
+          map("<F2>", dap.step_over, "Debug: Step Over")
+          map("<F3>", dap.step_out, "Debug: Step Out")
+          map("<F4>", dap.continue, "Debug: Start/Continue")
+          map("<F5>", require("dapui").toggle, "Debug: Last Session Result")
+          map("<leader>db", dap.toggle_breakpoint, "Debug: Toggle Breakpoint")
+          map("<leader>dB", function()
+            dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+          end, "Debug: Set Breakpoint")
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
