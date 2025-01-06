@@ -4,7 +4,7 @@
 # ghostty +list-fonts
 
 # Font
-font-family                    = JetBrainsMonoNL NFM Light
+font-family                    = JetBrainsMono NFM Light
 font-feature                   = calt,dlig,ss05
 font-thicken                   = false
 font-size                      = 13
