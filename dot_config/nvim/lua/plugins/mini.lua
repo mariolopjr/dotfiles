@@ -23,6 +23,28 @@ return {
       -- show notifications
       require("mini.notify").setup()
 
+      -- dashboard
+      require("mini.starter").setup()
+
+      -- sessions management
+      require("mini.sessions").setup()
+
+      -- icons
+      require("mini.icons").setup()
+
+      package.preload["nvim-web-devicons"] = function()
+        require("mini.icons").mock_nvim_web_devicons()
+        return package.loaded["nvim-web-devicons"]
+      end
+
+      -- statusline
+      require("mini.statusline").setup()
+
+      -- ident lines
+      require("mini.indentscope").setup({
+        symbol = "|",
+      })
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,

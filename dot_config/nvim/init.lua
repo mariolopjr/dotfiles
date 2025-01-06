@@ -39,11 +39,8 @@ vim.api.nvim_create_autocmd("VimEnter", {
       return
     end
 
-    if #vim.fn.argv() == 0 then
-      require("telescope.builtin").find_files({ cwd = vim.loop.cwd(), hidden = true })
-      return
+    if #vim.fn.argv() ~= 0 then
+      require("telescope.builtin").find_files({ hidden = true })
     end
-
-    require("telescope.builtin").find_files({ hidden = true })
   end,
 })
