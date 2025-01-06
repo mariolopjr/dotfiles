@@ -13,7 +13,7 @@ return {
         end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
-      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons",               enabled = vim.g.have_nerd_font },
       { "nvim-telescope/telescope-file-browser.nvim" },
     },
     config = function()
@@ -107,6 +107,11 @@ return {
       vim.keymap.set("n", "<leader>sn", function()
         builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "[S]earch [N]eovim files" })
+
+      -- shortcut for file browser
+      vim.keymap.set("n", "<space>fb", function()
+        require("telescope").extensions.file_browser.file_browser()
+      end, { desc = "[F]ile [B]rowser" })
     end,
   },
 }

@@ -1,4 +1,4 @@
 -- load spoons
 hs.loadSpoon("EmmyLua")
 
-require "slowq"
+require("slowq")
