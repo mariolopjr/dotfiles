@@ -33,12 +33,6 @@ return {
     -- main LSP configuration
     "neovim/nvim-lspconfig",
     dependencies = {
-      { "williamboman/mason.nvim", config = true }, -- must be loaded before dependants
-      "williamboman/mason-lspconfig.nvim",
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
-
-      { "j-hui/fidget.nvim", opts = {} }, -- Useful status updates for LSP.
-      -- "hrsh7th/cmp-nvim-lsp",
       "saghen/blink.cmp",
 
       -- add neoconf support
@@ -50,7 +44,6 @@ return {
         dependencies = {
           "rcarriga/nvim-dap-ui",
           "nvim-neotest/nvim-nio",
-          "jay-babu/mason-nvim-dap.nvim",
         },
         config = function()
           local dap = require("dap")
@@ -195,67 +188,22 @@ return {
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      -- capabilities =
-      --   vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
       capabilities =
         vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
-      -- Enable the following language servers
-      local servers = {
-        clangd = {},
-        gopls = {
-          settings = {
-            gopls = {
-              staticcheck = true,
+      -- enable language servers
+      local lspconfig = require("lspconfig")
+
+      lspconfig.clangd.setup({})
+      lspconfig.fish_lsp.setup({})
+      lspconfig.lua_ls.setup({
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = "Replace",
             },
+            -- diagnostics = { disable = { 'missing-fields' } },
           },
-        },
-        pyright = {},
-        lua_ls = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = "Replace",
-              },
-              -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
-        },
-      }
-
-      -- manually enable sourcekit for swift
-      require("lspconfig").sourcekit.setup({})
-
-      -- Ensure the servers and tools above are installed
-      require("mason").setup()
-
-      -- You can add other tools here that you want Mason to install
-      --  for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        "stylua",
-      })
-      require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
-      require("mason-lspconfig").setup({
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities =
-              vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-            require("lspconfig")[server_name].setup(server)
-          end,
-        },
-      })
-
-      require("mason-nvim-dap").setup({
-        automatic_installation = true,
-        handlers = {},
-        ensure_installed = {
-          "codelldb",
         },
       })
     end,

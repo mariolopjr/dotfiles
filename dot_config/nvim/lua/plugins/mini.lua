@@ -20,6 +20,9 @@ return {
       -- fast autopairs
       require("mini.pairs").setup()
 
+      -- show notifications
+      require("mini.notify").setup()
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,

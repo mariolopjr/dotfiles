@@ -51,6 +51,14 @@ function M.setup()
 
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.opt.scrolloff = 10
+
+  -- treesitter folding
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+  vim.opt.foldcolumn = "0"
+  vim.opt.foldtext = "" -- first line of fold will have syntax highlighting
+  vim.opt.foldlevel = 5 -- ensure file is unfolded
+  vim.opt.foldnestmax = 4 -- only fold up to 4 levels deep
 end
 
 return M
