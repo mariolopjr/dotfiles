@@ -1,4 +1,4 @@
-{{- if and (eq .chezmoi.os "darwin") (not (env "GITHUB_ACTION")) -}}
+{{- if and (hasKey .macHostnames .chezmoi.hostname) (not (env "GITHUB_ACTION")) -}}
 #!/bin/bash
 
 # Install brew cask packages

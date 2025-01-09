@@ -17,7 +17,7 @@ return {
         "markdown_inline",
         "query",
         "rust",
-        "swift",
+        "ron",
       },
       -- Autoinstall languages that are not installed
       auto_install = true,

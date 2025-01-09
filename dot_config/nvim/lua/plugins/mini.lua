@@ -45,6 +45,14 @@ return {
         symbol = "|",
       })
 
+      -- git integration
+      require("mini.diff").setup()
+      require("mini.git").setup()
+
+      -- snippets support
+      -- TODO: actually load snippets
+      require("mini.snippets").setup()
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,

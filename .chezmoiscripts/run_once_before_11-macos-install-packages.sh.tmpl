@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- if hasKey .macHostnames .chezmoi.hostname -}}
 #!/bin/bash
 
 # Install brew packages
