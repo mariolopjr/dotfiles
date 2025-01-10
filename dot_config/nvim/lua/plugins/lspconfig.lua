@@ -32,10 +32,54 @@ return {
   -- install debuggers and linters, etc.
   {
     "williamboman/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "codelldb" })
+    opts_extend = { "ensure_installed" },
+    opts = {
+      ensure_installed = {
+        "codelldb",
+        "stylua",
+        "shfmt",
+      },
+    },
+    ---@param opts MasonSettings | {ensure_installed: string[]}
+    config = function(_, opts)
+      require("mason").setup(opts)
+      local mr = require("mason-registry")
+      mr:on("package:install:success", function()
+        vim.defer_fn(function()
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger({
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          })
+        end, 100)
+      end)
+
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+          end
+        end
+      end)
     end,
+    keys = { { "<leader>pm", "<cmd>Mason<cr>", desc = "[P]lugin [M]ason" } },
+  },
+
+  -- lsp integration with mason
+  {
+    "williamboman/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = {
+        "bashls",
+        "clangd",
+        "gopls",
+        "lua_ls",
+        "marksman",
+        "pyright",
+        "ruff",
+      },
+    },
   },
 
   -- rust support
@@ -147,6 +191,7 @@ return {
   -- main LSP configuration
   {
     "neovim/nvim-lspconfig",
+    event = "LazyFile",
     dependencies = {
       "saghen/blink.cmp",
     },
@@ -195,7 +240,7 @@ return {
           )
 
           -- Rename the variable under your cursor.
-          map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+          map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -259,6 +304,9 @@ return {
       -- enable language servers
       local lspconfig = require("lspconfig")
 
+      lspconfig.bashls.setup({
+        capabilities = capabilities,
+      })
       lspconfig.clangd.setup({
         capabilities = capabilities,
       })
@@ -278,6 +326,12 @@ return {
             -- diagnostics = { disable = { 'missing-fields' } },
           },
         },
+      })
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
       })
     end,
   },
@@ -439,22 +493,5 @@ return {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = "mason.nvim",
     cmd = { "DapInstall", "DapUninstall" },
-    opts = {
-      -- Makes a best effort to setup the various debuggers with
-      -- reasonable debug configurations
-      automatic_installation = true,
-
-      -- You can provide additional configuration to the handlers,
-      -- see mason-nvim-dap README for more information
-      handlers = {},
-
-      -- You'll need to check that you have the required things installed
-      -- online, please don't ask me how to install them :)
-      ensure_installed = {
-        -- Update this to ensure that you have the debuggers for the langs you want
-      },
-    },
-    -- mason-nvim-dap is loaded when nvim-dap loads
-    config = function() end,
   },
 }

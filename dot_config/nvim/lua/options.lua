@@ -9,6 +9,9 @@ function M.setup()
   vim.opt.cursorline = true
   vim.opt.termguicolors = true
 
+  -- make fish default shell
+  vim.o.shell = "/opt/homebrew/bin/fish"
+
   vim.schedule(function()
     vim.opt.clipboard = "unnamedplus"
   end)
