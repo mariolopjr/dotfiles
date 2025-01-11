@@ -213,11 +213,28 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
           end
 
-          -- Rename the variable under your cursor.
-          map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
+          map(
+            "gd",
+            "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>",
+            "[G]oto [D]efinition"
+          )
+          map(
+            "gr",
+            "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>",
+            "[G]oto [R]eferences"
+          )
+          map(
+            "gI",
+            "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>",
+            "[G]oto [I]mplementation"
+          )
+          map(
+            "gy",
+            "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>",
+            "[G]oto T[y]pe Definition"
+          )
 
-          -- Execute a code action, usually your cursor needs to be on top of an error
-          -- or a suggestion from your LSP for this to activate.
+          map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
           map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
@@ -308,30 +325,6 @@ return {
         capabilities = capabilities,
       })
     end,
-    keys = {
-      {
-        "gd",
-        "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto [D]efinition",
-        has = "definition",
-      },
-      {
-        "gr",
-        "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto [R]eferences",
-        nowait = true,
-      },
-      {
-        "gI",
-        "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto [I]mplementation",
-      },
-      {
-        "gy",
-        "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto T[y]pe Definition",
-      },
-    },
   },
 
   -- blink completions
