@@ -35,9 +35,9 @@ return {
         css = { "stylelint" },
         lua = { "stylua" },
         golang = { "gofmt" },
+        python = { "isort", "ruff" },
         rust = { "rustfmt" },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        json = { "fixjson" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },

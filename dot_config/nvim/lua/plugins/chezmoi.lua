@@ -9,13 +9,31 @@ return {
   },
   {
     "xvzc/chezmoi.nvim",
-    -- keys = {
-    --   {
-    --     "<leader>sz",
-    --     require("telescope").extensions.chezmoi.find_files(), -- TODO: replace this with fzf
-    --     desc = "Chezmoi",
-    --   },
-    -- },
+    keys = {
+      {
+        "<leader>sz",
+        function()
+          local fzf_lua = require("fzf-lua")
+          local results = require("chezmoi.commands").list()
+          local chezmoi = require("chezmoi.commands")
+
+          local opts = {
+            fzf_opts = {},
+            fzf_colors = true,
+            actions = {
+              ["default"] = function(selected)
+                chezmoi.edit({
+                  targets = { "~/" .. selected[1] },
+                  args = { "--watch" },
+                })
+              end,
+            },
+          }
+          fzf_lua.fzf_exec(results, opts)
+        end,
+        desc = "Chezmoi",
+      },
+    },
     opts = {
       edit = {
         watch = false,
@@ -25,9 +43,6 @@ return {
         on_open = true,
         on_apply = true,
         on_watch = false,
-      },
-      telescope = {
-        select = { "<CR>" },
       },
     },
     init = function()
