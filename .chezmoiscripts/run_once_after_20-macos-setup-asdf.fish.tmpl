@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- if hasKey .macHostnames .chezmoi.hostname -}}
 #!/opt/homebrew/bin/fish
 
 if type -q /opt/homebrew/bin/brew

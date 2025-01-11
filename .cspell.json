@@ -1,0 +1,22 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "enabledLanguageIds": [],
+    "ignorePaths": [
+        ".cspell.json",
+        ".github/workflows/**",
+        ".vscode/*.json",
+        "**/*.{json,snap}"
+    ],
+    "dictionaries": [
+        "softwareTerms",
+        "en_US",
+        "misc",
+        "filetypes"
+    ],
+    "ignoreRegExpList": [],
+    "words": [
+        "ghostty"
+    ],
+    "overrides": []
+}

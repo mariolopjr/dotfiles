@@ -11,3 +11,4 @@ Library
 .asdf/shims
 .asdf/tmp
 {{- end }}
+.luarc.json

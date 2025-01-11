@@ -1,0 +1,40 @@
+# ghostty +show-config --default --docs
+# ghostty +show-config --default | grep {option-name}
+# ghostty +list-themes
+# ghostty +list-fonts
+
+# Font
+font-family                    = JetBrainsMono NFM Light
+font-feature                   = calt,dlig,ss05
+font-thicken                   = false
+font-size                      = 13
+
+# Look and Feel
+adjust-cursor-thickness        = 10
+adjust-underline-position      = 3
+bold-is-bright                 = true
+mouse-hide-while-typing        = true
+theme                          = catppuccin-macchiato
+
+# Other
+command                        = /opt/homebrew/bin/fish -l
+copy-on-select                 = true
+auto-update                    = off
+
+# Key bindings
+## splits
+keybind                        = ctrl+h=goto_split:left
+keybind                        = ctrl+j=goto_split:bottom
+keybind                        = ctrl+k=goto_split:top
+keybind                        = ctrl+l=goto_split:right
+keybind                        = ctrl+shift+h=new_split:left
+keybind                        = ctrl+shift+j=new_split:down
+keybind                        = ctrl+shift+k=new_split:up
+keybind                        = ctrl+shift+l=new_split:right
+keybind                        = ctrl+alt+h=resize_split:left,30
+keybind                        = ctrl+alt+j=resize_split:down,30
+keybind                        = ctrl+alt+k=resize_split:up,30
+keybind                        = ctrl+alt+l=resize_split:right,30
+
+## other
+keybind                        = super+alt+enter=new_split:auto

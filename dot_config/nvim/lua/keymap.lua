@@ -28,15 +28,6 @@ function M.setup()
   keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
   keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
-  -- Keybinds to make split navigation easier.
-  --  Use CTRL+<hjkl> to switch between windows
-  --
-  --  See `:help wincmd` for a list of all window commands
-  -- keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-  -- keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-  -- keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-  -- keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-
   -- [[ Basic Autocommands ]]
   --  See `:help lua-guide-autocommands`
 
@@ -68,5 +59,12 @@ keymap.set(
   { desc = "[B]uffer [D]elete", noremap = true, silent = true }
 )
 keymap.set("n", "<leader>fw", ":w<CR>", { desc = "[F]ile [W]rite", noremap = true, silent = true })
+keymap.set("n", "<leader>fq", ":q<CR>", { desc = "[F]ile [Q]uit", noremap = true, silent = true })
+keymap.set(
+  "n",
+  "<leader>Q",
+  ":cquit<CR>",
+  { desc = "[Q]uit Neovim", noremap = true, silent = true }
+)
 
 return M

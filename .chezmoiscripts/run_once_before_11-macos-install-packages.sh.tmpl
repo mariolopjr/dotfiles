@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.os "darwin" -}}
+{{- if hasKey .macHostnames .chezmoi.hostname -}}
 #!/bin/bash
 
 # Install brew packages
@@ -19,6 +19,8 @@ brew "git"
 brew "git-lfs"
 brew "git-delta"
 brew "jq"
+brew "lazygit"
+brew "llvm"
 brew "m1ddc"
 brew "macchina"
 brew "mas"
@@ -28,8 +30,11 @@ brew "neovim"
 brew "qmk/qmk/qmk"
 brew "ripgrep"
 brew "rustup"
+brew "shellcheck"
 brew "silicon", link: false
+brew "shfmt"
 brew "smartmontools"
+brew "stylua"
 brew "terminal-notifier"
 brew "tmux"
 brew "wakeonlan"

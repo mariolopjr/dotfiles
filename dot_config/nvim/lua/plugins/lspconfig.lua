@@ -1,3 +1,21 @@
+---@param config {type?:string, args?:string[]|fun():string[]?}
+local function get_args(config)
+  local args = type(config.args) == "function" and (config.args() or {}) or config.args or {} --[[@as string[] | string ]]
+  local args_str = type(args) == "table" and table.concat(args, " ") or args --[[@as string]]
+
+  config = vim.deepcopy(config)
+  ---@cast args string[]
+  config.args = function()
+    local new_args = vim.fn.expand(vim.fn.input("Run with args: ", args_str)) --[[@as string]]
+    if config.type and config.type == "java" then
+      ---@diagnostic disable-next-line: return-type-mismatch
+      return new_args
+    end
+    return require("dap.utils").splitstr(new_args)
+  end
+  return config
+end
+
 return {
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -6,120 +24,197 @@ return {
     ft = "lua",
     opts = {
       library = {
-        -- Load luvit types when the `vim.uv` word is found
-        { path = "luvit-meta/library", words = { "vim%.uv" } },
         { plugins = { "nvim-dap-ui" }, types = true },
       },
     },
   },
-  { "Bilal2453/luvit-meta", lazy = true },
+
+  -- install debuggers and linters, etc.
+  {
+    "williamboman/mason.nvim",
+    opts_extend = { "ensure_installed" },
+    opts = {
+      ensure_installed = {
+        "codelldb",
+        "stylua",
+        "shfmt",
+        "fixjson",
+        "isort",
+      },
+    },
+    ---@param opts MasonSettings | {ensure_installed: string[]}
+    config = function(_, opts)
+      require("mason").setup(opts)
+      local mr = require("mason-registry")
+      mr:on("package:install:success", function()
+        vim.defer_fn(function()
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger({
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          })
+        end, 100)
+      end)
+
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+          end
+        end
+      end)
+    end,
+    keys = { { "<leader>pm", "<cmd>Mason<cr>", desc = "[P]lugin [M]ason" } },
+  },
+
+  -- lsp integration with mason
+  {
+    "williamboman/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = {
+        "bashls",
+        "clangd",
+        "gopls",
+        "lua_ls",
+        "marksman",
+        "pyright",
+        "ruff",
+      },
+    },
+  },
+
+  -- rust support
   {
     "mrcjkb/rustaceanvim",
     version = "^5",
-    lazy = false,
-    config = function()
-      require("rustaceanvim").server = {
-        settings = {
-          ["rust-analyzer"] = {
-            rustfmt = {
-              extraArgs = { "--unstable-features" },
+    ft = "rust",
+    opts = {
+      server = {
+        on_attach = function(_, bufnr)
+          vim.keymap.set("n", "<leader>ca", function()
+            vim.cmd.RustLsp("codeAction")
+          end, { desc = "[C]ode [A]ction", buffer = bufnr })
+          vim.keymap.set("n", "K", function()
+            vim.cmd.RustLsp({ "hover", "actions" })
+          end, { desc = "[K] Hover", buffer = bufnr })
+          vim.keymap.set("n", "<leader>dd", function()
+            vim.cmd.RustLsp("debuggables")
+          end, { desc = "[D]ebug Rust [D]ebuggables", buffer = bufnr })
+        end,
+      },
+      default_settings = {
+        -- rust-analyzer language server configuration
+        ["rust-analyzer"] = {
+          cargo = {
+            allFeatures = true,
+            loadOutDirsFromCheck = true,
+            buildScripts = {
+              enable = true,
+            },
+          },
+          rustfmt = {
+            extraArgs = { "--unstable-features" },
+          },
+          -- clippy lints
+          checkOnSave = true,
+          -- diagnostics
+          diagnostics = {
+            enable = true,
+          },
+          procMacro = {
+            enable = true,
+            ignored = {
+              ["async-trait"] = { "async_trait" },
+              ["napi-derive"] = { "napi" },
+              ["async-recursion"] = { "async_recursion" },
+            },
+          },
+          files = {
+            excludeDirs = {
+              ".direnv",
+              ".git",
+              ".github",
+              ".gitlab",
+              "bin",
+              "node_modules",
+              "target",
+              "venv",
+              ".venv",
             },
           },
         },
-      }
-    end,
-  },
-  {
-    -- main LSP configuration
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      { "williamboman/mason.nvim", config = true }, -- must be loaded before dependants
-      "williamboman/mason-lspconfig.nvim",
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
-
-      { "j-hui/fidget.nvim", opts = {} }, -- Useful status updates for LSP.
-      "hrsh7th/cmp-nvim-lsp",
-
-      -- setup dap with lsp
-      {
-        "mfussenegger/nvim-dap",
-        dependencies = {
-          "rcarriga/nvim-dap-ui",
-          "nvim-neotest/nvim-nio",
-          "jay-babu/mason-nvim-dap.nvim",
-        },
-        config = function()
-          local dap = require("dap")
-          local dapui = require("dapui")
-
-          -- Dap UI setup
-          -- For more information, see |:help nvim-dap-ui|
-          dapui.setup()
-
-          -- Change breakpoint icons
-          -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
-          -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
-          -- local breakpoint_icons = vim.g.have_nerd_font
-          --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
-          --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
-          -- for type, icon in pairs(breakpoint_icons) do
-          --   local tp = 'Dap' .. type
-          --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
-          --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
-          -- end
-
-          dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-          dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-          dap.listeners.before.event_exited["dapui_config"] = dapui.close
-        end,
       },
     },
+    config = function(_, opts)
+      local package_path = require("mason-registry").get_package("codelldb"):get_install_path()
+      local codelldb = package_path .. "/extension/adapter/codelldb"
+      local library_path = package_path .. "/extension/lldb/lib/liblldb.dylib"
+
+      -- ensure linux .so is loaded instead
+      local uname = io.popen("uname"):read("*l")
+      if uname == "Linux" then
+        library_path = package_path .. "/extension/lldb/lib/liblldb.so"
+      end
+
+      opts.dap = {
+        adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb, library_path),
+      }
+      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
+
+      if vim.fn.executable("rust-analyzer") == 0 then
+        vim.notify(
+          "**rust-analyzer** not found in PATH, please install it.\nhttps://rust-analyzer.github.io/",
+          vim.log.levels.ERROR
+        )
+      end
+    end,
+  },
+
+  -- Cargo.toml lsp
+  {
+    "Saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
     opts = {
-      setup = {
-        rust_analyzer = function()
-          return true
-        end,
+      completion = {
+        crates = {
+          enabled = true,
+        },
+      },
+      lsp = {
+        enabled = true,
+        actions = true,
+        completion = true,
+        hover = true,
+      },
+    },
+  },
+
+  -- main LSP configuration
+  {
+    "neovim/nvim-lspconfig",
+    event = "LazyFile",
+    dependencies = {
+      "saghen/blink.cmp",
+    },
+    opts = {
+      -- LSP Server Settings
+      ---@type lspconfig.options
+      servers = {
+        rust_analyzer = { enabled = false },
       },
     },
     config = function()
       vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+        group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
         callback = function(event)
           local map = function(keys, func, desc, mode)
             mode = mode or "n"
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
           end
 
-          -- Jump to the definition of the word under your cursor.
-          --  To jump back, press <C-t>.
-          map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-
-          -- Find references for the word under your cursor.
-          map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-
-          -- Jump to the implementation of the word under your cursor.
-          map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-
-          -- Jump to the type of the word under your cursor.
-          --  the definition of its *type*, not where it was *defined*.
-          map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-
-          -- Fuzzy find all the symbols in your current document.
-          map(
-            "<leader>ds",
-            require("telescope.builtin").lsp_document_symbols,
-            "[D]ocument [S]ymbols"
-          )
-
-          -- Fuzzy find all the symbols in your current workspace.
-          map(
-            "<leader>ws",
-            require("telescope.builtin").lsp_dynamic_workspace_symbols,
-            "[W]orkspace [S]ymbols"
-          )
-
           -- Rename the variable under your cursor.
-          map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+          map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -128,58 +223,6 @@ return {
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
           map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-
-          -- map debugging keys
-          -- {
-          --   "<F5>",
-          --   function()
-          --     require("dap").continue()
-          --   end,
-          --   desc = "Debug: Start/Continue",
-          -- },
-          -- {
-          --   "<F1>",
-          --   function()
-          --     require("dap").step_into()
-          --   end,
-          --   desc = "Debug: Step Into",
-          -- },
-          -- {
-          --   "<F2>",
-          --   function()
-          --     require("dap").step_over()
-          --   end,
-          --   desc = "Debug: Step Over",
-          -- },
-          -- {
-          --   "<F3>",
-          --   function()
-          --     require("dap").step_out()
-          --   end,
-          --   desc = "Debug: Step Out",
-          -- },
-          -- {
-          --   "<leader>b",
-          --   function()
-          --     require("dap").toggle_breakpoint()
-          --   end,
-          --   desc = "Debug: Toggle Breakpoint",
-          -- },
-          -- {
-          --   "<leader>B",
-          --   function()
-          --     require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
-          --   end,
-          --   desc = "Debug: Set Breakpoint",
-          -- },
-          -- -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-          -- {
-          --   "<F7>",
-          --   function()
-          --     require("dapui").toggle()
-          --   end,
-          --   desc = "Debug: See last session result.",
-          -- },
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
@@ -192,7 +235,7 @@ return {
             and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight)
           then
             local highlight_augroup =
-              vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+              vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -206,11 +249,11 @@ return {
             })
 
             vim.api.nvim_create_autocmd("LspDetach", {
-              group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+              group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
                 vim.api.nvim_clear_autocmds({
-                  group = "kickstart-lsp-highlight",
+                  group = "lsp-highlight",
                   buffer = event2.buf,
                 })
               end,
@@ -220,9 +263,9 @@ return {
           -- The following code creates a keymap to toggle inlay hints in your
           -- code, if the language server you are using supports them
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-            map("<leader>th", function()
+            map("<leader>ch", function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
-            end, "[T]oggle Inlay [H]ints")
+            end, "[C]ode Toggle Inlay [H]ints")
           end
         end,
       })
@@ -230,66 +273,223 @@ return {
       -- LSP servers and clients are able to communicate to each other what features they support.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities =
-        vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+        vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
 
-      -- Enable the following language servers
-      local servers = {
-        clangd = {},
-        gopls = {
-          settings = {
-            gopls = {
-              staticcheck = true,
+      -- enable language servers
+      local lspconfig = require("lspconfig")
+
+      lspconfig.bashls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.clangd.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.fish_lsp.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = "Replace",
             },
+            telemetry = {
+              enable = false,
+            },
+            -- diagnostics = { disable = { 'missing-fields' } },
           },
         },
-        pyright = {},
-        lua_ls = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = "Replace",
-              },
-              -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
-        },
-      }
-
-      -- manually enable sourcekit for swift
-      require("lspconfig").sourcekit.setup({})
-
-      -- Ensure the servers and tools above are installed
-      require("mason").setup()
-
-      -- You can add other tools here that you want Mason to install
-      --  for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        "stylua",
       })
-      require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
-      require("mason-lspconfig").setup({
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities =
-              vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-            require("lspconfig")[server_name].setup(server)
-          end,
-        },
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
       })
-
-      require("mason-nvim-dap").setup({
-        automatic_installation = true,
-        handlers = {},
-        ensure_installed = {
-          "codelldb",
-        },
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
       })
     end,
+    keys = {
+      {
+        "gd",
+        "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>",
+        desc = "[G]oto [D]efinition",
+        has = "definition",
+      },
+      {
+        "gr",
+        "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>",
+        desc = "[G]oto [R]eferences",
+        nowait = true,
+      },
+      {
+        "gI",
+        "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>",
+        desc = "[G]oto [I]mplementation",
+      },
+      {
+        "gy",
+        "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>",
+        desc = "[G]oto T[y]pe Definition",
+      },
+    },
+  },
+
+  -- blink completions
+  {
+    "saghen/blink.cmp",
+    dependencies = {
+      "xzbdmw/colorful-menu.nvim",
+    },
+    version = "*",
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      keymap = { preset = "default" },
+      appearance = {
+        nerd_font_variant = "mono",
+      },
+      signature = { enabled = true },
+      sources = {
+        default = { "lazydev", "lsp", "path", "buffer" },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            -- make lazydev completions top priority (see `:h blink.cmp`)
+            score_offset = 100,
+          },
+        },
+      },
+
+      -- add colorful-menu to blink
+      completion = {
+        -- Show documentation when selecting a completion item
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
+
+        menu = {
+          draw = {
+            columns = { { "kind_icon" }, { "label", gap = 1 } },
+            components = {
+              label = {
+                width = { fill = true, max = 60 },
+                text = function(ctx)
+                  local highlights_info = require("colorful-menu").blink_highlights(ctx)
+                  if highlights_info ~= nil then
+                    return highlights_info.label
+                  else
+                    return ctx.label
+                  end
+                end,
+                highlight = function(ctx)
+                  local highlights = {}
+                  local highlights_info = require("colorful-menu").blink_highlights(ctx)
+                  if highlights_info ~= nil then
+                    highlights = highlights_info.highlights
+                  end
+                  for _, idx in ipairs(ctx.label_matched_indices) do
+                    table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                  end
+                  return highlights
+                end,
+              },
+            },
+          },
+        },
+      },
+    },
+    opts_extend = { "sources.default" },
+  },
+
+  -- setup dap with lsp
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      -- virtual text for the debugger
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        opts = {},
+      },
+      "nvim-neotest/nvim-nio",
+    },
+    -- stylua: ignore
+    keys = {
+      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "[D]ebug [󰘶B]reakpoint Condition" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "[D]ebug Toggle [B]reakpoint" },
+      { "<leader>dc", function() require("dap").continue() end, desc = "Run/Continue" },
+      { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
+      { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to 󰘶Cursor" },
+      { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
+      { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
+      { "<leader>dj", function() require("dap").down() end, desc = "Down" },
+      { "<leader>dk", function() require("dap").up() end, desc = "Up" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
+      { "<leader>do", function() require("dap").step_over() end, desc = "Step Over" },
+      { "<leader>dO", function() require("dap").step_out() end, desc = "Step 󰘶Out" },
+      { "<leader>dP", function() require("dap").pause() end, desc = "󰘶Pause" },
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
+      { "<leader>ds", function() require("dap").session() end, desc = "Session" },
+      { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
+      { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
+    },
+    config = function()
+      require("mason-nvim-dap").setup()
+
+      -- change breakpoint icons
+      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+      local breakpoint_icons = vim.g.have_nerd_font
+          and {
+            Breakpoint = "",
+            BreakpointCondition = "",
+            BreakpointRejected = "",
+            LogPoint = "",
+            Stopped = "",
+          }
+        or {
+          Breakpoint = "●",
+          BreakpointCondition = "⊜",
+          BreakpointRejected = "⊘",
+          LogPoint = "◆",
+          Stopped = "⭔",
+        }
+      for type, icon in pairs(breakpoint_icons) do
+        local tp = "Dap" .. type
+        local hl = (type == "Stopped") and "DapStop" or "DapBreak"
+        vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+      end
+    end,
+  },
+
+  -- fancy UI for the debugger
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "nvim-neotest/nvim-nio" },
+    -- stylua: ignore
+    keys = {
+      { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
+      { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
+    },
+    opts = {},
+    config = function(_, opts)
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup(opts)
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open({})
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close({})
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close({})
+      end
+    end,
+  },
+
+  -- mason.nvim integration
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = "mason.nvim",
+    cmd = { "DapInstall", "DapUninstall" },
   },
 }
