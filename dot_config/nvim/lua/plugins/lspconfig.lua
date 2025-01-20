@@ -98,6 +98,9 @@ return {
           vim.keymap.set("n", "K", function()
             vim.cmd.RustLsp({ "hover", "actions" })
           end, { desc = "[K] Hover", buffer = bufnr })
+          vim.keymap.set("n", "gR", function()
+            vim.cmd.RustLsp({ "hover", "range" })
+          end, { desc = "[G] Hover [R]ange", buffer = bufnr })
           vim.keymap.set("n", "<leader>dd", function()
             vim.cmd.RustLsp("debuggables")
           end, { desc = "[D]ebug Rust [D]ebuggables", buffer = bufnr })
@@ -213,27 +216,8 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
           end
 
-          map(
-            "gd",
-            "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>",
-            "[G]oto [D]efinition"
-          )
-          map(
-            "gr",
-            "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>",
-            "[G]oto [R]eferences"
-          )
-          map(
-            "gI",
-            "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>",
-            "[G]oto [I]mplementation"
-          )
-          map(
-            "gy",
-            "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>",
-            "[G]oto T[y]pe Definition"
-          )
-
+          map("K", vim.lsp.buf.hover, "Hover")
+          map("gK", vim.lsp.buf.signature_help, "Signature Help")
           map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
           map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
@@ -299,6 +283,14 @@ return {
         capabilities = capabilities,
       })
       lspconfig.clangd.setup({
+        -- cmd = { "clangd", "--compile-commands-dir=." },
+        filetypes = { "c", "cpp", "objc", "objcpp" },
+        root_dir = require("lspconfig").util.root_pattern("compile_commands.json", ".git"),
+        settings = {
+          clangd = {
+            compilationDatabasePath = ".",
+          },
+        },
         capabilities = capabilities,
       })
       lspconfig.fish_lsp.setup({
@@ -323,6 +315,10 @@ return {
       })
       lspconfig.gopls.setup({
         capabilities = capabilities,
+      })
+      lspconfig.gdscript.setup({
+        name = "godot",
+        cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
       })
     end,
   },

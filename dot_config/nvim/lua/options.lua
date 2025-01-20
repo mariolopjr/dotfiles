@@ -62,6 +62,9 @@ function M.setup()
   vim.opt.foldtext = "" -- first line of fold will have syntax highlighting
   vim.opt.foldlevel = 5 -- ensure file is unfolded
   vim.opt.foldnestmax = 4 -- only fold up to 4 levels deep
+
+  -- force .h files to c
+  vim.g.c_syntax_for_h = true
 end
 
 return M
