@@ -10,7 +10,6 @@ return {
     opts = {
       integrations = {
         blink_cmp = true,
-        fzf = true,
         leap = true,
         mason = true,
         markdown = true,

@@ -12,3 +12,4 @@ Library
 .asdf/tmp
 {{- end }}
 .luarc.json
+bootstrap.sh

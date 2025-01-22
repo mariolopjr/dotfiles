@@ -98,6 +98,9 @@ return {
           vim.keymap.set("n", "K", function()
             vim.cmd.RustLsp({ "hover", "actions" })
           end, { desc = "[K] Hover", buffer = bufnr })
+          vim.keymap.set("n", "gR", function()
+            vim.cmd.RustLsp({ "hover", "range" })
+          end, { desc = "[G] Hover [R]ange", buffer = bufnr })
           vim.keymap.set("n", "<leader>dd", function()
             vim.cmd.RustLsp("debuggables")
           end, { desc = "[D]ebug Rust [D]ebuggables", buffer = bufnr })
@@ -213,11 +216,9 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
           end
 
-          -- Rename the variable under your cursor.
+          map("K", vim.lsp.buf.hover, "Hover")
+          map("gK", vim.lsp.buf.signature_help, "Signature Help")
           map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
-
-          -- Execute a code action, usually your cursor needs to be on top of an error
-          -- or a suggestion from your LSP for this to activate.
           map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
@@ -282,6 +283,14 @@ return {
         capabilities = capabilities,
       })
       lspconfig.clangd.setup({
+        -- cmd = { "clangd", "--compile-commands-dir=." },
+        filetypes = { "c", "cpp", "objc", "objcpp" },
+        root_dir = require("lspconfig").util.root_pattern("compile_commands.json", ".git"),
+        settings = {
+          clangd = {
+            compilationDatabasePath = ".",
+          },
+        },
         capabilities = capabilities,
       })
       lspconfig.fish_lsp.setup({
@@ -307,31 +316,11 @@ return {
       lspconfig.gopls.setup({
         capabilities = capabilities,
       })
+      lspconfig.gdscript.setup({
+        name = "godot",
+        cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
+      })
     end,
-    keys = {
-      {
-        "gd",
-        "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto [D]efinition",
-        has = "definition",
-      },
-      {
-        "gr",
-        "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto [R]eferences",
-        nowait = true,
-      },
-      {
-        "gI",
-        "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto [I]mplementation",
-      },
-      {
-        "gy",
-        "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>",
-        desc = "[G]oto T[y]pe Definition",
-      },
-    },
   },
 
   -- blink completions
