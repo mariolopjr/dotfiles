@@ -1,0 +1,9 @@
+{{- if hasKey .archHostnames .chezmoi.hostname -}}
+#!/bin/bash
+
+sudo pacman -Sy \
+	hyprland hyprpaper hyprpicker hypridle hyprlock hyprcursor \
+	xdg-desktop-portal-hyprland dbus-broker
+
+sudo paru -Sy uwsm
+{{ end -}}

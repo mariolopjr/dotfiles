@@ -180,12 +180,12 @@ if ! [[ "${disk_response,,}" =~ ^(yes|y)$ ]]; then
 	error_print "Quitting."
 	exit
 fi
-info_print "Wiping $DISK."
+info_print "Wiping $DISK"
 wipefs -af "$DISK" &>/dev/null
 sgdisk -Zo "$DISK" &>/dev/null
 
 # Creating a new partition scheme.
-info_print "Creating the partitions on $DISK."
+info_print "Creating the partitions on $DISK"
 parted -s "$DISK" \
 	mklabel gpt \
 	mkpart ESP fat32 1MiB 1025MiB \
@@ -196,26 +196,26 @@ ESP="/dev/disk/by-partlabel/ESP"
 CRYPTROOT="/dev/disk/by-partlabel/CRYPTROOT"
 
 # Informing the Kernel of the changes.
-info_print "Informing the Kernel about the disk changes."
+info_print "Informing the Kernel about the disk changes"
 partprobe "$DISK"
 
 # Formatting the ESP as FAT32.
-info_print "Formatting the EFI Partition as FAT32."
+info_print "Formatting the EFI Partition as FAT32"
 mkfs.fat -F 32 "$ESP" &>/dev/null
 
 # Creating a LUKS Container for the root partition.
-info_print "Creating LUKS Container for the root partition."
+info_print "Creating LUKS Container for the root partition"
 echo -n "$password" | cryptsetup luksFormat "$CRYPTROOT" -d - &>/dev/null
 echo -n "$password" | cryptsetup open "$CRYPTROOT" cryptroot -d -
 BTRFS="/dev/mapper/cryptroot"
 
 # Formatting the LUKS Container as BTRFS.
-info_print "Formatting the LUKS container as BTRFS."
+info_print "Formatting the LUKS container as BTRFS"
 mkfs.btrfs "$BTRFS" &>/dev/null
 mount "$BTRFS" /mnt
 
 # Creating BTRFS subvolumes.
-info_print "Creating BTRFS subvolumes."
+info_print "Creating BTRFS subvolumes"
 subvols=(snapshots var_pkgs var_log home root srv)
 for subvol in '' "${subvols[@]}"; do
 	btrfs su cr /mnt/@"$subvol" &>/dev/null
@@ -223,7 +223,7 @@ done
 
 # Mounting the newly created subvolumes.
 umount /mnt
-info_print "Mounting the newly created subvolumes."
+info_print "Mounting the newly created subvolumes"
 mountopts="ssd,noatime,compress-force=zstd:3,discard=async"
 mount -o "$mountopts",subvol=@ "$BTRFS" /mnt
 mkdir -p /mnt/{home,root,srv,.snapshots,var/{log,cache/pacman/pkg},boot}
@@ -237,14 +237,14 @@ chattr +C /mnt/var/log
 mount "$ESP" /mnt/boot/
 
 # Pacstrap (setting up a base sytem onto the new root).
-info_print "Installing the base system (it may take a while)."
+info_print "Installing the base system"
 pacstrap -K /mnt base base-devel "$kernel" linux-firmware "$kernel"-headers btrfs-progs rsync efibootmgr chezmoi neovim git openssh snapper reflector snap-pac zram-generator &>/dev/null
 
 # Setting up the hostname.
 echo "$hostname" >/mnt/etc/hostname
 
 # Generating /etc/fstab.
-info_print "Generating a new fstab."
+info_print "Generating a new fstab"
 genfstab -U /mnt >>/mnt/etc/fstab
 
 # Configure selected locale and console keymap
@@ -253,7 +253,7 @@ echo "LANG=$locale" >/mnt/etc/locale.conf
 echo "KEYMAP=$kblayout" >/mnt/etc/vconsole.conf
 
 # Setting hosts file.
-info_print "Setting hosts file."
+info_print "Setting hosts file"
 cat >/mnt/etc/hosts <<EOF
 127.0.0.1   localhost
 ::1         localhost
@@ -263,19 +263,17 @@ EOF
 # Virtualization check.
 virt_check
 
-if [ -z "$hypervisor" ]; then
-	# Checking the microcode to install.
-	microcode_detector
-	pacstrap -K /mnt "$microcode" &>/dev/null
-fi
+# Checking the microcode to install.
+microcode_detector
+pacstrap -K /mnt "$microcode" &>/dev/null
 
 # Setting up the network.
-info_print "Installing and enabling IWD."
+info_print "Installing and enabling IWD"
 pacstrap /mnt iwd >/dev/null
 systemctl enable iwd --root=/mnt &>/dev/null
 
 # Configuring /etc/mkinitcpio.conf.
-info_print "Configuring /etc/mkinitcpio.conf."
+info_print "Configuring /etc/mkinitcpio.conf"
 cat >/mnt/etc/mkinitcpio.conf <<EOF
 HOOKS=(systemd autodetect keyboard sd-vconsole modconf block sd-encrypt filesystems)
 EOF
@@ -298,6 +296,34 @@ initrd /$microcode.img
 initrd /initramfs-linux.img
 options rd.luks.name=$UUID=cryptroot root=$BTRFS rootflags=subvol=@ rw
 EOF
+
+ln -sf /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
+
+cat >/mnt/etc/systemd/network/wired.network <<EOF
+[Match]
+Name=en*
+Name=eth*
+
+[Network]
+DHCP=true
+IPv6PrivacyExtensions=true
+
+[DHCP]
+Anonymize=true
+EOF
+
+# Install NVIDIA proprietary driver if necessary
+read -r -p "Do you want to install nvidia proprietary driver? [y/N]? " response
+response=${response,,}
+if [[ "$response" =~ ^(yes|y)$ ]]; then
+	print "Installing nvidia driver."
+	pacstrap /mnt nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings egl-wayland
+	echo "MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)" >>/mnt/etc/mkinitcpio.conf
+
+	cat >/mnt/etc/modprobe.d/nvidia.conf <<EOF
+options nvidia_drm modeset=1 fbdev=1
+EOF
+fi
 
 arch-chroot /mnt /bin/bash -e <<EOF
 
@@ -371,7 +397,7 @@ sed -Ei 's/^#(Color)$/\1\nILoveCandy/;s/^#(ParallelDownloads).*/\1 = 10/' /mnt/e
 
 # Enabling various services.
 info_print "Enabling Reflector, automatic snapshots, BTRFS scrubbing and systemd-oomd."
-services=(reflector.timer snapper-timeline.timer snapper-cleanup.timer btrfs-scrub@-.timer btrfs-scrub@home.timer btrfs-scrub@var-log.timer btrfs-scrub@\\x2esnapshots.timer grub-btrfsd.service systemd-oomd sshd)
+services=(reflector.timer snapper-timeline.timer snapper-cleanup.timer btrfs-scrub@-.timer btrfs-scrub@home.timer btrfs-scrub@var-log.timer btrfs-scrub@\\x2esnapshots.timer grub-btrfsd.service systemd-oomd sshd systemd-resolved systemd-networkd)
 for service in "${services[@]}"; do
 	systemctl enable "$service" --root=/mnt &>/dev/null
 done

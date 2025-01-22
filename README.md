@@ -16,6 +16,11 @@ git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 
 ## macOS
 
+### dragonstone (laptop)
+
+#### Setup arch dotfiles
+TBD
+
 ### targaryen (laptop)
 
 #### Setup macOS dotfiles
@@ -30,7 +35,8 @@ git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 
 ## Todo
 
-- linux configuration for nas
-- linux configuration for pi
-- linux configuratiion for asahi
+- configuration for steam deck
+- configuration for nas
+- configuration for pi
+- configuratiion for asahi
 
