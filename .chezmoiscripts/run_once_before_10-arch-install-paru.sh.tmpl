@@ -1,12 +1,14 @@
 {{- if hasKey .archHostnames .chezmoi.hostname -}}
 #!/bin/bash
 
-# build paru
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -si
-cd ..
-rm -rf paru
+# build paru if its not on the system
+if ! command -v <the_command> 2>&1 >/dev/null; then
+  git clone https://aur.archlinux.org/paru.git
+  cd paru
+  makepkg -si
+  cd ..
+  rm -rf paru
+fi
 
 # install paru with paru
 paru -Sy paru
