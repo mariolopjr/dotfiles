@@ -18,7 +18,7 @@ git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 
 ### dragonstone (laptop)
 
-#### Setup arch dotfiles
+#### Setup Linux dotfiles
 TBD
 
 ### targaryen (laptop)
