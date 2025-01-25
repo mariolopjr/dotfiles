@@ -22,3 +22,5 @@ theme:
 
 authorColors:
   '*': '#b7bdf8'
+
+disableStartupPopups: false

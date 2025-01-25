@@ -2,14 +2,5 @@ README.md
 stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
 Library
+dot_hammerspoon
 {{- end }}
-{{- if or (eq .chezmoi.os "windows") (eq .chezmoi.os "linux") }}
-.asdf/downloads
-.asdf/installs
-.asdf/plugins
-.asdf/repository
-.asdf/shims
-.asdf/tmp
-{{- end }}
-.luarc.json
-bootstrap.sh
