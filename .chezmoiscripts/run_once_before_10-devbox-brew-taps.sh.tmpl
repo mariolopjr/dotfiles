@@ -1,0 +1,11 @@
+{{- if eq (env "CONTAINER_ID") .devboxHostname -}}
+#!/bin/bash
+
+# install brew taps
+brew bundle --no-lock --file=/dev/stdin <<EOF
+tap "homebrew/aliases"
+tap "homebrew/bundle"
+tap "homebrew/services"
+tap "qmk/qmk"
+EOF
+{{ end -}}
