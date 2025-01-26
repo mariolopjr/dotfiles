@@ -1,20 +1,19 @@
+# Commands to run in interactive sessions can go here
 if status is-interactive
-    # Commands to run in interactive sessions can go here
+    ## Launch homebrew on macOS
+    if type -q /opt/homebrew/bin/brew
+        eval (/opt/homebrew/bin/brew shellenv fish)
+    end
+
+    ## Launch homebrew on linux
+    if type -q /home/linuxbrew/.linuxbrew/bin/brew
+        eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)
+    end
 end
 
 ## Source custom configs
 for file in $__fish_config_dir/custom.d/*.fish
     source $file
-end
-
-## Launch homebrew on macOS
-if type -q /opt/homebrew/bin/brew
-    eval (/opt/homebrew/bin/brew shellenv fish)
-end
-
-## Launch homebrew on linux
-if type -q /home/linuxbrew/.linuxbrew/bin/brew
-    eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)
 end
 
 ## Launch The Fuck
