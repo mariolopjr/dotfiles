@@ -3,4 +3,5 @@ stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
 Library
 dot_hammerspoon
+dot_local/share/private_fish/vendor_conf.d/asdf_direnv.fish
 {{- end }}
