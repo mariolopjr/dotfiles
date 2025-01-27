@@ -7,8 +7,13 @@ My personal dotfiles repo, managed by the wonderful [chezmoi](https://github.com
 ### winterfell (desktop)
 
 #### Setup dotfiles
-Chezmoi should be already installed via the bootstrap file
+Since the base OS is westerOS and the devbox should automatically be configured, it is quick to bootstrap dotfiles.
+
+**Make sure to have 1Password logged in**
+
 ```bash
+ujust assemble
+distrobox enter
 chezmoi init --apply mariolopjr
 chezmoi cd
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
