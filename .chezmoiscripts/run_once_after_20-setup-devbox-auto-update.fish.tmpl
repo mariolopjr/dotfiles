@@ -2,6 +2,6 @@
 #!/home/linuxbrew/.linuxbrew/bin/fish
 
 systemctl --user daemon-reload
-systemctl --user enable --now devbox.service
+systemctl --user start --now devbox.service
 sudo systemctl enable podman-auto-update.timer
 {{ end -}}
