@@ -1,0 +1,7 @@
+{{ if eq (env "CONTAINER_ID") .devboxHostname -}}
+#!/home/linuxbrew/.linuxbrew/bin/fish
+
+systemctl --user daemon-reload
+systemctl --user enable --now devbox.service
+sudo systemctl enable podman-auto-update.timer
+{{ end -}}
