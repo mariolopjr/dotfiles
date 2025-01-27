@@ -4,7 +4,7 @@ Description=devbox container for development
 [Container]
 Annotation=run.oci.keep_original_groups=1
 AutoUpdate=registry
-ContainerName=devbox-quadlet
+ContainerName=devbox
 Environment=SHELL=%s
 Environment=HOME=%h
 Environment=container=podman
@@ -35,3 +35,6 @@ Volume=/var/home/%u:/var/home/%u:rslave
 Volume=%t:%t:rslave
 Volume=/etc/hosts:/etc/hosts:ro
 Volume=/etc/resolv.conf:/etc/resolv.conf:ro
+
+[Install]
+WantedBy=default.target
