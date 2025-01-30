@@ -10,7 +10,7 @@ Environment=HOME=%h
 Environment=container=podman
 Exec=--verbose --name %u --user %U --group %G --home %h --init "0" --nvidia "1" -- " "
 Image=ghcr.io/mariolopjr/devbox:latest
-HostName=devbox-quadlet.%l
+HostName=devbox.%l
 Label=manager=distrobox
 Network=host
 PodmanArgs=--entrypoint /usr/bin/entrypoint

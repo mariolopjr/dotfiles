@@ -12,6 +12,7 @@ Since the base OS is westerOS and the devbox should automatically be configured,
 **Make sure to have 1Password logged in**
 
 ```bash
+sudo usermod --shell $(which fish) $(whoami)
 ujust assemble
 distrobox enter
 chezmoi init --apply mariolopjr
