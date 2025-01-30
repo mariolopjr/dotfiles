@@ -3,5 +3,6 @@
 # git
 gsurm git submodule update --recursive --remote --merge
 
-# other
-n nvim
+# devbox
+devass ujust assemble
+dev distrobox enter
