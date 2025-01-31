@@ -40,6 +40,8 @@ return {
         "shfmt",
         "fixjson",
         "isort",
+        "prettier",
+        "xmlformatter",
       },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
