@@ -5,4 +5,5 @@ gsurm git submodule update --recursive --remote --merge
 
 # devbox
 devass ujust assemble
+devlog podman logs -f devbox
 dev distrobox enter
