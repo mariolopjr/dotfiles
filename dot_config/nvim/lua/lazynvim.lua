@@ -35,7 +35,7 @@ function M.setup()
     },
 
     -- keymap
-    vim.keymap.set("n", "<leader>pl", "<cmd>Lazy<cr>", { desc = "[P]lugin Lazy" }),
+    vim.keymap.set("n", "<leader>pl", require("lazy").home, { desc = "[P]lugin [L]azy" }),
 
     -- disable additional built-in plugins
     performance = {
