@@ -8,6 +8,7 @@ ContainerName=devbox
 Environment=SHELL=%s
 Environment=HOME=%h
 Environment=container=podman
+Environment=TERMINFO_DIRS=/usr/share/terminfo:/run/host/usr/share/terminfo
 Exec=--verbose --name %u --user %U --group %G --home %h --init 0 --nvidia 1 --
 Image=ghcr.io/mariolopjr/devbox:latest
 HostName=devbox.%l
