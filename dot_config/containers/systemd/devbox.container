@@ -8,7 +8,7 @@ ContainerName=devbox
 Environment=SHELL=%s
 Environment=HOME=%h
 Environment=container=podman
-Exec=--verbose --name %u --user %U --group %G --home %h --init 0 --nvidia 1 -- /init.sh
+Exec=--verbose --name %u --user %U --group %G --home %h --init 0 --nvidia 1 --
 Image=ghcr.io/mariolopjr/devbox:latest
 HostName=devbox.%l
 Label=manager=distrobox
