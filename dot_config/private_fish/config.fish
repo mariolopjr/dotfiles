@@ -11,6 +11,11 @@ if status is-interactive
     end
 end
 
+## Source profile.d configs
+for file in /etc/profile.d/*.fish
+    source $file
+end
+
 ## Source custom configs
 for file in $__fish_config_dir/custom.d/*.fish
     source $file
