@@ -2,12 +2,8 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/opt/homebrew/bin/fish
 {{ else if eq (env "CONTAINER_ID") .devboxHostname -}}
-#!/home/linuxbrew/.linuxbrew/bin/fish
+#!/usr/bin/fish
 {{- end }}
 
-# This script will run whenever there's an update in .config/fish/fish_plugins
-# .config/fish/fish_plugins hash: {{ include "dot_config/private_fish/fish_plugins" | sha256sum }}
-
-fisher update
-
+curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
 {{ end -}}
