@@ -4,6 +4,9 @@
 gsurm git submodule update --recursive --remote --merge
 
 # devbox
-devass ujust assemble
+devass distrobox assemble create --replace --file ~/.config/distrobox/distrobox.ini --name devbox
 devlog podman logs -f devbox
 dev distrobox enter
+
+# monitor
+mon ddcutil -d 1 setvcp 60 0x12

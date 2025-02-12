@@ -36,10 +36,5 @@ if type -q direnv
     direnv hook fish | source
 end
 
-## Load asdf
-if type -q asdf
-    source $(brew --prefix)/opt/asdf/libexec/asdf.fish
-end
-
 ## add llvm to path
 fish_add_path $(brew --prefix)/opt/llvm/bin

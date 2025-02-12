@@ -23,6 +23,8 @@ theme                          = catppuccin-macchiato
 # Other
 {{ if eq .chezmoi.os "darwin" -}}
 command                        = /opt/homebrew/bin/fish -l
+{{ else if eq .chezmoi.os "linux" -}}
+command                        = /usr/bin/fish -l
 {{- end }}
 copy-on-select                 = true
 auto-update                    = off

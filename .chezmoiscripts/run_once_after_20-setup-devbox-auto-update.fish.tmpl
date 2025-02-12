@@ -1,7 +1,11 @@
 {{ if eq (env "CONTAINER_ID") .devboxHostname -}}
-#!/home/linuxbrew/.linuxbrew/bin/fish
+#!/usr/bin/fish
 
 systemctl --user daemon-reload
 systemctl --user start devbox.service
 systemctl --user enable --now podman-auto-update.timer
+
+# system level services
+systemctl enable --now coolercontrold
+systemctl enable --now lactd
 {{ end -}}
