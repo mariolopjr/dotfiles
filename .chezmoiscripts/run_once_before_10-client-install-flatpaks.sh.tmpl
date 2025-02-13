@@ -1,4 +1,4 @@
-{{- if hasKey .clientHostnames .chezmoi.hostname -}}
+{{ if eq (env "CONTAINER_ID") .devboxHostname -}}
 #!/bin/bash
 
 # Install flatpaks

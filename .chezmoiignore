@@ -2,5 +2,8 @@ README.md
 stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
 Library
-dot_hammerspoon
+.hammerspoon
+.config
+.ssh
+.gitconfig
 {{- end }}
