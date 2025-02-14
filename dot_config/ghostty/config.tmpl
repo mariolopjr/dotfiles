@@ -4,7 +4,11 @@
 # ghostty +list-fonts
 
 # Font
+{{ if eq .chezmoi.os "darwin" -}}
 font-family                    = JetBrainsMono NFM Light
+{{ else if eq .chezmoi.os "linux" -}}
+font-family                    = JetBrains Mono Light
+{{- end }}
 font-feature                   = calt,dlig,ss05
 font-thicken                   = false
 font-size                      = 13
@@ -17,7 +21,11 @@ mouse-hide-while-typing        = true
 theme                          = catppuccin-macchiato
 
 # Other
+{{ if eq .chezmoi.os "darwin" -}}
 command                        = /opt/homebrew/bin/fish -l
+{{ else if eq .chezmoi.os "linux" -}}
+command                        = /usr/bin/fish -l
+{{- end }}
 copy-on-select                 = true
 auto-update                    = off
 

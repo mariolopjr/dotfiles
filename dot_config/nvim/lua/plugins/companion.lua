@@ -44,10 +44,12 @@ return {
       {
         "<leader>ai",
         function()
-          local prompt = vim.fn.input("Enter text for [A]I [I]nline Chat: ")
-          require("codecompanion").inline({
-            user_prompt = prompt,
-          })
+          local input = vim.fn.input("Enter text for [A]I [I]nline Chat: ")
+          if input ~= "" then
+            require("codecompanion").inline({
+              user_prompt = input,
+            })
+          end
         end,
         mode = { "n", "v" },
         desc = "[A]I [I]line Chat",

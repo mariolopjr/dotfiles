@@ -1,3 +1,24 @@
+--- Get the root directory using LSP or .git
+--- @return string root_dir The root directory
+local function get_root_dir()
+  --- @type string|nil
+  local lsp_root = vim.lsp.buf.list_workspace_folders()[1]
+  if lsp_root then
+    return lsp_root
+  end
+
+  -- fallback to searching for .git directory
+  --- @type string|nil
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if vim.v.shell_error == 0 and git_root and git_root ~= "" then
+    return git_root
+  end
+
+  -- fallback to current working directory
+  --- @type string
+  return vim.fn.getcwd()
+end
+
 return {
   {
     "folke/snacks.nvim",
@@ -21,6 +42,9 @@ return {
           { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
           { section = "startup" },
         },
+      },
+      explorer = {
+        replace_netrw = true,
       },
       gitbrowse = {},
       indent = { enabled = true },
@@ -347,6 +371,23 @@ return {
         end,
         desc = "LSP Symbols",
       },
+      -- file explorer
+      {
+        "<leader>fe",
+        function()
+          Snacks.explorer({ cwd = get_root_dir() })
+        end,
+        desc = "[F]ile [E]xplorer (root dir)",
+      },
+      {
+        "<leader>fE",
+        function()
+          Snacks.explorer()
+        end,
+        desc = "[F]ile [󰘶E]xplorer (cwd)",
+      },
+      { "<leader>e", "<leader>fe", desc = "[F]ile [E]xplorer (root dir)", remap = true },
+      { "<leader>E", "<leader>fE", desc = "[F]ile [󰘶E]xplorer (cwd)", remap = true },
     },
     config = function(_, opts)
       require("snacks").setup(opts)

@@ -6,9 +6,13 @@
     command = "plutil"
     args = ["-convert", "xml1", "-o", "-", "-"]
 {{- end }}
-[data]
-linuxHostnames = { winterfell = true }
-serverHostnames = { pyke = true }
-devboxHostname = "devbox"
-macHostnames = { targaryen = true }
 
+[diff]
+    command = "delta"
+    pager = "delta"
+
+[data]
+    clientHostnames = { winterfell = true }
+    serverHostnames = { pyke = true }
+    devboxHostname = "devbox"
+    macHostnames = { targaryen = true }
