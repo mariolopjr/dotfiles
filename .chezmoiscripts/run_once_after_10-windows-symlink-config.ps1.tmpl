@@ -1,0 +1,10 @@
+# {{- if hasKey .windowsHosts .chezmoi.hostname -}}
+# code: language=powershell insertSpaces=true tabSize=4
+
+# symlink neovim
+If ($PSVersionTable.PSVersion.Major -Le 5 -Or $isWindows) {
+    If (-Not (Test-Path $env:LOCALAPPDATA\nvim)) {
+        New-Item -Path $env:LOCALAPPDATA\nvim -ItemType Junction -Value $env:USERPROFILE\.config/nvim
+    }
+}
+# {{ end -}}

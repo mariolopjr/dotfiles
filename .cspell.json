@@ -14,9 +14,23 @@
         "misc",
         "filetypes"
     ],
-    "ignoreRegExpList": [],
+    "ignoreRegExpList": [
+        "vim\\.[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*",
+        "keymap\\.set[\\s\\S]*?\\([\\s\\S]*?\\)",
+        "<[Cc]-\\\\>",
+        ":help\\s+[\\w.-]+",
+        "require\\(['\"]([^'\"]+)['\"]\\)",
+        "local\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*=",
+        "[\\w.]*\\s*=\\s*['\"]([^'\"]+)['\"]"
+    ],
     "words": [
-        "ghostty"
+        "Autocommands",
+        "chezmoi",
+        "keymaps",
+        "modelines",
+        "noremap",
+        "nvim",
+        "signcolumn"
     ],
     "overrides": []
 }

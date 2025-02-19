@@ -1,0 +1,12 @@
+" custom remaps
+nnoremap Y y$
+
+# default plugins
+source ~/.config/ideavim/settings.vim
+source ~/.config/ideavim/plugins.vim
+
+# keymaps
+source ~/.config/ideavim/keymaps/init.vim
+
+" which-key
+source ~/.config/ideavim/which-key.vim

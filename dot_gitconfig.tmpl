@@ -1,9 +1,16 @@
 [core]
+	{{ if eq .chezmoi.os "windows" -}}
+    sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+    {{ else if .is_wsl -}}
+    sshCommand = ssh.exe
+	{{- end }}
 	pager = delta
 [user]
 	{{ if eq .chezmoi.os "darwin" -}}
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAipRk9CK71BwC7DtnYAsMX5CsuCbnq03YaOL7ZKX+bn
-	{{ else if eq .chezmoi.os "linux" -}}
+	{{ else if eq .chezmoi.os "windows" -}}
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhF7/5agjGzrAiS7eOH+tY5GhqdLKqbCuvGwkbR0lyr
+	{{ else if .is_wsl -}}
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+RlSav1/qs905tuVJpOo5zfLe2AfF5cg/cG27pnp8n
 	{{- end }}
 	email = mario@techmunchies.net
@@ -12,6 +19,11 @@
 	format = ssh
 [gpg "ssh"]
 	allowedSignersFile = ~/.ssh/allowed_signers
+	{{ if eq .chezmoi.os "windows" -}}
+	program = "C:/Users/{{ .username }}/AppData/Local/1Password/app/8/op-ssh-sign.exe"
+	{{ else if .is_wsl -}}
+	program = "/mnt/c/Users/{{ .username }}/AppData/Local/1Password/app/8/op-ssh-sign-wsl"
+	{{- end }}
 [commit]
 	gpgsign = true
 [pull]
@@ -19,6 +31,6 @@
 [tag]
 	gpgsign = true
 [init]
-        defaultBranch = main
+    defaultBranch = main
 [push]
-        autoSetupRemote = true
+    autoSetupRemote = true

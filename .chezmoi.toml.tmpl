@@ -12,7 +12,13 @@
     pager = "delta"
 
 [data]
-    clientHostnames = { winterfell = true }
-    serverHostnames = { pyke = true }
+    username = "mario"
+    windowsHosts = { winterfell = true }
+    serverHosts = { pyke = true }
     devboxHostname = "devbox"
-    macHostnames = { targaryen = true }
+    macHosts = { targaryen = true }
+{{- if or (eq .chezmoi.os "windows") (eq .chezmoi.os "darwin") }}
+    is_wsl = false
+{{- else }}
+    is_wsl = {{ (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+{{- end }}
