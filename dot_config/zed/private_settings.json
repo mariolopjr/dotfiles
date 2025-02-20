@@ -51,7 +51,7 @@
     "version": "2"
   },
   "show_copilot_suggestions": true,
-  "show_inline_completions": false, // disable ai inline completions
+  "show_edit_predictions": false, // disable ai inline completions
   // ui configuration
   "inlay_hints": {
     "enabled": true
@@ -119,6 +119,7 @@
         "checkOnSave": true,
         // diagnostics
         "diagnostics": {
+          "disabled": ["unresolved-macro-call"],
           "experimental": {
             "enable": true
           }
