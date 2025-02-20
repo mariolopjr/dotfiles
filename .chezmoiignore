@@ -1,9 +1,10 @@
 README.md
 stylua.toml
+.ideavimrc
+.config/ideavim
 {{- if ne .chezmoi.os "darwin" }}
 Library
+.config/ghostty
+.config/fish
 .hammerspoon
-.config
-.ssh
-.gitconfig
 {{- end }}

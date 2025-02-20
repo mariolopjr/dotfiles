@@ -1,4 +1,4 @@
-{{- if or (eq (env "CONTAINER_ID") .devboxHostname) (hasKey .macHostnames .chezmoi.hostname) -}}
+{{- if or (eq (env "CONTAINER_ID") .devboxHostname) (hasKey .macHosts .chezmoi.hostname) -}}
 {{ if eq .chezmoi.os "darwin" -}}
 #!/opt/homebrew/bin/fish
 {{ else if eq (env "CONTAINER_ID") .devboxHostname -}}

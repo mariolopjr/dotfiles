@@ -1,6 +1,6 @@
 [cd]
     command = "fish"
-{{- if eq .chezmoi.os "darwin" }}
+{{ if eq .chezmoi.os "darwin" -}}
 [[textconv]]
     pattern = "**/*.plist"
     command = "plutil"
@@ -12,7 +12,8 @@
     pager = "delta"
 
 [data]
-    clientHostnames = { winterfell = true }
-    serverHostnames = { pyke = true }
+    username = "mario"
+    windowsHosts = { winterfell = true }
+    serverHosts = { pyke = true }
     devboxHostname = "devbox"
-    macHostnames = { targaryen = true }
+    macHosts = { targaryen = true }

@@ -1,8 +1,0 @@
-{{ if eq (env "CONTAINER_ID") .devboxHostname -}}
-#!/bin/bash
-
-# Install flatpaks
-flatpak install flathub --assumeyes \
-	com.discordapp.Discord org.libreoffice.LibreOffice fm.reaper.Reaper com.bitwig.BitwigStudio org.gnome.World.PikaBackup \
-	md.obsidian.Obsidian io.github.neil_morrison44.pocket-sync de.haeckerfelix.Fragments
-{{ end -}}
