@@ -1,9 +1,7 @@
 README.md
 stylua.toml
-{{- if ne .chezmoi.os "windows" }}
-AppData
-Documents
-{{- end }}
+.ideavimrc
+.config/ideavim
 {{- if ne .chezmoi.os "darwin" }}
 Library
 .config/ghostty

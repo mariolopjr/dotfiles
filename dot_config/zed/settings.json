@@ -8,7 +8,8 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "features": {
-    "inline_completion_provider": "zed"
+    "edit_prediction_provider": "zed",
+    "copilot": true
   },
   "auto_install_extensons": {
     "astro": true,
@@ -86,7 +87,10 @@
   // terminal
   "terminal": {
     "shell": {
-      "program": "fish"
+      "with_arguments": {
+        "program": "/opt/homebrew/bin/fish",
+        "args": ["-l"]
+      }
     }
   },
   // lsp settings
