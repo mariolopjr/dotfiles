@@ -1,12 +1,17 @@
-" custom remaps
+source ~/.intellimacs/plugins.vim
+source ~/.intellimacs/spacemacs.vim
+
+" (Optional) Enable other Intellimacs modules
+source ~/.intellimacs/extra.vim
+source ~/.intellimacs/major.vim
+source ~/.intellimacs/hybrid.vim
+
+" (Optional) Enable which-key plugin
+source ~/.intellimacs/which-key.vim
+
+" (Optional) My own vim commands
 nnoremap Y y$
 
-# default plugins
-source ~/.config/ideavim/settings.vim
-source ~/.config/ideavim/plugins.vim
-
-# keymaps
-source ~/.config/ideavim/keymaps/init.vim
-
-" which-key
-source ~/.config/ideavim/which-key.vim
+" (Optional) Comma for major mode
+nmap , <leader>m
+vmap , <leader>m
