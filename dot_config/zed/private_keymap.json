@@ -10,10 +10,10 @@
   {
     "context": "Dock || Terminal || Editor || ProjectPanel",
     "bindings": {
-      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
-      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
-      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
-      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   },
   // put key-bindings here if you want them to work in normal & visual mode
@@ -26,7 +26,7 @@
       "space a c": "assistant::ToggleFocus",
 
       // Git
-      "space g h d": "editor::ToggleHunkDiff",
+      "space g h d": "editor::ToggleSelectedDiffHunks",
       "space g h r": "editor::RevertSelectedHunks",
       "space g g": ["task::Spawn", { "task_name": "lazygit" }],
 

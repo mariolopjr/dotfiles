@@ -3,8 +3,8 @@ stylua.toml
 .ideavimrc
 .config/ideavim
 {{- if ne .chezmoi.os "darwin" }}
-Library
-.config/ghostty
 .config/fish
+.config/ghostty
 .hammerspoon
+Library
 {{- end }}
