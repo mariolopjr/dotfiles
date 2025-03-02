@@ -1,4 +1,5 @@
-{{- if or (eq (env "CONTAINER_ID") .devboxHostname) (hasKey .macHosts .chezmoi.hostname) -}}
+# code: language=fish insertSpaces=true tabSize=4
+{{- if hasKey .macHosts .chezmoi.hostname -}}
 #!/opt/homebrew/bin/fish
 
 # This script will run whenever there's an update in .config/fish/fish_plugins

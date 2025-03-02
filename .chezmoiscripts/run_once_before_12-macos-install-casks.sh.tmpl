@@ -1,25 +1,46 @@
+# code: language=bash insertSpaces=true tabSize=4
+#
+# shellcheck disable=SC1083,SC1054,SC1073,SC1009,SC1036,SC1056,SC1072
 {{- if and (hasKey .macHosts .chezmoi.hostname) (not (env "GITHUB_ACTION")) -}}
 #!/bin/bash
 
 # Install brew cask packages
 brew bundle --no-lock --file=/dev/stdin <<EOF
+cask "ableton-live-suite"
 cask "adobe-digital-editions"
 cask "alfred"
 cask "bettertouchtool"
 cask "calibre"
 cask "carbon-copy-cloner"
+cask "crossover"
 cask "discord"
-cask "font-jetbrains-mono-nerd-font"
+cask "fission"		
+cask "font-cascadia-code"
+cask "font-cascadia-code-nf"
+cask "font-cascadia-mono"
+cask "font-cascadia-mono-nf"
 cask "ghostty"
 cask "hammerspoon"
 cask "jordanbaird-ice"
 cask "little-snitch"
+cask "lockrattler"
+cask "loopback"
 cask "micro-snitch"
 cask "motu-m-series"
-cask "plexamp"
+cask "nvidia-geforce-now"
+cask "obsidian"
 cask "qmk-toolbox"
 cask "quicken"
 cask "reaper"
 cask "rectangle"
+cask "silentknight"
+cask "silicon"
+cask "silnite"
+cask "starsector"
+cask "steam"
+cask "surge-xt"
+cask "viable"
+cask "visual-studio-code"
+cask "whisky"
 EOF
 {{ end -}}

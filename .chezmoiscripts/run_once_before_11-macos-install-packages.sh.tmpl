@@ -1,9 +1,11 @@
+# code: language=bash insertSpaces=true tabSize=4
+#
+# shellcheck disable=SC1083,SC1054
 {{- if hasKey .macHosts .chezmoi.hostname -}}
 #!/bin/bash
 
 # Install brew packages
 brew bundle --no-lock --file=/dev/stdin <<EOF
-brew "asdf"
 brew "bat"
 brew "bottom"
 brew "ctop"
@@ -25,24 +27,19 @@ brew "llvm"
 brew "m1ddc"
 brew "macchina"
 brew "mas"
-brew "mdbook"
+brew "mise"
 brew "ncdu"
 brew "neovim"
 brew "pkg-config"
 brew "qmk/qmk/qmk"
 brew "ripgrep"
-brew "rustup"
-brew "rust-analyzer"
-brew "shellcheck"
 brew "silicon", link: false
-brew "shfmt"
 brew "smartmontools"
-brew "stylua"
 brew "terminal-notifier"
-brew "tmux"
 brew "wakeonlan"
 brew "wget"
-brew "zola"
 brew "zoxide"
 EOF
+
+# shellcheck disable=SC1009,SC1073,SC1056,SC1072
 {{ end -}}

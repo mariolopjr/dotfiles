@@ -1,9 +1,6 @@
-{{- if or (eq (env "CONTAINER_ID") .devboxHostname) (hasKey .macHosts .chezmoi.hostname) -}}
-{{ if eq .chezmoi.os "darwin" -}}
+# code: language=fish insertSpaces=true tabSize=4
+{{- if hasKey .macHosts .chezmoi.hostname -}}
 #!/opt/homebrew/bin/fish
-{{ else if eq (env "CONTAINER_ID") .devboxHostname -}}
-#!/usr/bin/fish
-{{- end }}
 
 tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Few icons' --transient=Yes
 {{ end -}}

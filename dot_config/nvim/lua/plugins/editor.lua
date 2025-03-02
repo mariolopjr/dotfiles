@@ -4,6 +4,7 @@ return {
     "MagicDuck/grug-far.nvim",
     opts = { headerMaxWidth = 80 },
     cmd = "GrugFar",
+    enabled = not vim.g.vscode,
     keys = {
       {
         "<leader>sr",
@@ -34,10 +35,26 @@ return {
     opts = {},
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,   desc = "Flash" },
+      {
+        "S",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash")
+              .treesitter()
+        end,
+        desc = "Flash Treesitter"
+      },
+      { "r", mode = "o",               function() require("flash").remote() end, desc = "Remote Flash" },
+      {
+        "R",
+        mode = { "o", "x" },
+        function()
+          require("flash")
+              .treesitter_search()
+        end,
+        desc = "Treesitter Search"
+      },
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
   },
@@ -46,6 +63,7 @@ return {
   {
     "folke/trouble.nvim",
     cmd = { "Trouble" },
+    enabled = not vim.g.vscode,
     opts = {
       modes = {
         lsp = {
@@ -60,14 +78,14 @@ return {
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
       },
-      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>",     desc = "Symbols (Trouble)" },
       {
         "<leader>cS",
         "<cmd>Trouble lsp toggle<cr>",
         desc = "LSP references/definitions/... (Trouble)",
       },
       { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
-      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>",  desc = "Quickfix List (Trouble)" },
       {
         "[q",
         function()
@@ -105,6 +123,7 @@ return {
     "folke/todo-comments.nvim",
     cmd = { "TodoTrouble" },
     event = "LazyFile",
+    enabled = not vim.g.vscode,
     opts = {},
     keys = {
       {

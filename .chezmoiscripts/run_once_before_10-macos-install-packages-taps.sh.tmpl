@@ -1,13 +1,17 @@
+# code: language=bash insertSpaces=true tabSize=4
+#
+# shellcheck disable=SC1083,SC1054
 {{- if hasKey .macHosts .chezmoi.hostname -}}
 #!/bin/bash
 
 # Install brew taps
 brew bundle --no-lock --file=/dev/stdin <<EOF
-tap "homebrew/aliases"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "osx-cross/arm"
 tap "osx-cross/avr"
 tap "qmk/qmk"
 EOF
+
+# shellcheck disable=SC1009,SC1073,SC1056,SC1072
 {{ end -}}
