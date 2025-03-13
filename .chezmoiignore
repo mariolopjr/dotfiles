@@ -1,3 +1,4 @@
+chezmoi.code-workspace
 README.md
 stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
