@@ -25,10 +25,10 @@
       // Chat with AI
       "space a c": "assistant::ToggleFocus",
 
-      // Git
+      // space g: [G]it
       "space g h d": "editor::ToggleSelectedDiffHunks",
-      "space g h r": "editor::RevertSelectedHunks",
-      "space g g": ["task::Spawn", { "task_name": "lazygit" }],
+      "space g h r": "git::Restore",
+      "space g g": "git_panel::ToggleFocus",
 
       // space t: [T]oggle Settings
       "space t i": "editor::ToggleInlayHints", // Toggle inlay hints
@@ -87,7 +87,7 @@
       // +Git
       // Git prev/next hunk
       "] h": "editor::GoToHunk",
-      "[ h": "editor::GoToPrevHunk",
+      "[ h": "editor::GoToPreviousHunk",
 
       // TODO: git diff is not ready yet, refer https://github.com/zed-industries/zed/issues/8665#issuecomment-2194000497
 

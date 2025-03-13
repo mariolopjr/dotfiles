@@ -1,5 +1,5 @@
-# code: language=fish insertSpaces=true tabSize=4
-{{- if hasKey .macHosts .chezmoi.hostname -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/opt/homebrew/bin/fish
 
 # This script will run whenever there's an update in .config/fish/fish_plugins

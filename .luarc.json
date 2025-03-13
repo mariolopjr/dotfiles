@@ -1,6 +1,7 @@
 {
     "diagnostics.globals": [
         "vim",
-        "vscode"
+        "vscode",
+        "hs"
     ]
 }

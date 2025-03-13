@@ -30,7 +30,8 @@
         "modelines",
         "noremap",
         "nvim",
-        "signcolumn"
+        "signcolumn",
+        "targaryen"
     ],
     "overrides": []
 }

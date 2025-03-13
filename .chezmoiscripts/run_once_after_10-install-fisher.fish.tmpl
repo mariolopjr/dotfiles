@@ -1,5 +1,5 @@
-# code: language=fish insertSpaces=true tabSize=4
-{{- if hasKey .macHosts .chezmoi.hostname -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/opt/homebrew/bin/fish
 
 curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher

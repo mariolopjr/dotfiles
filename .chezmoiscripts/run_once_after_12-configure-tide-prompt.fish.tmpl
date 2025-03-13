@@ -1,5 +1,5 @@
-# code: language=fish insertSpaces=true tabSize=4
-{{- if hasKey .macHosts .chezmoi.hostname -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/opt/homebrew/bin/fish
 
 tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Few icons' --transient=Yes

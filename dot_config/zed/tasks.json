@@ -1,8 +1,8 @@
 [
-  {
-    "label": "lazygit",
-    "command": "lazygit",
-    "use_new_terminal": true,
-    "reveal_target": "center"
-  }
+  // {
+  //   "label": "lazygit",
+  //   "command": "lazygit",
+  //   "use_new_terminal": true,
+  //   "reveal_target": "center"
+  // }
 ]

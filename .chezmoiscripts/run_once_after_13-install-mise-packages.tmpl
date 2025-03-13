@@ -1,0 +1,13 @@
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
+#!/opt/homebrew/bin/fish
+
+# This script will run whenever there's an update in .config/mise/config.toml
+# .config/mise/config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+# install mise tools
+mise install
+
+# add shell completions
+mise completion fish > ~/.config/fish/completions/mise.fish
+{{ end -}}

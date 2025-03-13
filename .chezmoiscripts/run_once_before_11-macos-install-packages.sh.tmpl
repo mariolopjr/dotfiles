@@ -1,16 +1,13 @@
-# code: language=bash insertSpaces=true tabSize=4
-#
-# shellcheck disable=SC1083,SC1054
-{{- if hasKey .macHosts .chezmoi.hostname -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/bin/bash
 
 # Install brew packages
-brew bundle --no-lock --file=/dev/stdin <<EOF
+brew bundle --file=/dev/stdin <<EOF
 brew "bat"
 brew "bottom"
 brew "ctop"
 brew "curl"
-brew "direnv"
 brew "f3"
 brew "fd"
 brew "fish"
@@ -33,6 +30,7 @@ brew "neovim"
 brew "pkg-config"
 brew "qmk/qmk/qmk"
 brew "ripgrep"
+brew "shellcheck"
 brew "silicon", link: false
 brew "smartmontools"
 brew "terminal-notifier"
@@ -40,6 +38,4 @@ brew "wakeonlan"
 brew "wget"
 brew "zoxide"
 EOF
-
-# shellcheck disable=SC1009,SC1073,SC1056,SC1072
 {{ end -}}
