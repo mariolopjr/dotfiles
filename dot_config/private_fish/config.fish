@@ -33,7 +33,7 @@ end
 
 ## mise
 if type -q mise
-    mise activate fish
+    mise activate fish | source
 end
 
 ## add llvm to path
