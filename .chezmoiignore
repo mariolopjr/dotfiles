@@ -7,3 +7,4 @@ stylua.toml
 .hammerspoon
 Library
 {{- end }}
+.hammerspoon/Spoons/EmmyLua.spoon
