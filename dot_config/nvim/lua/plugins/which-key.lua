@@ -2,6 +2,7 @@ return {
   {
     "folke/which-key.nvim",
     event = "VimEnter",
+    enabled = not vim.g.vscode,
     opts = {
       preset = "helix",
       icons = {
@@ -43,18 +44,18 @@ return {
 
       -- Document existing key chains
       spec = {
-        { "<leader>a", group = "[A]I", mode = { "n", "x" } },
-        { "<leader>b", group = "[B]uffer", mode = { "n", "x" } },
-        { "<leader>c", group = "[C]ode", mode = { "n", "x" } },
-        { "<leader>d", group = "[D]ebug" },
-        { "<leader>f", group = "[F]iles" },
-        { "<leader>g", group = "[G]it" },
-        { "<leader>p", group = "[P]lugins" },
-        { "<leader>r", group = "[R]un" },
-        { "<leader>s", group = "[S]earch" },
+        { "<leader>a",        group = "[A]I",       mode = { "n", "x" } },
+        { "<leader>b",        group = "[B]uffer",   mode = { "n", "x" } },
+        { "<leader>c",        group = "[C]ode",     mode = { "n", "x" } },
+        { "<leader>d",        group = "[D]ebug" },
+        { "<leader>f",        group = "[F]iles" },
+        { "<leader>g",        group = "[G]it" },
+        { "<leader>p",        group = "[P]lugins" },
+        { "<leader>r",        group = "[R]un" },
+        { "<leader>s",        group = "[S]earch" },
         -- { "<leader>w", group = "[W]orkspace" },
-        { "<leader>t", group = "[T]ests" },
-        { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+        { "<leader>t",        group = "[T]ests" },
+        { "<leader>h",        group = "Git [H]unk", mode = { "n", "v" } },
         { "<leader><leader>", group = "[ ] Hop" },
       },
     },

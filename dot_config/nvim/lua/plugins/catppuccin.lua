@@ -7,6 +7,7 @@ return {
     init = function()
       vim.cmd.colorscheme("catppuccin-macchiato")
     end,
+    enabled = not vim.g.vscode,
     opts = {
       integrations = {
         blink_cmp = true,

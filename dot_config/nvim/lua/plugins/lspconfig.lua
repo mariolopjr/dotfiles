@@ -1,7 +1,9 @@
 ---@param config {type?:string, args?:string[]|fun():string[]?}
 local function get_args(config)
-  local args = type(config.args) == "function" and (config.args() or {}) or config.args or {} --[[@as string[] | string ]]
-  local args_str = type(args) == "table" and table.concat(args, " ") or args --[[@as string]]
+  local args = type(config.args) == "function" and (config.args() or {}) or
+      config.args or {} --[[@as string[] | string ]]
+  local args_str = type(args) == "table" and table.concat(args, " ") or
+      args --[[@as string]]
 
   config = vim.deepcopy(config)
   ---@cast args string[]
@@ -22,6 +24,7 @@ return {
     -- used for completion, annotations and signatures of Neovim apis
     "folke/lazydev.nvim",
     ft = "lua",
+    enabled = not vim.g.vscode,
     opts = {
       library = {
         { plugins = { "nvim-dap-ui" }, types = true },
@@ -32,6 +35,7 @@ return {
   -- install debuggers and linters, etc.
   {
     "williamboman/mason.nvim",
+    enabled = not vim.g.vscode,
     opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {
@@ -73,6 +77,7 @@ return {
   -- lsp integration with mason
   {
     "williamboman/mason-lspconfig.nvim",
+    enabled = not vim.g.vscode,
     opts = {
       ensure_installed = {
         "bashls",
@@ -91,6 +96,7 @@ return {
     "mrcjkb/rustaceanvim",
     version = "^5",
     ft = "rust",
+    enabled = not vim.g.vscode,
     opts = {
       server = {
         on_attach = function(_, bufnr)
@@ -152,7 +158,8 @@ return {
       },
     },
     config = function(_, opts)
-      local package_path = require("mason-registry").get_package("codelldb"):get_install_path()
+      local package_path = require("mason-registry").get_package("codelldb")
+          :get_install_path()
       local codelldb = package_path .. "/extension/adapter/codelldb"
       local library_path = package_path .. "/extension/lldb/lib/liblldb.dylib"
 
@@ -163,9 +170,11 @@ return {
       end
 
       opts.dap = {
-        adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb, library_path),
+        adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb,
+          library_path),
       }
-      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
+      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {},
+        opts or {})
 
       if vim.fn.executable("rust-analyzer") == 0 then
         vim.notify(
@@ -180,6 +189,7 @@ return {
   {
     "Saecki/crates.nvim",
     event = { "BufRead Cargo.toml" },
+    enabled = not vim.g.vscode,
     opts = {
       completion = {
         crates = {
@@ -199,6 +209,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = "LazyFile",
+    enabled = not vim.g.vscode,
     dependencies = {
       "saghen/blink.cmp",
     },
@@ -215,13 +226,15 @@ return {
         callback = function(event)
           local map = function(keys, func, desc, mode)
             mode = mode or "n"
-            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+            vim.keymap.set(mode, keys, func,
+              { buffer = event.buf, desc = "LSP: " .. desc })
           end
 
           map("K", vim.lsp.buf.hover, "Hover")
           map("gK", vim.lsp.buf.signature_help, "Signature Help")
           map("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
-          map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+          map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction",
+            { "n", "x" })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -234,11 +247,11 @@ return {
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if
-            client
-            and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight)
+              client
+              and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight)
           then
             local highlight_augroup =
-              vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+                vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -267,7 +280,10 @@ return {
           -- code, if the language server you are using supports them
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             map("<leader>ch", function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({
+                bufnr =
+                    event.buf
+              }))
             end, "[C]ode Toggle Inlay [H]ints")
           end
         end,
@@ -276,7 +292,8 @@ return {
       -- LSP servers and clients are able to communicate to each other what features they support.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities =
-        vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
+          vim.tbl_deep_extend("force", capabilities,
+            require("blink.cmp").get_lsp_capabilities())
 
       -- enable language servers
       local lspconfig = require("lspconfig")
@@ -287,7 +304,8 @@ return {
       lspconfig.clangd.setup({
         -- cmd = { "clangd", "--compile-commands-dir=." },
         filetypes = { "c", "cpp", "objc", "objcpp" },
-        root_dir = require("lspconfig").util.root_pattern("compile_commands.json", ".git"),
+        root_dir = require("lspconfig").util.root_pattern(
+          "compile_commands.json", ".git"),
         settings = {
           clangd = {
             compilationDatabasePath = ".",
@@ -331,6 +349,7 @@ return {
     dependencies = {
       "xzbdmw/colorful-menu.nvim",
     },
+    enabled = not vim.g.vscode,
     version = "*",
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -364,7 +383,8 @@ return {
               label = {
                 width = { fill = true, max = 60 },
                 text = function(ctx)
-                  local highlights_info = require("colorful-menu").blink_highlights(ctx)
+                  local highlights_info = require("colorful-menu")
+                      .blink_highlights(ctx)
                   if highlights_info ~= nil then
                     return highlights_info.label
                   else
@@ -373,12 +393,14 @@ return {
                 end,
                 highlight = function(ctx)
                   local highlights = {}
-                  local highlights_info = require("colorful-menu").blink_highlights(ctx)
+                  local highlights_info = require("colorful-menu")
+                      .blink_highlights(ctx)
                   if highlights_info ~= nil then
                     highlights = highlights_info.highlights
                   end
                   for _, idx in ipairs(ctx.label_matched_indices) do
-                    table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                    table.insert(highlights,
+                      { idx, idx + 1, group = "BlinkCmpLabelMatch" })
                   end
                   return highlights
                 end,
@@ -403,9 +425,17 @@ return {
       },
       "nvim-neotest/nvim-nio",
     },
+    enabled = not vim.g.vscode,
     -- stylua: ignore
     keys = {
-      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "[D]ebug [󰘶B]reakpoint Condition" },
+      {
+        "<leader>dB",
+        function()
+          require("dap").set_breakpoint(vim.fn.input(
+            'Breakpoint condition: '))
+        end,
+        desc = "[D]ebug [󰘶B]reakpoint Condition"
+      },
       { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "[D]ebug Toggle [B]reakpoint" },
       { "<leader>dc", function() require("dap").continue() end, desc = "Run/Continue" },
       { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
@@ -427,7 +457,8 @@ return {
       require("mason-nvim-dap").setup()
 
       -- change breakpoint icons
-      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+      vim.api.nvim_set_hl(0, "DapStoppedLine",
+        { default = true, link = "Visual" })
       local breakpoint_icons = vim.g.have_nerd_font
           and {
             Breakpoint = "",
@@ -436,13 +467,13 @@ return {
             LogPoint = "",
             Stopped = "",
           }
-        or {
-          Breakpoint = "●",
-          BreakpointCondition = "⊜",
-          BreakpointRejected = "⊘",
-          LogPoint = "◆",
-          Stopped = "⭔",
-        }
+          or {
+            Breakpoint = "●",
+            BreakpointCondition = "⊜",
+            BreakpointRejected = "⊘",
+            LogPoint = "◆",
+            Stopped = "⭔",
+          }
       for type, icon in pairs(breakpoint_icons) do
         local tp = "Dap" .. type
         local hl = (type == "Stopped") and "DapStop" or "DapBreak"
@@ -455,10 +486,11 @@ return {
   {
     "rcarriga/nvim-dap-ui",
     dependencies = { "nvim-neotest/nvim-nio" },
+    enabled = not vim.g.vscode,
     -- stylua: ignore
     keys = {
-      { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
-      { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
+      { "<leader>du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
+      { "<leader>de", function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
     },
     opts = {},
     config = function(_, opts)
@@ -481,6 +513,7 @@ return {
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = "mason.nvim",
+    enabled = not vim.g.vscode,
     cmd = { "DapInstall", "DapUninstall" },
   },
 }

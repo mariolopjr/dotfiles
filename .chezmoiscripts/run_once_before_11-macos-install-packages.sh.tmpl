@@ -1,14 +1,13 @@
-{{- if hasKey .macHostnames .chezmoi.hostname -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/bin/bash
 
 # Install brew packages
-brew bundle --no-lock --file=/dev/stdin <<EOF
-brew "asdf"
+brew bundle --file=/dev/stdin <<EOF
 brew "bat"
 brew "bottom"
 brew "ctop"
 brew "curl"
-brew "direnv"
 brew "f3"
 brew "fd"
 brew "fish"
@@ -25,24 +24,18 @@ brew "llvm"
 brew "m1ddc"
 brew "macchina"
 brew "mas"
-brew "mdbook"
+brew "mise"
 brew "ncdu"
 brew "neovim"
 brew "pkg-config"
 brew "qmk/qmk/qmk"
 brew "ripgrep"
-brew "rustup"
-brew "rust-analyzer"
 brew "shellcheck"
 brew "silicon", link: false
-brew "shfmt"
 brew "smartmontools"
-brew "stylua"
 brew "terminal-notifier"
-brew "tmux"
 brew "wakeonlan"
 brew "wget"
-brew "zola"
 brew "zoxide"
 EOF
 {{ end -}}

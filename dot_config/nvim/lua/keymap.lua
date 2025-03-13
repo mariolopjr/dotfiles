@@ -58,8 +58,10 @@ keymap.set(
   ":bd<CR>",
   { desc = "[B]uffer [D]elete", noremap = true, silent = true }
 )
-keymap.set("n", "<leader>fw", ":w<CR>", { desc = "[F]ile [W]rite", noremap = true, silent = true })
-keymap.set("n", "<leader>fq", ":q<CR>", { desc = "[F]ile [Q]uit", noremap = true, silent = true })
+keymap.set("n", "<leader>fw", ":w<CR>",
+  { desc = "[F]ile [W]rite", noremap = true, silent = true })
+keymap.set("n", "<leader>fq", ":q<CR>",
+  { desc = "[F]ile [Q]uit", noremap = true, silent = true })
 keymap.set(
   "n",
   "<leader>Q",

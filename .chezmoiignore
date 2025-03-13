@@ -1,9 +1,9 @@
+chezmoi.code-workspace
 README.md
 stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
-Library
+.config/fish
+.config/ghostty
 .hammerspoon
-.config
-.ssh
-.gitconfig
+Library
 {{- end }}

@@ -1,8 +1,9 @@
-{{- if and (hasKey .macHostnames .chezmoi.hostname) (not (env "GITHUB_ACTION")) -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if and (hasKey .macHosts $hostname) (not (env "GITHUB_ACTION")) -}}
 #!/bin/bash
 
 # Install brew mas packages
-brew bundle --no-lock --file=/dev/stdin <<EOF
+brew bundle --file=/dev/stdin <<EOF
 mas "AdGuard for Safari", id: 1440147259
 mas "Amphetamine", id: 937984704
 mas "Final Cut Pro", id: 424389933

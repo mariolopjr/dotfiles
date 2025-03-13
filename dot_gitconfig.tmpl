@@ -1,11 +1,7 @@
 [core]
 	pager = delta
 [user]
-	{{ if eq .chezmoi.os "darwin" -}}
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAipRk9CK71BwC7DtnYAsMX5CsuCbnq03YaOL7ZKX+bn
-	{{ else if eq .chezmoi.os "linux" -}}
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+RlSav1/qs905tuVJpOo5zfLe2AfF5cg/cG27pnp8n
-	{{- end }}
 	email = mario@techmunchies.net
 	name = Mario Lopez
 [gpg]
@@ -19,6 +15,6 @@
 [tag]
 	gpgsign = true
 [init]
-        defaultBranch = main
+    defaultBranch = main
 [push]
-        autoSetupRemote = true
+    autoSetupRemote = true

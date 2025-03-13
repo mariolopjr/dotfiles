@@ -1,9 +1,6 @@
-{{- if or (eq (env "CONTAINER_ID") .devboxHostname) (hasKey .macHostnames .chezmoi.hostname) -}}
-{{ if eq .chezmoi.os "darwin" -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/opt/homebrew/bin/fish
-{{ else if eq (env "CONTAINER_ID") .devboxHostname -}}
-#!/usr/bin/fish
-{{- end }}
 
 curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
 {{ end -}}

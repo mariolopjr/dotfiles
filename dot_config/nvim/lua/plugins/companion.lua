@@ -6,6 +6,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
       { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
     },
+    enabled = not vim.g.vscode,
     opts = {
       display = {
         diff = {

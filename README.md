@@ -2,30 +2,11 @@
 
 My personal dotfiles repo, managed by the wonderful [chezmoi](https://github.com/twpayne/chezmoi)
 
-## Linux
-
-### winterfell (desktop)
-
-#### Setup dotfiles
-Since the base OS is westerOS and the devbox should automatically be configured, it is quick to bootstrap dotfiles.
-
-**Make sure to have 1Password logged in**
-
-```bash
-sudo usermod --shell $(which fish) $(whoami)
-ujust assemble
-distrobox enter
-chezmoi init --apply mariolopjr
-chezmoi cd
-git remote set-url origin git@github.com:mariolopjr/dotfiles.git
-```
-
 ## macOS
 
-### dragonstone (laptop)
+Both my desktop and laptop run macOS, so setting up the dotfiles is quite trivial and is the main OS supported.
 
-#### Setup Linux dotfiles
-TBD
+### stark (desktop)
 
 ### targaryen (laptop)
 
@@ -39,10 +20,11 @@ chezmoi cd
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
+#### Setup Linux dotfiles
+
+TBD
+
 ## Todo
 
 - configuration for steam deck
 - configuration for nas
-- configuration for pi
-- configuratiion for asahi
-

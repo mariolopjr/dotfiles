@@ -21,19 +21,19 @@ for file in $__fish_config_dir/custom.d/*.fish
     source $file
 end
 
-## Launch The Fuck
+## The Fuck
 if type -q thefuck
     thefuck --alias | source
 end
 
-## Launch zoxide
+## zoxide
 if type -q zoxide
     zoxide init fish | source
 end
 
-## Launch direnv
-if type -q direnv
-    direnv hook fish | source
+## mise
+if type -q mise
+    mise activate fish
 end
 
 ## add llvm to path

@@ -35,6 +35,7 @@ return {
     build = ":TSUpdate",
     main = "nvim-treesitter.configs",
     lazy = vim.fn.argc(-1) == 0,
+    enabled = not vim.g.vscode,
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
@@ -69,7 +70,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     event = "VeryLazy",
-    enabled = true,
+    enabled = not vim.g.vscode,
     config = function()
       -- If treesitter is already loaded, we need to run config again for textobjects
       if is_loaded("nvim-treesitter") then
@@ -84,7 +85,8 @@ return {
         if name:find("goto") == 1 then
           move[name] = function(q, ...)
             if vim.wo.diff then
-              local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
+              local config = configs.get_module("textobjects.move")
+                  [name] ---@type table<string,string>
               for key, query in pairs(config or {}) do
                 if q == query and key:find("[%]%[][cC]") then
                   vim.cmd("normal! " .. key)
@@ -102,5 +104,6 @@ return {
     "bezhermoso/tree-sitter-ghostty",
     build = "make nvim_install",
     ft = "ghostty",
+    enabled = not vim.g.vscode,
   },
 }

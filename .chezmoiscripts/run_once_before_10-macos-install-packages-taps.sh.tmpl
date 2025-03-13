@@ -1,9 +1,9 @@
-{{- if hasKey .macHostnames .chezmoi.hostname -}}
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if hasKey .macHosts $hostname -}}
 #!/bin/bash
 
 # Install brew taps
-brew bundle --no-lock --file=/dev/stdin <<EOF
-tap "homebrew/aliases"
+brew bundle --file=/dev/stdin <<EOF
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "osx-cross/arm"
