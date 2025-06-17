@@ -17,18 +17,6 @@ local function get_args(config)
 end
 
 return {
-  {
-    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-    -- used for completion, annotations and signatures of Neovim apis
-    "folke/lazydev.nvim",
-    ft = "lua",
-    opts = {
-      library = {
-        { plugins = { "nvim-dap-ui" }, types = true },
-      },
-    },
-  },
-
   -- main LSP configuration
   {
     "neovim/nvim-lspconfig",
@@ -67,12 +55,8 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if
-            client
-            and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight)
-          then
-            local highlight_augroup =
-              vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+            local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -107,59 +91,6 @@ return {
             end, "[C]ode Toggle Inlay [H]ints")
           end
         end,
-      })
-
-      -- LSP servers and clients are able to communicate to each other what features they support.
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities =
-        vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
-
-      -- enable language servers
-      local lspconfig = require("lspconfig")
-
-      lspconfig.bashls.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.clangd.setup({
-        -- cmd = { "clangd", "--compile-commands-dir=." },
-        filetypes = { "c", "cpp", "objc", "objcpp" },
-        root_dir = require("lspconfig").util.root_pattern("compile_commands.json", ".git"),
-        settings = {
-          clangd = {
-            compilationDatabasePath = ".",
-          },
-        },
-        capabilities = capabilities,
-      })
-      lspconfig.fish_lsp.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = "Replace",
-            },
-            telemetry = {
-              enable = false,
-            },
-            -- diagnostics = { disable = { 'missing-fields' } },
-          },
-        },
-      })
-      lspconfig.pyright.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.gopls.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.gdscript.setup({
-        name = "godot",
-        cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
-      })
-      lspconfig.sourcekit.setup({
-        capabilities = capabilities,
       })
     end,
   },
