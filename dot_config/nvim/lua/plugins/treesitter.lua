@@ -35,7 +35,6 @@ return {
     build = ":TSUpdate",
     main = "nvim-treesitter.configs",
     lazy = vim.fn.argc(-1) == 0,
-    enabled = not vim.g.vscode,
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
@@ -70,7 +69,6 @@ return {
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     event = "VeryLazy",
-    enabled = not vim.g.vscode,
     config = function()
       -- If treesitter is already loaded, we need to run config again for textobjects
       if is_loaded("nvim-treesitter") then
@@ -104,6 +102,5 @@ return {
     "bezhermoso/tree-sitter-ghostty",
     build = "make nvim_install",
     ft = "ghostty",
-    enabled = not vim.g.vscode,
   },
 }

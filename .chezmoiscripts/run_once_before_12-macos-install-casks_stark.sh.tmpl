@@ -1,0 +1,10 @@
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if eq $hostname "stark" -}}
+#!/bin/bash
+
+# Install brew cask packages
+brew bundle --file=/dev/stdin <<EOF
+cask "adobe-digital-editions"
+cask "calibre"
+EOF
+{{ end -}}

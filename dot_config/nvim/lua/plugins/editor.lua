@@ -4,7 +4,6 @@ return {
     "MagicDuck/grug-far.nvim",
     opts = { headerMaxWidth = 80 },
     cmd = "GrugFar",
-    enabled = not vim.g.vscode,
     keys = {
       {
         "<leader>sr",
@@ -30,7 +29,6 @@ return {
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    vscode = true,
     ---@type Flash.Config
     opts = {},
     -- stylua: ignore
@@ -63,7 +61,6 @@ return {
   {
     "folke/trouble.nvim",
     cmd = { "Trouble" },
-    enabled = not vim.g.vscode,
     opts = {
       modes = {
         lsp = {
@@ -78,14 +75,14 @@ return {
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
       },
-      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>",     desc = "Symbols (Trouble)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
       {
         "<leader>cS",
         "<cmd>Trouble lsp toggle<cr>",
         desc = "LSP references/definitions/... (Trouble)",
       },
       { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
-      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>",  desc = "Quickfix List (Trouble)" },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
       {
         "[q",
         function()
@@ -123,7 +120,6 @@ return {
     "folke/todo-comments.nvim",
     cmd = { "TodoTrouble" },
     event = "LazyFile",
-    enabled = not vim.g.vscode,
     opts = {},
     keys = {
       {

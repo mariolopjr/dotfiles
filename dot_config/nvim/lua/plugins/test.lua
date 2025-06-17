@@ -2,7 +2,6 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = { "nvim-neotest/nvim-nio" },
-    enabled = not vim.g.vscode,
     opts = {
       adapters = {
         ["rustaceanvim.neotest"] = {},

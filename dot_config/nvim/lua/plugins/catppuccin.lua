@@ -7,12 +7,10 @@ return {
     init = function()
       vim.cmd.colorscheme("catppuccin-macchiato")
     end,
-    enabled = not vim.g.vscode,
     opts = {
       integrations = {
         blink_cmp = true,
         leap = true,
-        mason = true,
         markdown = true,
         mini = true,
         native_lsp = {

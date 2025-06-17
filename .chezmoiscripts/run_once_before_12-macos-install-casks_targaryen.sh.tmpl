@@ -1,0 +1,8 @@
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if eq $hostname "targaryen" -}}
+#!/bin/bash
+
+# Install brew cask packages
+brew bundle --file=/dev/stdin <<EOF
+EOF
+{{ end -}}

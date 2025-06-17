@@ -1,7 +1,6 @@
 return {
   { -- Collection of various small independent plugins/modules
     "echasnovski/mini.nvim",
-    enabled = not vim.g.vscode,
     config = function()
       -- Better Around/Inside textobjects
       --

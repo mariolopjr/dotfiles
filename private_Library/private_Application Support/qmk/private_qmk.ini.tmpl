@@ -1,0 +1,23 @@
+[user]
+keyboard = mode/m75h
+keymap = mariolopjr
+{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{- if eq $hostname "stark" -}}
+overlay_dir = /Volumes/Data/Code/keyboards-firmware
+qmk_home = /Volumes/Data/Code/keyboards-firmware/qmk_firmware
+{{- else -}}
+overlay_dir = ~/Code/personal/keyboards-firmware
+qmk_home = ~/Code/personal/keyboards-firmware/qmk_firmware
+{{ end }}
+
+[find]
+keymap = default
+
+[mass_compile]
+keymap = default
+
+[config]
+
+[console]
+
+[general]
