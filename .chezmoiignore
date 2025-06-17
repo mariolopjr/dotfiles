@@ -1,10 +1,10 @@
-chezmoi.code-workspace
 README.md
-stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
 .config/fish
 .config/ghostty
 .hammerspoon
 Library
 {{- end }}
+.config/nvim/stylua.toml
+.config/nvim/selene.toml
 .hammerspoon/Spoons/EmmyLua.spoon
