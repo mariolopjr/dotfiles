@@ -87,6 +87,7 @@ return {
         "[q",
         function()
           if require("trouble").is_open() then
+            ---@diagnostic disable-next-line: missing-fields,missing-parameter
             require("trouble").prev({ skip_groups = true, jump = true })
           else
             local ok, err = pcall(vim.cmd.cprev)
@@ -101,6 +102,7 @@ return {
         "]q",
         function()
           if require("trouble").is_open() then
+            ---@diagnostic disable-next-line: missing-fields,missing-parameter
             require("trouble").next({ skip_groups = true, jump = true })
           else
             local ok, err = pcall(vim.cmd.cnext)
@@ -145,6 +147,7 @@ return {
       {
         "<leader>st",
         function()
+          ---@diagnostic disable-next-line: undefined-field
           Snacks.picker.todo_comments()
         end,
         desc = "Todo",
@@ -152,6 +155,7 @@ return {
       {
         "<leader>sT",
         function()
+          ---@diagnostic disable-next-line: undefined-field
           Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } })
         end,
         desc = "Todo/Fix/Fixme",

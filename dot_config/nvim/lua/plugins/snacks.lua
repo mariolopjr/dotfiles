@@ -55,7 +55,7 @@ return {
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
       terminal = { enabled = true },
-      words = { enabled = false },
+      words = { enabled = true },
     },
     keys = {
       {
@@ -375,6 +375,7 @@ return {
       {
         "<leader>fe",
         function()
+          ---@diagnostic disable-next-line: missing-fields
           Snacks.explorer({ cwd = get_root_dir() })
         end,
         desc = "[F]ile [E]xplorer (root dir)",
@@ -398,8 +399,7 @@ return {
         ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
         callback = function(ev)
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          local value = ev.data.params
-              .value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+          local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
           if not client or type(value) ~= "table" then
             return
           end
@@ -431,8 +431,8 @@ return {
             title = client.name,
             opts = function(notif)
               notif.icon = #progress[client.id] == 0 and " "
-                  or spinner
-                  [math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+                ---@diagnostic disable-next-line: undefined-field
+                or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
             end,
           })
         end,
