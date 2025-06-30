@@ -1,0 +1,7 @@
+{
+  "bevy::prelude::*": {
+    "prefix": "bevyp",
+    "body": "use bevy::prelude::*;",
+    "description": "use bevy::prelude::*;"
+  }
+}
