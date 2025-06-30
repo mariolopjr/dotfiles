@@ -38,6 +38,26 @@ function M.setup()
   })
 end
 
+-- Open lazy plugin github page
+local function custom_gx()
+  local line = vim.api.nvim_get_current_line()
+  -- Match: { "author/repo",
+  local repo = line:match('{%s*"([%w%-_]+/[%w%-_%.]+)",')
+  if not repo then
+    -- Also match: "author/repo",
+    repo = line:match('"([%w%-_]+/[%w%-_%.]+)",')
+  end
+  if repo then
+    local url = "https://github.com/" .. repo
+    vim.fn.jobstart({ "open", url }, { detach = true })
+    return
+  end
+  -- Fallback to default gx
+  vim.api.nvim_feedkeys("gx", "n", false)
+end
+
+keymap.set("n", "gx", custom_gx, { desc = "Open URL or plugin repo in browser" })
+
 -- LSP keymap
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),

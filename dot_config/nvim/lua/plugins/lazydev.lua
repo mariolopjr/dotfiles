@@ -8,7 +8,7 @@ return {
     ---@type lazydev.Config
     opts = {
       library = {
-        { path = "love2d/library", words = { "love" } },
+        { path = "love2d/library",     words = { "love" } },
         { plugins = { "nvim-dap-ui" }, types = true },
       },
     },
