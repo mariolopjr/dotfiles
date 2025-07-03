@@ -124,8 +124,10 @@
       // TODO: Open other files
       // Show project panel with current file
       "space e": "pane::RevealInProjectPanel",
+      "space t b": "workspace::ToggleBottomDock",
       "space t c": "workspace::ToggleRightDock",
-      "space t e": "workspace::ToggleLeftDock"
+      "space t e": "workspace::ToggleLeftDock",
+      "space t z": "workspace::ToggleZoom"
     }
   },
   {
@@ -167,8 +169,7 @@
       "p": "project_panel::Paste",
 
       // Close project panel as project file panel on the right
-      "q": "workspace::ToggleRightDock",
-      "space e": "workspace::ToggleRightDock"
+      "q": "workspace::ToggleRightDock"
     }
   }
 ]

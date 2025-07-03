@@ -12,6 +12,7 @@
   "auto_install_extensions": {
     "catppuccin": true,
     "catppuccin-icons": true,
+    "fish": true,
     "html": true,
     "lua": true,
     "toml": true
