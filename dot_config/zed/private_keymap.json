@@ -41,6 +41,7 @@
       "space m P": "markdown::OpenPreviewToTheSide",
 
       // Open recent project
+      "space f n": "workspace::NewFile",
       "space f p": "projects::OpenRecent",
 
       // Search word under cursor
@@ -54,7 +55,10 @@
       "space z s": "zed::OpenSettings",
 
       // Go to file with `gf`
-      "g f": "editor::OpenExcerpts"
+      "g f": "editor::OpenExcerpts",
+
+      "s": ["vim::PushSneak", {}],
+      "S": ["vim::PushSneakBackward", {}]
     }
   },
   // put key-bindings here if you want them to work only in normal mode
@@ -69,11 +73,16 @@
       "space c a": "editor::ToggleCodeActions",
       "space c f": "editor::Format",
       "space c r": "editor::Rename",
+      "space c s": "outline::Toggle",
+      "space c S": "project_symbols::Toggle",
 
       "g d": "editor::GoToDefinition",
       "g D": "editor::GoToDefinitionSplit",
+      "g e": "editor::GoToDeclaration",
+      "g E": "editor::GoToDeclarationSplit",
       "g i": "editor::GoToImplementation",
       "g I": "editor::GoToImplementationSplit",
+      "g K": "editor::ShowSignatureHelp",
       "g t": "editor::GoToTypeDefinition",
       "g T": "editor::GoToTypeDefinitionSplit",
       "g r": "editor::FindAllReferences",
@@ -83,10 +92,6 @@
       // TODO: Go to next/prev error when supported
       "] e": "editor::GoToDiagnostic",
       "[ e": "editor::GoToPreviousDiagnostic",
-
-      // Symbol search
-      "s s": "outline::Toggle",
-      "s S": "project_symbols::Toggle",
 
       // Diagnostic
       "space x x": "diagnostics::Deploy",
@@ -153,7 +158,15 @@
     "bindings": {
       "j j": "vim::NormalBefore", // remap jj in insert mode to escape
       "j k": "vim::NormalBefore", // remap jk in insert mode to escape
-      "ctrl-i": "editor::ShowEditPrediction"
+      "ctrl-i": "editor::ShowEditPrediction",
+      "ctrl-k": "editor::ShowSignatureHelp"
+    }
+  },
+  // Run nearest task
+  {
+    "context": "EmptyPane || SharedScreen || vim_mode == normal",
+    "bindings": {
+      "space r t": ["editor::SpawnNearestTask", { "reveal": "no_focus" }]
     }
   },
   // File panel (netrw)

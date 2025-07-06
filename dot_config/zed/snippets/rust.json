@@ -1,7 +1,33 @@
 {
+  // bevy snippets
   "bevy::prelude::*": {
-    "prefix": "bevyp",
+    "prefix": "bp",
     "body": "use bevy::prelude::*;",
     "description": "use bevy::prelude::*;"
+  },
+  "bevy_app::plugin": {
+    "prefix": "pl",
+    "body": [
+      "pub struct ${1};",
+      "",
+      "impl Plugin for ${1} {",
+      "    fn build(&self, app: &mut App) {",
+      "        ${0}",
+      "    }",
+      "}"
+    ]
+  },
+  // rust snippets
+  "struct definition": {
+    "prefix": "st",
+    "body": ["$1struct $2 {", "    $3", "}"]
+  },
+  "generic struct definition": {
+    "prefix": "stg",
+    "body": ["$1struct $2<${3:T}> $4{", "    $5", "}"]
+  },
+  "struct definition with impl": {
+    "prefix": "sti",
+    "body": ["$1struct $2 {", "    $3", "}\n", "impl $2 {", "    $4", "}"]
   }
 }
