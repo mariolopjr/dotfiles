@@ -10,6 +10,7 @@
 // settings from https://github.com/jellydn/zed-101-setup
 {
   "auto_install_extensions": {
+    "beancount": true,
     "catppuccin": true,
     "catppuccin-icons": true,
     "fish": true,
@@ -89,6 +90,7 @@
   },
   // File syntax highlighting
   "file_types": {
+    "Beancount": ["*.bc"],
     "Dockerfile": ["Dockerfile", "Dockerfile.*"],
     "JSON": ["json", "jsonc", "*.code-snippets"],
     "TOML": ["*.toml.tmpl"]
