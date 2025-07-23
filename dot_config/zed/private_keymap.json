@@ -138,7 +138,13 @@
   {
     "context": "Workspace",
     "bindings": {
-      "ctrl-\\": "terminal_panel::ToggleFocus"
+      "ctrl-/": "terminal_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-\\": "workspace::NewTerminal"
     }
   },
   // Empty pane, set of keybindings that are available when there is no active editor

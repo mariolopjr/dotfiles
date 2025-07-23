@@ -14,6 +14,7 @@
     "catppuccin": true,
     "catppuccin-icons": true,
     "fish": true,
+    "gdscript": true,
     "html": true,
     "lua": true,
     "toml": true
