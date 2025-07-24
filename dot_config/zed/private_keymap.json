@@ -54,6 +54,10 @@
       "space z p": "zed::OpenProjectSettings",
       "space z s": "zed::OpenSettings",
 
+      // language server
+      "space l l": "editor::RestartLanguageServer",
+      "space l r": "dev::OpenLanguageServerLogs",
+
       // Go to file with `gf`
       "g f": "editor::OpenExcerpts",
 
@@ -86,12 +90,12 @@
       "g t": "editor::GoToTypeDefinition",
       "g T": "editor::GoToTypeDefinitionSplit",
       "g r": "editor::FindAllReferences",
+
+      // diagnostics
       "] d": "editor::GoToDiagnostic",
       "[ d": "editor::GoToPreviousDiagnostic",
-
-      // TODO: Go to next/prev error when supported
-      "] e": "editor::GoToDiagnostic",
-      "[ e": "editor::GoToPreviousDiagnostic",
+      "] e": ["editor::GoToDiagnostic", { "severity": { "min": "error" } }],
+      "[ e": ["editor::GoToPreviousDiagnostic", { "severity": { "min": "error" } }],
 
       // Diagnostic
       "space x x": "diagnostics::Deploy",
@@ -129,6 +133,8 @@
       // TODO: Open other files
       // Show project panel with current file
       "space e": "pane::RevealInProjectPanel",
+
+      // various toggles
       "space t b": "workspace::ToggleBottomDock",
       "space t c": "workspace::ToggleRightDock",
       "space t e": "workspace::ToggleLeftDock",
