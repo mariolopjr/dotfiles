@@ -22,6 +22,7 @@ return {
   -- setup dap with lsp
   {
     "mfussenegger/nvim-dap",
+    enabled = not vim.g.vscode,
     dependencies = {
       "rcarriga/nvim-dap-ui",
       -- virtual text for the debugger
@@ -88,6 +89,7 @@ return {
   -- fancy UI for the debugger
   {
     "rcarriga/nvim-dap-ui",
+    enabled = not vim.g.vscode,
     dependencies = { "nvim-neotest/nvim-nio" },
     -- stylua: ignore
     keys = {

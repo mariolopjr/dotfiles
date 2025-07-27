@@ -1,6 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
+    enabled = not vim.g.vscode,
     dependencies = {
       "xzbdmw/colorful-menu.nvim",
     },
@@ -38,7 +39,7 @@ return {
                 width = { fill = true, max = 60 },
                 text = function(ctx)
                   local highlights_info = require("colorful-menu")
-                  .blink_highlights(ctx)
+                      .blink_highlights(ctx)
                   if highlights_info ~= nil then
                     return highlights_info.label
                   else
@@ -48,7 +49,7 @@ return {
                 highlight = function(ctx)
                   local highlights = {}
                   local highlights_info = require("colorful-menu")
-                  .blink_highlights(ctx)
+                      .blink_highlights(ctx)
                   if highlights_info ~= nil then
                     highlights = highlights_info.highlights
                   end

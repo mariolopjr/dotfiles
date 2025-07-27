@@ -32,6 +32,7 @@ local textobjects = {
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    enabled = not vim.g.vscode,
     build = ":TSUpdate",
     main = "nvim-treesitter.configs",
     lazy = vim.fn.argc(-1) == 0,
@@ -68,6 +69,7 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
+    enabled = not vim.g.vscode,
     event = "VeryLazy",
     config = function()
       -- If treesitter is already loaded, we need to run config again for textobjects
@@ -100,6 +102,7 @@ return {
   },
   {
     "bezhermoso/tree-sitter-ghostty",
+    enabled = not vim.g.vscode,
     build = "make nvim_install",
     ft = "ghostty",
   },

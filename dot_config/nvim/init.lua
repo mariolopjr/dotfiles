@@ -14,6 +14,11 @@ vim.g.loaded_netrwPlugin = 1
 vim.api.nvim_create_autocmd("User", {
   pattern = { "LazyInstall", "LazySync", "LazyUpdate", "LazyClean" },
   callback = function()
+    -- skip chezmoi update in vscode
+    if vim.g.vscode then
+      return
+    end
+
     -- run chezmoi add after lockfile update
     local lock_file = vim.fn.stdpath("config") .. "/lazy-lock.json"
     local command = "chezmoi add " .. lock_file

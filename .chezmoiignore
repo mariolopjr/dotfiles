@@ -8,3 +8,4 @@ Library
 .config/nvim/stylua.toml
 .config/nvim/selene.toml
 .hammerspoon/Spoons/EmmyLua.spoon
+chezmoi.code-workspace

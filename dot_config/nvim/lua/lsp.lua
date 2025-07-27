@@ -8,6 +8,10 @@ local icons = {
 }
 
 M.setup = function()
+  if vim.g.vscode then
+    return
+  end
+
   -- enable LSPs
   vim.lsp.enable({
     "clangd",

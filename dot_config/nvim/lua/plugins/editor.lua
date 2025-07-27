@@ -2,6 +2,7 @@ return {
   -- search/replace in multiple files
   {
     "MagicDuck/grug-far.nvim",
+    enabled = not vim.g.vscode,
     opts = { headerMaxWidth = 80 },
     cmd = "GrugFar",
     keys = {
@@ -60,6 +61,7 @@ return {
   -- better diagnostics list and others
   {
     "folke/trouble.nvim",
+    enabled = not vim.g.vscode,
     cmd = { "Trouble" },
     opts = {
       modes = {
@@ -120,6 +122,7 @@ return {
   -- in your project and loads them into a browsable list.
   {
     "folke/todo-comments.nvim",
+    enabled = not vim.g.vscode,
     cmd = { "TodoTrouble" },
     event = "LazyFile",
     opts = {},
