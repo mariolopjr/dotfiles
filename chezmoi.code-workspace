@@ -11,7 +11,8 @@
 		"go.goroot": "/Users/mario/.local/share/mise/installs/go/1.24.5",
 		"go.alternateTools": {
 			"go": "/Users/mario/.local/share/mise/shims/go",
-			"gopls": "/Users/mario/.local/share/mise/shims/gopls"
+			"gopls": "/Users/mario/.local/share/mise/shims/gopls",
+			"dlv": "/Users/mario/.local/share/mise/shims/dlv"
 		}
 	}
 }
