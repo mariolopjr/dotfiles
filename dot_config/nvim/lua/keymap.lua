@@ -29,22 +29,6 @@ function M.setup()
     end,
   })
 
-  -- LSP keymap
-  vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
-    callback = function(args)
-      local buf = args.buf
-
-      keymap.set("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help", buffer = buf })
-      keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "[C]ode [R]ename", buffer = buf })
-      keymap.set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode [A]ction", buffer = buf })
-      keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]oto [D]eclaration", buffer = buf })
-      keymap.set("n", "<leader>ch", function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-      end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
-    end,
-  })
-
   -- Open lazy plugin github page
   local function custom_gx()
     local line = vim.api.nvim_get_current_line()
@@ -68,13 +52,19 @@ function M.setup()
   if vim.g.vscode then
     local vscode = require('vscode')
 
+    -- Code
+    keymap.set("n", "<leader>cr", vscode.action("editor.action.rename"), { desc = "[C]ode [R]ename" })
+    keymap.set("n", "<leader>cs", vscode.action("workbench.action.gotoSymbol"), { desc = "[C]ode [S]ymbols" })
+    keymap.set("n", "<leader>cS", vscode.action("workbench.action.showAllSymbols"),
+      { desc = "[C]ode Workspace [S]ymbols" })
+
     keymap.set("n", "<leader>ti", function()
       local enabled = vscode.get_config("editor.inlineSuggest.enabled")
       vscode.update_config("editor.inlineSuggest.enabled", not enabled, "global")
     end, { desc = "Toggle Inline Suggest" })
 
     keymap.set("n", "<leader>ff", function()
-      vscode.action('workbench.action.quickOpen')
+      vscode.action("workbench.action.quickOpen")
     end, { desc = "[F]ile [F]inder" })
 
     keymap.set("i", "<C-Enter>", function()
@@ -84,6 +74,23 @@ function M.setup()
 
     return
   end
+
+  -- LSP keymap
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+    callback = function(args)
+      local buf = args.buf
+
+      keymap.set("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help", buffer = buf })
+      keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "[C]ode [R]ename", buffer = buf })
+      keymap.set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode [A]ction", buffer = buf })
+      keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]oto [D]eclaration", buffer = buf })
+      keymap.set("n", "<leader>ch", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
+    end,
+  })
+
 
   -- Diagnostic keymaps
   keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
