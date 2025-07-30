@@ -5,7 +5,6 @@ README.md
 .hammerspoon
 Library
 {{- end }}
-.config/nvim/stylua.toml
-.config/nvim/selene.toml
 .hammerspoon/Spoons/EmmyLua.spoon
-chezmoi.code-workspace
+selene.toml
+stylua.toml

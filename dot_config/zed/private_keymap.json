@@ -29,6 +29,7 @@
       // space g: [G]it
       "space g h d": "editor::ToggleSelectedDiffHunks",
       "space g h r": "git::Restore",
+      "space g b": "editor::BlameHover",
       "space g g": "git_panel::ToggleFocus",
 
       // space t: [T]oggle Settings
