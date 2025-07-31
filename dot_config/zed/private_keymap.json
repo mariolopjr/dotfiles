@@ -49,11 +49,13 @@
       "space s w": "pane::DeploySearch",
 
       /// Zed IDE pages
-      "space z d": "debug_panel::ToggleFocus",
+      "space d d": "debug_panel::ToggleFocus",
+      "space z d": "zed::OpenDebugTasks",
       "space z e": "zed::Extensions",
       "space z k": "zed::OpenKeymap",
       "space z p": "zed::OpenProjectSettings",
       "space z s": "zed::OpenSettings",
+      "space z t": "zed::OpenTasks",
 
       // language server
       "space l l": "editor::RestartLanguageServer",
@@ -196,6 +198,14 @@
 
       // Close project panel as project file panel on the right
       "q": "workspace::ToggleRightDock"
+    }
+  },
+  // Git panel
+  {
+    "context": "GitPanel",
+    "bindings": {
+      "ctrl-a": "git::StageAll",
+      "ctrl-u": "git::UnstageAll"
     }
   }
 ]

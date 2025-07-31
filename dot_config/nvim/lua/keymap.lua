@@ -53,10 +53,17 @@ function M.setup()
     local vscode = require('vscode')
 
     -- Code
-    keymap.set("n", "<leader>cr", vscode.action("editor.action.rename"), { desc = "[C]ode [R]ename" })
-    keymap.set("n", "<leader>cs", vscode.action("workbench.action.gotoSymbol"), { desc = "[C]ode [S]ymbols" })
-    keymap.set("n", "<leader>cS", vscode.action("workbench.action.showAllSymbols"),
-      { desc = "[C]ode Workspace [S]ymbols" })
+    keymap.set("n", "<leader>cr", function()
+      vscode.action("editor.action.rename")
+    end, { desc = "[C]ode [R]ename" })
+
+    keymap.set("n", "<leader>cs", function()
+      vscode.action("workbench.action.gotoSymbol")
+    end, { desc = "[C]ode [S]ymbols" })
+
+    keymap.set("n", "<leader>cS", function()
+      vscode.action("workbench.action.showAllSymbols")
+    end, { desc = "[C]ode Workspace [S]ymbols" })
 
     keymap.set("n", "<leader>ti", function()
       local enabled = vscode.get_config("editor.inlineSuggest.enabled")

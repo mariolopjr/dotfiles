@@ -49,5 +49,17 @@
   "vec macro call": {
     "prefix": "vec",
     "body": ["vec![$1]"]
+  },
+  "derive attribute": {
+    "prefix": "drv",
+    "body": ["#[derive($1)]"]
+  },
+  "derive debug": {
+    "prefix": "ddrv",
+    "body": ["#[derive(Debug)]"]
+  },
+  "derive a few useful attributes": {
+    "prefix": "drv*",
+    "body": ["#[derive(Copy, Clone, Debug, Default, PartialEq, Eq$1)]"]
   }
 }

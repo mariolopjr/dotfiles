@@ -47,7 +47,7 @@
   "buffer_font_size": 16,
   // Finder model width
   "file_finder": {
-    "modal_width": "medium"
+    "modal_max_width": "medium"
   },
   "buffer_font_family": "JetBrainsMono Nerd Font",
   "buffer_font_weight": 300,
@@ -56,9 +56,7 @@
   },
   // vim mode settings
   "vim_mode": true,
-  "vim": {
-    "enable_vim_sneak": true
-  },
+  "vim": {},
   "relative_line_numbers": true,
   "cursor_blink": false,
   "soft_wrap": "editor_width",
@@ -79,9 +77,7 @@
   },
   // enable minimap
   "minimap": {
-    "enabled": true,
-    "display_in": "active_editor",
-    "show_scrollbar": false
+    "display_in": "active_editor"
   },
   // NOTE: Zen mode, refer https://github.com/zed-industries/zed/issues/4382 when it's resolved
   "centered_layout": {
