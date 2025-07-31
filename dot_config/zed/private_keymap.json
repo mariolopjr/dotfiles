@@ -204,10 +204,10 @@
   {
     "context": "GitPanel",
     "bindings": {
-      "ctrl-a": "git::StageAll",
-      "ctrl-l": "git::Pull",
-      "ctrl-p": "git::Push",
-      "ctrl-u": "git::UnstageAll"
+      "ctrl-g a": "git::StageAll",
+      "ctrl-g l": "git::Pull",
+      "ctrl-g p": "git::Push",
+      "ctrl-g u": "git::UnstageAll"
     }
   }
 ]
