@@ -205,6 +205,8 @@
     "context": "GitPanel",
     "bindings": {
       "ctrl-a": "git::StageAll",
+      "ctrl-l": "git::Pull",
+      "ctrl-p": "git::Push",
       "ctrl-u": "git::UnstageAll"
     }
   }
