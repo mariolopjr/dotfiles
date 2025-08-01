@@ -138,8 +138,8 @@
       "space e": "pane::RevealInProjectPanel",
 
       // Run tasks
-      "space o o": "task::Spawn",
-      "space o q": "task::Rerun",
+      "space o l": "task::Spawn",
+      "space o o": "task::Rerun",
 
       // various toggles
       "space t b": "workspace::ToggleBottomDock",
