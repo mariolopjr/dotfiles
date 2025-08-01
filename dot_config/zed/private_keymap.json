@@ -137,6 +137,10 @@
       // Show project panel with current file
       "space e": "pane::RevealInProjectPanel",
 
+      // Run tasks
+      "space o o": "task::Spawn",
+      "space o q": "task::Rerun",
+
       // various toggles
       "space t b": "workspace::ToggleBottomDock",
       "space t c": "workspace::ToggleRightDock",
