@@ -165,9 +165,6 @@
             "enable": true
           }
         },
-        "rustfmt": {
-          "extraArgs": ["--unstable-features"]
-        },
         "procMacro": {
           "enable": true,
           "ignored": {
