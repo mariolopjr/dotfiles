@@ -17,6 +17,10 @@
       "}"
     ]
   },
+  "fn plugin": {
+    "prefix": "plf",
+    "body": ["pub(super) fn plugin(app: &mut App) {}"]
+  },
   // rust snippets
   "struct definition": {
     "prefix": "st",
