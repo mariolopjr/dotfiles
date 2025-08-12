@@ -35,7 +35,8 @@
     "gdscript": true,
     "html": true,
     "lua": true,
-    "toml": true
+    "toml": true,
+    "wgsl": true
   },
   "git_panel": {
     "dock": "right"
