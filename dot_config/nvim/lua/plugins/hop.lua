@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 return {
   {
     "smoka7/hop.nvim",
