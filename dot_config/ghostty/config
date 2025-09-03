@@ -6,7 +6,7 @@
 # Font
 font-family                    = JetBrainsMono NFM Light
 font-feature                   = calt,dlig,ss05
-font-thicken                   = false
+font-thicken                   = true
 font-size                      = 14
 
 # Look and Feel
@@ -38,3 +38,4 @@ keybind                        = ctrl+alt+l=resize_split:right,30
 
 ## other
 keybind                        = super+alt+enter=new_split:auto
+keybind                        = global:ctrl+`=toggle_quick_terminal

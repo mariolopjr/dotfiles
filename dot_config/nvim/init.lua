@@ -9,6 +9,9 @@ vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- enable vim.pack
+vim.g.use_vim_pack = false
+
 -- ensure lazy lock file is synced with chezmoi
 -- load before lazy.nvim otherwise LazyInstall will not be caught
 vim.api.nvim_create_autocmd("User", {
