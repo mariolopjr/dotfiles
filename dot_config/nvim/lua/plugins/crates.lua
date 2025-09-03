@@ -6,7 +6,7 @@ M.setup = function()
     { src = "https://github.com/saecki/crates.nvim", version = "stable" },
   })
 
-  require("crates").setup()
+  require("crates").setup({})
 end
 
 if vim.g.use_vim_pack then

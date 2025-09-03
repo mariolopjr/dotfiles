@@ -1,5 +1,6 @@
 local M = {}
 
+---@type Wezterm
 local wezterm = require("wezterm")
 local action = wezterm.action
 
@@ -31,19 +32,29 @@ local function split_nav(resize_or_move, key)
       if is_nvim(pane) then
         -- pass the keys through to nvim
         win:perform_action({
-          SendKey = { key = key, mods = resize_or_move == "resize" and "META" or "CTRL" },
+          SendKey = {
+            key = key,
+            mods = resize_or_move == "resize" and "META" or "CTRL",
+          },
         }, pane)
       else
         if resize_or_move == "resize" then
-          win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
+          win:perform_action(
+            { AdjustPaneSize = { direction_keys[key], 3 } },
+            pane
+          )
         else
-          win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
+          win:perform_action(
+            { ActivatePaneDirection = direction_keys[key] },
+            pane
+          )
         end
       end
     end),
   }
 end
 
+---@param config Config
 function M.apply_to_config(config)
   config.keys = {
     -- move between split panes

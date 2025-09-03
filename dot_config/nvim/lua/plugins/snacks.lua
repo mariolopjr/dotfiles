@@ -31,8 +31,20 @@ return {
         enabled = true,
         sections = {
           { section = "header" },
-          { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
-          { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+          {
+            icon = " ",
+            title = "Keymaps",
+            section = "keys",
+            indent = 2,
+            padding = 1,
+          },
+          {
+            icon = " ",
+            title = "Projects",
+            section = "projects",
+            indent = 2,
+            padding = 1,
+          },
           {
             icon = " ",
             title = "Recent Files",
@@ -54,7 +66,7 @@ return {
       quickfile = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
-      terminal = { enabled = true },
+      terminal = { enabled = false },
       words = { enabled = true },
     },
     keys = {
@@ -93,24 +105,24 @@ return {
         end,
         desc = "Lazygit Log (cwd)",
       },
-      {
-        "<leader>rt",
-        function()
-          Snacks.terminal()
-        end,
-        mode = { "n", "v" },
-        desc = "[R]un [T]erminal",
-      },
-      {
-        "<leader>rc",
-        function()
-          Snacks.input("cmd> ", function(cmd)
-            Snacks.terminal(cmd)
-          end)
-        end,
-        mode = { "n", "v" },
-        desc = "[R]un [C]ommand in Terminal",
-      },
+      -- {
+      --   "<leader>rt",
+      --   function()
+      --     Snacks.terminal()
+      --   end,
+      --   mode = { "n", "v" },
+      --   desc = "[R]un [T]erminal",
+      -- },
+      -- {
+      --   "<leader>rc",
+      --   function()
+      --     Snacks.input("cmd> ", function(cmd)
+      --       Snacks.terminal(cmd)
+      --     end)
+      --   end,
+      --   mode = { "n", "v" },
+      --   desc = "[R]un [C]ommand in Terminal",
+      -- },
       -- picker
       {
         "<leader>,",
@@ -132,13 +144,6 @@ return {
           Snacks.picker.command_history()
         end,
         desc = "Command History",
-      },
-      {
-        "<leader><space>",
-        function()
-          Snacks.picker.files()
-        end,
-        desc = "Find Files",
       },
       -- find
       {
@@ -387,8 +392,18 @@ return {
         end,
         desc = "[F]ile [󰘶E]xplorer (cwd)",
       },
-      { "<leader>e", "<leader>fe", desc = "[F]ile [E]xplorer (root dir)", remap = true },
-      { "<leader>E", "<leader>fE", desc = "[F]ile [󰘶E]xplorer (cwd)", remap = true },
+      {
+        "<leader>e",
+        "<leader>fe",
+        desc = "[F]ile [E]xplorer (root dir)",
+        remap = true,
+      },
+      {
+        "<leader>E",
+        "<leader>fE",
+        desc = "[F]ile [󰘶E]xplorer (cwd)",
+        remap = true,
+      },
     },
     config = function(_, opts)
       require("snacks").setup(opts)
@@ -425,7 +440,18 @@ return {
             return table.insert(msg, v.msg) or not v.done
           end, p)
 
-          local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+          local spinner = {
+            "⠋",
+            "⠙",
+            "⠹",
+            "⠸",
+            "⠼",
+            "⠴",
+            "⠦",
+            "⠧",
+            "⠇",
+            "⠏",
+          }
           vim.notify(table.concat(msg, "\n"), "info", {
             id = "lsp_progress",
             title = client.name,

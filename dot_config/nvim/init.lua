@@ -33,5 +33,9 @@ vim.api.nvim_create_autocmd("User", {
 
 require("options").setup()
 require("keymap").setup()
-require("lazynvim").setup()
+if vim.g.use_vim_pack then
+  require("plugins").setup()
+else
+  require("lazynvim").setup()
+end
 require("lsp").setup()

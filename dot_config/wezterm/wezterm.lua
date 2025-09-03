@@ -1,11 +1,11 @@
--- setup local wezterm APIs
+---@type Wezterm
 local wezterm = require("wezterm")
 local mux = wezterm.mux
 local action = wezterm.action
 
 local keymap = require("keymap")
 
--- config
+---@type Config
 local config = wezterm.config_builder()
 
 config.term = "wezterm"
