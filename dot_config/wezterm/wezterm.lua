@@ -19,7 +19,12 @@ wezterm.on("gui-startup", function()
   window:gui_window():maximize()
 end)
 config.window_decorations = "RESIZE"
+
+-- tab bar config
 config.hide_tab_bar_if_only_one_tab = true
+config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = true
+config.tab_max_width = 30
 
 -- set theme settings
 config.color_scheme = "Catppuccin Macchiato"
