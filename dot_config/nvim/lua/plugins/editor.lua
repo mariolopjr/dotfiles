@@ -2,7 +2,6 @@ return {
   -- search/replace in multiple files
   {
     "MagicDuck/grug-far.nvim",
-    enabled = not vim.g.vscode,
     opts = { headerMaxWidth = 80 },
     cmd = "GrugFar",
     keys = {
@@ -61,7 +60,6 @@ return {
   -- better diagnostics list and others
   {
     "folke/trouble.nvim",
-    enabled = not vim.g.vscode,
     cmd = { "Trouble" },
     opts = {
       modes = {
@@ -77,14 +75,14 @@ return {
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
       },
-      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>",     desc = "Symbols (Trouble)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
       {
         "<leader>cS",
         "<cmd>Trouble lsp toggle<cr>",
         desc = "LSP references/definitions/... (Trouble)",
       },
       { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
-      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>",  desc = "Quickfix List (Trouble)" },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
       {
         "[q",
         function()
@@ -122,7 +120,6 @@ return {
   -- in your project and loads them into a browsable list.
   {
     "folke/todo-comments.nvim",
-    enabled = not vim.g.vscode,
     cmd = { "TodoTrouble" },
     event = "LazyFile",
     opts = {},

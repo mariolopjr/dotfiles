@@ -1,8 +1,5 @@
 local M = {}
 
--- TODO
--- add keymaps for navigating git hunks in vscode
-
 local keymap = vim.keymap
 function M.setup()
   -- Clear highlights on search when pressing <Esc> in normal mode
@@ -49,39 +46,6 @@ function M.setup()
 
   keymap.set("n", "gx", custom_gx, { desc = "Open URL or plugin repo in browser" })
 
-  if vim.g.vscode then
-    local vscode = require('vscode')
-
-    -- Code
-    keymap.set("n", "<leader>cr", function()
-      vscode.action("editor.action.rename")
-    end, { desc = "[C]ode [R]ename" })
-
-    keymap.set("n", "<leader>cs", function()
-      vscode.action("workbench.action.gotoSymbol")
-    end, { desc = "[C]ode [S]ymbols" })
-
-    keymap.set("n", "<leader>cS", function()
-      vscode.action("workbench.action.showAllSymbols")
-    end, { desc = "[C]ode Workspace [S]ymbols" })
-
-    keymap.set("n", "<leader>ti", function()
-      local enabled = vscode.get_config("editor.inlineSuggest.enabled")
-      vscode.update_config("editor.inlineSuggest.enabled", not enabled, "global")
-    end, { desc = "Toggle Inline Suggest" })
-
-    keymap.set("n", "<leader>ff", function()
-      vscode.action("workbench.action.quickOpen")
-    end, { desc = "[F]ile [F]inder" })
-
-    keymap.set("i", "<C-Enter>", function()
-      local enabled = vscode.get_config("editor.inlineSuggest.enabled")
-      vscode.update_config("editor.inlineSuggest.enabled", not enabled, "global")
-    end, { desc = "[AI] Toggle Copilot Inline Suggestion (Insert mode)" })
-
-    return
-  end
-
   -- LSP keymap
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
@@ -97,7 +61,6 @@ function M.setup()
       end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
     end,
   })
-
 
   -- Diagnostic keymaps
   keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })

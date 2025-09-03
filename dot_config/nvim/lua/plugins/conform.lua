@@ -1,7 +1,6 @@
 return {
   { -- Autoformat
     "stevearc/conform.nvim",
-    enabled = not vim.g.vscode,
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {

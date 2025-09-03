@@ -22,7 +22,6 @@ end
 return {
   {
     "folke/snacks.nvim",
-    enabled = not vim.g.vscode,
     priority = 1000,
     lazy = false,
     ---@type snacks.Config
@@ -33,6 +32,7 @@ return {
         sections = {
           { section = "header" },
           { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
+          { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
           {
             icon = " ",
             title = "Recent Files",
@@ -40,7 +40,6 @@ return {
             indent = 2,
             padding = 1,
           },
-          { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
           { section = "startup" },
         },
       },
@@ -400,8 +399,7 @@ return {
         ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
         callback = function(ev)
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          local value = ev.data.params
-              .value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+          local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
           if not client or type(value) ~= "table" then
             return
           end
@@ -433,9 +431,8 @@ return {
             title = client.name,
             opts = function(notif)
               notif.icon = #progress[client.id] == 0 and " "
-                  ---@diagnostic disable-next-line: undefined-field
-                  or spinner
-                  [math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+                ---@diagnostic disable-next-line: undefined-field
+                or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
             end,
           })
         end,

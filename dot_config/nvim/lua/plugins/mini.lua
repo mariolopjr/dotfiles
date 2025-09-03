@@ -20,10 +20,6 @@ return {
       -- fast autopairs
       require("mini.pairs").setup()
 
-      if vim.g.vscode then
-        return
-      end
-
       -- sessions management
       local sessions = require("mini.sessions")
       sessions.setup({
@@ -80,6 +76,9 @@ return {
 
       -- diff
       require("mini.diff").setup()
+
+      -- dashboard
+      -- require("mini.starter").setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim

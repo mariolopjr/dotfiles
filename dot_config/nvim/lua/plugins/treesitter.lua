@@ -32,7 +32,6 @@ local textobjects = {
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    enabled = not vim.g.vscode,
     build = ":TSUpdate",
     main = "nvim-treesitter.configs",
     lazy = vim.fn.argc(-1) == 0,
@@ -69,7 +68,6 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    enabled = not vim.g.vscode,
     event = "VeryLazy",
     config = function()
       -- If treesitter is already loaded, we need to run config again for textobjects
@@ -85,8 +83,7 @@ return {
         if name:find("goto") == 1 then
           move[name] = function(q, ...)
             if vim.wo.diff then
-              local config = configs.get_module("textobjects.move")
-                  [name] ---@type table<string,string>
+              local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
               for key, query in pairs(config or {}) do
                 if q == query and key:find("[%]%[][cC]") then
                   vim.cmd("normal! " .. key)
@@ -102,7 +99,6 @@ return {
   },
   {
     "bezhermoso/tree-sitter-ghostty",
-    enabled = not vim.g.vscode,
     build = "make nvim_install",
     ft = "ghostty",
   },

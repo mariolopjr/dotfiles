@@ -8,9 +8,10 @@ local icons = {
 }
 
 M.setup = function()
-  if vim.g.vscode then
-    return
-  end
+  -- install
+  vim.pack.add({
+    { src = "https://github.com/neovim/nvim-lspconfig" },
+  })
 
   -- enable LSPs
   vim.lsp.enable({
