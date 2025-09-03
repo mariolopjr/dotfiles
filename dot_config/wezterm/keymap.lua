@@ -56,6 +56,7 @@ end
 
 ---@param config Config
 function M.apply_to_config(config)
+  config.leader = { key = ",", mods = "CTRL", timeout_milliseconds = 2000 }
   config.keys = {
     -- move between split panes
     split_nav("move", "h"),
