@@ -28,6 +28,7 @@ config.tab_max_width = 30
 
 -- set theme settings
 config.color_scheme = "Catppuccin Macchiato"
+config.underline_position = -2
 config.font = wezterm.font_with_fallback({
   {
     family = "Monaspace Neon",
