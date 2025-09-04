@@ -14,16 +14,17 @@ M.setup = function()
   smart_splits.setup()
 
   -- keymaps
-  vim.keymap.set("n", "<C-h>", smart_splits.move_cursor_left)
-  vim.keymap.set("n", "<C-j>", smart_splits.move_cursor_down)
-  vim.keymap.set("n", "<C-k>", smart_splits.move_cursor_up)
-  vim.keymap.set("n", "<C-l>", smart_splits.move_cursor_right)
-  vim.keymap.set("n", "<C-\\>", smart_splits.move_cursor_previous)
+  local map = vim.keymap.set
+  map("n", "<C-h>", smart_splits.move_cursor_left)
+  map("n", "<C-j>", smart_splits.move_cursor_down)
+  map("n", "<C-k>", smart_splits.move_cursor_up)
+  map("n", "<C-l>", smart_splits.move_cursor_right)
+  map("n", "<C-\\>", smart_splits.move_cursor_previous)
 
-  vim.keymap.set("n", "<A-h>", smart_splits.resize_left)
-  vim.keymap.set("n", "<A-j>", smart_splits.resize_down)
-  vim.keymap.set("n", "<A-k>", smart_splits.resize_up)
-  vim.keymap.set("n", "<A-l>", smart_splits.resize_right)
+  map("n", "<A-h>", smart_splits.resize_left)
+  map("n", "<A-j>", smart_splits.resize_down)
+  map("n", "<A-k>", smart_splits.resize_up)
+  map("n", "<A-l>", smart_splits.resize_right)
 end
 
 if vim.g.use_vim_pack then

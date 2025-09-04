@@ -6,6 +6,7 @@ M.setup = function()
     { src = "https://github.com/saecki/crates.nvim", version = "stable" },
   })
 
+  -- setup
   require("crates").setup({})
 end
 

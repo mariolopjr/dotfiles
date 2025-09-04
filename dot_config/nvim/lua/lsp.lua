@@ -21,7 +21,7 @@ M.setup = function()
     "fish_lsp",
     "gopls",
     "lua_ls",
-    "pyright",
+    "ty",
   })
 
   -- setup inlay hints
