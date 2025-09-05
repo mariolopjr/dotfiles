@@ -83,17 +83,14 @@ M.setup = function()
 
   -- setup
   local snacks = require("snacks")
-  local default_opts = snacks.config
-  local config_index
-  for i = #default_opts.dashboard.preset.keys, 1, -1 do
-    if default_opts.dashboard.preset.keys[i].key == "c" then
-      table.remove(default_opts.dashboard.preset.keys, i)
-      config_index = i
-      break
-    end
-  end
-  table.insert(default_opts.dashboard.preset.keys, config_index, chezmoi_entry)
-  opts.dashboard.preset.keys = default_opts.dashboard.preset.keys
+  -- local config_index
+  -- for i = #snacks.config.dashboard.preset.keys, 1, -1 do
+  --   if snacks.config.dashboard.preset.keys[i].key == "c" then
+  --     config_index = i
+  --     break
+  --   end
+  -- end
+  -- table.insert(opts.dashboard.preset.keys, config_index, chezmoi_entry)
   snacks.setup(opts)
 
   -- fancy LSP progress
@@ -157,7 +154,9 @@ M.setup = function()
 
   -- git
   map("n", "<leader>gb", Snacks.git.blame_line, { desc = "[G]it [B]lame" })
-  map("n", "<leader>gB", Snacks.gitbrowse(), { desc = "[G]it [B]rowse" })
+  map("n", "<leader>gB", function()
+    Snacks.gitbrowse()
+  end, { desc = "[G]it [B]rowse" })
   map("n", "<leader>gc", Snacks.picker.git_log, { desc = "Git Log" })
   map("n", "<leader>gs", Snacks.picker.git_status, { desc = "Git Status" })
   map(

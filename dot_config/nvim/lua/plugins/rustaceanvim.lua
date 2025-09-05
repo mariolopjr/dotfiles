@@ -4,13 +4,10 @@ M.setup = function()
   -- install
   vim.pack.add({
     {
-      src = "https://github.com/mrjones2014/smart-splits.nvim",
+      src = "https://github.com/mrcjkb/rustaceanvim",
       version = vim.version.range("6.0.0"),
     },
   })
-
-  -- setup
-  require("rustaceanvim").setup()
 end
 
 if vim.g.use_vim_pack then
