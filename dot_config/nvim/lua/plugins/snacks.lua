@@ -96,7 +96,20 @@ return {
       indent = { enabled = true },
       input = { enabled = true },
       notifier = { enabled = true },
-      picker = {},
+      picker = {
+        win = {
+          input = {
+            keys = {
+              ["<Esc>"] = { "close", mode = { "n", "i" } },
+              -- scroll like lazygit
+              ["J"] = { "preview_scroll_down", mode = { "i", "n" } },
+              ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
+              ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
+              ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
+            },
+          },
+        },
+      },
       quickfile = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
