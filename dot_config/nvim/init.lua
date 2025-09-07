@@ -14,15 +14,5 @@ vim.g.use_vim_pack = false
 
 require("options").setup()
 require("keymap").setup()
+require("lazynvim").setup()
 require("lsp").setup()
-if vim.g.use_vim_pack then
-  require("plugins.catppuccin").setup()
-  require("plugins.snacks").setup()
-  require("plugins.crates").setup()
-  require("plugins.rustaceanvim").setup()
-  require("plugins.smart-splits").setup()
-  require("plugins.chezmoi").setup()
-  require("plugins.hop").setup()
-else
-  require("lazynvim").setup()
-end

@@ -97,9 +97,4 @@ return {
       end
     end,
   },
-  {
-    "bezhermoso/tree-sitter-ghostty",
-    build = "make nvim_install",
-    ft = "ghostty",
-  },
 }

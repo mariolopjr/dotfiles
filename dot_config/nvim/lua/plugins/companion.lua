@@ -1,16 +1,3 @@
-local M = {}
-
-M.setup = function()
-  -- install
-  vim.pack.add({
-    { src = "https://github.com/olimorris/codecompanion.nvim" },
-  })
-end
-
-if vim.g.use_vim_pack then
-  return M
-end
-
 return {
   {
     "olimorris/codecompanion.nvim",
