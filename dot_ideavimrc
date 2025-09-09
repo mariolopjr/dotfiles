@@ -1,0 +1,15 @@
+" vim: ft=vim :
+
+" custom remaps
+nnoremap Y y$
+
+" default settings and plugins
+source ~/.config/ideavim/settings.vim
+source ~/.config/ideavim/plugins.vim
+
+" keymaps
+source ~/.config/ideavim/keymap/init.vim
+
+" which-key
+" must come last to load keymap descriptions
+source ~/.config/ideavim/which-key.vim
