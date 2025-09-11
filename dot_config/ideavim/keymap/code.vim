@@ -3,6 +3,8 @@ let g:WhichKeyDesc_Code = "<leader>c    +code"
 
 nmap <leader>ca <Action>(ShowIntentionActions)
 nmap <leader>ce <Action>(ShowErrorDescription)
+nmap <leader>cf <Action>(ReformatCode)
+nmap <leader>cF <Action>(ReformatWithPrettierAction)
 nmap <leader>ch <Action>(CallHierarchy)
 nmap <leader>ci <Action>(OptimizeImports)
 nmap <leader>cm <Action>(MethodHierarchy)
@@ -16,6 +18,8 @@ nmap <leader>cU <Action>(ShowUmlDiagram)
 
 let g:WhichKeyDesc_Code_Action = "<leader>ca action list"
 let g:WhichKeyDesc_Code_ShowErrorDescr = "<leader>ce show error description"
+let g:WhichKeyDesc_Code_FormatCode = "<leader>cf format code"
+let g:WhichKeyDesc_Code_FormatCodeWithPrettier = "<leader>cF format code with prettier"
 let g:WhichKeyDesc_Code_CallHierarchy = "<leader>ch call hierarchy"
 let g:WhichKeyDesc_Code_OptimizeImports = "<leader>ci optimize imports"
 let g:WhichKeyDesc_Code_MethodHierarchy = "<leader>cm method hierarchy"

@@ -65,7 +65,6 @@ let g:WhichKeyDesc_Windows_WindowUp = "<C-k> window up"
 nnoremap <C-k>         <C-w>k
 vnoremap <C-k>         <Esc><C-w>k
 
-
 " Close window
 let g:WhichKeyDesc_Windows_CloseWindow = "<C-w>q close window"
 nmap <C-w>q    <Action>(CloseAllEditors)

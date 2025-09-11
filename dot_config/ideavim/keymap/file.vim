@@ -47,9 +47,8 @@ vnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
 let g:WhichKeyDesc_File_IDE = "<leader>fe +ide"
 
 " Show settings
-let g:WhichKeyDesc_File_IDE_Settings = "<leader>fed settings"
-nnoremap <leader>fed    :action ShowSettings<CR>
-vnoremap <leader>fed    <Esc>:action ShowSettings<CR>
+let g:WhichKeyDesc_File_IDE_Settings = "<leader>fes settings"
+map <leader>fes <Action>(ShowSettings)
 
 " Reload .ideavimrc
 let g:WhichKeyDesc_File_IDE_ReloadIdeaVimRc = "<leader>fer reload ideavimrc"
