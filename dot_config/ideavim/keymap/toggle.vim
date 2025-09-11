@@ -1,22 +1,19 @@
 """ Toggle settings Keymap
 let g:WhichKeyDesc_Toggle = "<leader>T    +toggle"
 
-" Toggle Gutter icons
+map <leader>Td <action>(ToggleDistractionFreeMode)
+map <leader>Tf <action>(ToggleFullScreen)
+map <leader>Tg <Action>(EditorToggleShowGutterIcons)
+map <leader>Tm <Action>(HideAllWindows)
+map <leader>Tp <Action>(TogglePresentationMode)
+map <leader>Tv <Action>(ChangeView)
+map <leader>Tz <action>(ToggleZenMode)
+
+let g:WhichKeyDesc_Toggle_DistractionFreeMode = "<leader>Td distration free mode"
+let g:WhichKeyDesc_Toggle_FullScreen = "<leader>Tf full screen"
 let g:WhichKeyDesc_Toggle_GutterIcons = "<leader>Tg gutter icons"
-nnoremap <leader>Tg    :action EditorToggleShowGutterIcons<CR>
-vnoremap <leader>Tg    :action EditorToggleShowGutterIcons<CR>
-
-" Hide all windows except the ones with code
 let g:WhichKeyDesc_Toggle_HideAllWindows = "<leader>Tm hide all windows"
-nnoremap <leader>Tm    :action HideAllWindows<CR>
-vnoremap <leader>Tm    :action HideAllWindows<CR>
-
-" Toggle presentation mode
 let g:WhichKeyDesc_Toggle_PresentationMode = "<leader>Tp presentation mode"
-nnoremap <leader>Tp    :action TogglePresentationMode<CR>
-vnoremap <leader>Tp    :action TogglePresentationMode<CR>
-
-" Toggle presentation or distraction free mode
 let g:WhichKeyDesc_Toggle_ChooseViewMode = "<leader>Tv choose view mode"
-nnoremap <leader>Tv    :action ChangeView<CR>
-vnoremap <leader>Tv    :action ChangeView<CR>
+let g:WhichKeyDesc_Toggle_ZenMode = "<leader>Tz zen mode"
+
