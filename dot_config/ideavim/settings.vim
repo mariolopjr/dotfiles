@@ -24,8 +24,12 @@ set hlsearch
 set ignorecase
 set smartcase
 
-" emulate vim-surround. Commands: ys, cs, ds, S.
-set surround
-
 " enable modeline support
 set modelines=1
+
+" enable joining lines
+set ideajoin
+
+" The ":substitute" flag 'g' is by default
+set gdefault
+
