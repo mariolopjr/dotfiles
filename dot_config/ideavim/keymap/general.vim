@@ -21,6 +21,33 @@ let g:WhichKeyDesc_Windows_WindowUp = "<C-k> window up"
 nnoremap <C-k>         <C-w>k
 vnoremap <C-k>         <Esc><C-w>k
 
+" Split window right
+let g:WhichKeyDesc_Windows_SplitWindowRightBackslash = "<C-\> split window right"
+nmap <C-\>    <Action>(SplitVertically)
+vmap <C-\>    <Action>(SplitVertically)
+
+let g:WhichKeyDesc_Windows_SplitWindowRight = "<C-w>v split window right"
+nmap <C-w>v    <Action>(SplitVertically)
+vmap <C-w>v    <Action>(SplitVertically)
+
+" Split window below
+let g:WhichKeyDesc_Windows_SplitWindowBelowDash = "<C--> split window below"
+nmap <C-->    <Action>(SplitHorizontally)
+vmap <C-->    <Action>(SplitHorizontally)
+
+let g:WhichKeyDesc_Windows_SplitWindowBelow = "<C-w>s split window below"
+nmap <C-w>s    <Action>(SplitHorizontally)
+vmap <C-w>s    <Action>(SplitHorizontally)
+
+" Close window
+let g:WhichKeyDesc_Windows_CloseWindow = "<C-w>q close window"
+nmap <C-w>q    <Action>(CloseAllEditors)
+vmap <C-w>q    <Action>(CloseAllEditors)
+
 """" Diagnostics
+" TBD if possible
+
+"""" Errors
 nmap ]e <Action>(GotoNextError)
 nmap [e <Action>(GotoPreviousError)
+

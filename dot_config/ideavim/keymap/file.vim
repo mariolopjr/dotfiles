@@ -52,9 +52,10 @@ nnoremap <leader>fed    :action ShowSettings<CR>
 vnoremap <leader>fed    <Esc>:action ShowSettings<CR>
 
 " Reload .ideavimrc
-let g:WhichKeyDesc_File_IDE_ReloadIdeaVimRc = "<leader>feR reload ideavimrc"
-nnoremap <leader>feR    :source ~/.ideavimrc<CR>
-vnoremap <leader>feR    <Esc>:source ~/.ideavimrc<CR>
+let g:WhichKeyDesc_File_IDE_ReloadIdeaVimRc = "<leader>fer reload ideavimrc"
+nnoremap <leader>fer    :source ~/.ideavimrc<CR>
+vnoremap <leader>fer    <Esc>:source ~/.ideavimrc<CR>
+"map <leader>fer    <Action>(IdeaVim.ReloadVimRc.reload)
 
 """" Yank/Copy submenu
 let g:WhichKeyDesc_File_YankCopy = "<leader>fy +Yank/Copy"
