@@ -14,6 +14,7 @@ M.setup = function()
     "fish_lsp",
     "gopls",
     "lua_ls",
+    "marksman",
     "ty",
   })
 

@@ -39,6 +39,33 @@ let g:WhichKeyDesc_Windows_SplitWindowBelow = "<C-w>s split window below"
 nmap <C-w>s    <Action>(SplitHorizontally)
 vmap <C-w>s    <Action>(SplitHorizontally)
 
+" Resize
+map <A-h> <Action>(StretchSplitToLeft)
+map <A-l> <Action>(StretchSplitToRight)
+map <A-k> <Action>(StretchSplitToTop)
+map <A-j> <Action>(StretchSplitToBottom)
+
+let g:WhichKeyDesc_Windows_StretchLeft = "<A-h> window stretch left"
+let g:WhichKeyDesc_Windows_StretchRight = "<A-l> window stretch right"
+let g:WhichKeyDesc_Windows_StretchUp = "<A-k> window stretch up"
+let g:WhichKeyDesc_Windows_StretchDown = "<A-j> window stretch down"
+
+" Focus window right
+let g:WhichKeyDesc_Windows_WindowRight = "<C-l> window right"
+nnoremap <C-l>         <C-w>l
+vnoremap <C-l>         <Esc><C-w>l
+
+" Focus window down
+let g:WhichKeyDesc_Windows_WindowDown = "<C-j> window down"
+nnoremap <C-j>         <C-w>j
+vnoremap <C-j>         <Esc><C-w>j
+
+" Focus window up
+let g:WhichKeyDesc_Windows_WindowUp = "<C-k> window up"
+nnoremap <C-k>         <C-w>k
+vnoremap <C-k>         <Esc><C-w>k
+
+
 " Close window
 let g:WhichKeyDesc_Windows_CloseWindow = "<C-w>q close window"
 nmap <C-w>q    <Action>(CloseAllEditors)
