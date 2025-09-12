@@ -6,5 +6,6 @@ source ~/.config/ideavim/keymap/debug.vim
 source ~/.config/ideavim/keymap/file.vim
 source ~/.config/ideavim/keymap/run.vim
 source ~/.config/ideavim/keymap/search.vim
+source ~/.config/ideavim/keymap/test.vim
 source ~/.config/ideavim/keymap/toggle.vim
 source ~/.config/ideavim/keymap/general.vim

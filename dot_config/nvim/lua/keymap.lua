@@ -44,7 +44,12 @@ function M.setup()
     vim.api.nvim_feedkeys("gx", "n", false)
   end
 
-  keymap.set("n", "gx", custom_gx, { desc = "Open URL or plugin repo in browser" })
+  keymap.set(
+    "n",
+    "gx",
+    custom_gx,
+    { desc = "Open URL or plugin repo in browser" }
+  )
 
   -- LSP keymap
   vim.api.nvim_create_autocmd("LspAttach", {
@@ -52,10 +57,30 @@ function M.setup()
     callback = function(args)
       local buf = args.buf
 
-      keymap.set("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help", buffer = buf })
-      keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "[C]ode [R]ename", buffer = buf })
-      keymap.set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode [A]ction", buffer = buf })
-      keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]oto [D]eclaration", buffer = buf })
+      keymap.set(
+        "n",
+        "gK",
+        vim.lsp.buf.signature_help,
+        { desc = "Signature Help", buffer = buf }
+      )
+      keymap.set(
+        "n",
+        "<leader>cr",
+        vim.lsp.buf.rename,
+        { desc = "[C]ode [R]ename", buffer = buf }
+      )
+      keymap.set(
+        { "n", "x" },
+        "<leader>ca",
+        vim.lsp.buf.code_action,
+        { desc = "[C]ode [A]ction", buffer = buf }
+      )
+      keymap.set(
+        "n",
+        "gD",
+        vim.lsp.buf.declaration,
+        { desc = "[G]oto [D]eclaration", buffer = buf }
+      )
       keymap.set("n", "<leader>ch", function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
       end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
@@ -63,7 +88,12 @@ function M.setup()
   })
 
   -- Diagnostic keymaps
-  keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+  keymap.set(
+    "n",
+    "<leader>q",
+    vim.diagnostic.setloclist,
+    { desc = "Open diagnostic [Q]uickfix list" }
+  )
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -82,10 +112,30 @@ function M.setup()
     end,
   })
 
-  keymap.set("n", "<leader>bd", ":bd<CR>", { desc = "[B]uffer [D]elete", noremap = true, silent = true })
-  keymap.set("n", "<leader>fw", ":w<CR>", { desc = "[F]ile [W]rite", noremap = true, silent = true })
-  keymap.set("n", "<leader>fq", ":q<CR>", { desc = "[F]ile [Q]uit", noremap = true, silent = true })
-  keymap.set("n", "<leader>Q", ":cquit<CR>", { desc = "[Q]uit Neovim", noremap = true, silent = true })
+  keymap.set(
+    "n",
+    "<leader>bd",
+    ":bd<CR>",
+    { desc = "[B]uffer [D]elete", noremap = true, silent = true }
+  )
+  keymap.set(
+    "n",
+    "<leader>fs",
+    ":w<CR>",
+    { desc = "[F]ile [S]ave", noremap = true, silent = true }
+  )
+  keymap.set(
+    "n",
+    "<leader>fq",
+    ":q<CR>",
+    { desc = "[F]ile [Q]uit", noremap = true, silent = true }
+  )
+  keymap.set(
+    "n",
+    "<leader>Q",
+    ":cquit<CR>",
+    { desc = "[Q]uit Neovim", noremap = true, silent = true }
+  )
 end
 
 return M

@@ -12,8 +12,8 @@ vnoremap <leader>fF    :action GotoFile<CR>
 
 " Rename file
 let g:WhichKeyDesc_File_Rename = "<leader>fR rename"
-nnoremap <leader>fR    :action RenameFile<CR>
-vnoremap <leader>fR    :action RenameFile<CR>
+nmap <leader>fR <Action>(RenameFile)
+vmap <leader>fR <Action>(RenameFile)
 
 " Recent files
 let g:WhichKeyDesc_File_Recent = "<leader>fr recent"

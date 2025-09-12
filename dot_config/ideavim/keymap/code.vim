@@ -7,6 +7,7 @@ nmap <leader>cf <Action>(ReformatCode)
 nmap <leader>cF <Action>(ReformatWithPrettierAction)
 nmap <leader>ch <Action>(CallHierarchy)
 nmap <leader>ci <Action>(OptimizeImports)
+nmap <leader>cI <Action>(ImplementMethods)
 nmap <leader>cm <Action>(MethodHierarchy)
 nmap <leader>cp <Action>(ParameterInfo)
 imap <C-i> <Action>(ParameterInfo)
@@ -23,6 +24,7 @@ let g:WhichKeyDesc_Code_FormatCode = "<leader>cf format code"
 let g:WhichKeyDesc_Code_FormatCodeWithPrettier = "<leader>cF format code with prettier"
 let g:WhichKeyDesc_Code_CallHierarchy = "<leader>ch call hierarchy"
 let g:WhichKeyDesc_Code_OptimizeImports = "<leader>ci optimize imports"
+let g:WhichKeyDesc_Code_ImplementMethods = "<leader>cI implement methods"
 let g:WhichKeyDesc_Code_MethodHierarchy = "<leader>cm method hierarchy"
 let g:WhichKeyDesc_Code_ParamInfo = "<leader>cp parameter info"
 let g:WhichKeyDesc_Code_ParamInfoInsert = "<C-i> parameter info"
