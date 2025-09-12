@@ -2,6 +2,7 @@
 source ~/.config/ideavim/keymap/easymotion.vim
 source ~/.config/ideavim/keymap/ai.vim
 source ~/.config/ideavim/keymap/code.vim
+source ~/.config/ideavim/keymap/debug.vim
 source ~/.config/ideavim/keymap/file.vim
 source ~/.config/ideavim/keymap/run.vim
 source ~/.config/ideavim/keymap/search.vim

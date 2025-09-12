@@ -9,6 +9,7 @@ nmap <leader>ch <Action>(CallHierarchy)
 nmap <leader>ci <Action>(OptimizeImports)
 nmap <leader>cm <Action>(MethodHierarchy)
 nmap <leader>cp <Action>(ParameterInfo)
+imap <C-i> <Action>(ParameterInfo)
 nmap <leader>cr <Action>(RenameElement)
 nmap <leader>cs <Action>(FileStructurePopup)
 nmap <leader>cS <Action>(GotoSymbol)
@@ -24,6 +25,7 @@ let g:WhichKeyDesc_Code_CallHierarchy = "<leader>ch call hierarchy"
 let g:WhichKeyDesc_Code_OptimizeImports = "<leader>ci optimize imports"
 let g:WhichKeyDesc_Code_MethodHierarchy = "<leader>cm method hierarchy"
 let g:WhichKeyDesc_Code_ParamInfo = "<leader>cp parameter info"
+let g:WhichKeyDesc_Code_ParamInfoInsert = "<C-i> parameter info"
 let g:WhichKeyDesc_Code_RenameSymbol = "<leader>cr rename symbol"
 let g:WhichKeyDesc_Code_SearchSymbols = "<leader>cs search symbols"
 let g:WhichKeyDesc_Code_SearchSymbolsInProject = "<leader>cS search symbols (project)"

@@ -9,3 +9,6 @@ map <leader>rb <Action>(BuildSolutionAction)
 let g:WhichKeyDesc_Run_Run = "<leader>rr run"
 map <leader>rr <Action>(Run)
 
+" Terminal
+let g:WhichKeyDesc_Run_Terminal = "<leader>rt terminal"
+map <leader>rt <Action>(ActivateTerminalToolWindow)
