@@ -29,6 +29,14 @@ return {
     },
     keys = {
       {
+        "<C-a>",
+        function()
+          require("codecompanion").actions({})
+        end,
+        mode = { "n", "v" },
+        desc = "AI Code Actions",
+      },
+      {
         "<leader>aa",
         function()
           require("codecompanion").actions({})

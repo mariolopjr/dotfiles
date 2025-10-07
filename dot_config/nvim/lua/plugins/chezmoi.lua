@@ -34,7 +34,7 @@ end
 
 return {
   {
-    -- highlighting for chezmoi files template files
+    -- highlighting for chezmoi template files
     "alker0/chezmoi.vim",
     init = function()
       vim.g["chezmoi#use_tmp_buffer"] = 1
@@ -44,6 +44,7 @@ return {
   },
   {
     "xvzc/chezmoi.nvim",
+    cmd = { "ChezmoiEdit" },
     keys = {
       {
         "<leader>sz",
@@ -68,6 +69,20 @@ return {
         pattern = { os.getenv("HOME") .. "/.local/share/chezmoi/*" },
         callback = function()
           vim.schedule(require("chezmoi.commands.__edit").watch)
+        end,
+      })
+
+      -- update lazy.nvim lockfile
+      vim.api.nvim_create_autocmd("User", {
+        pattern = { "LazyInstall", "LazyUpdate", "LazySync", "LazyClean" },
+        group = vim.api.nvim_create_augroup(
+          "chezmoi_update_lock",
+          { clear = true }
+        ),
+        callback = function(_)
+          local lock_file = vim.fn.stdpath("config") .. "/lazy-lock.json"
+          local command = "chezmoi add " .. lock_file
+          vim.fn.system(command)
         end,
       })
     end,
