@@ -89,14 +89,6 @@ function M.setup()
   })
 
   -- Diagnostic keymaps
-  keymap.set(
-    "n",
-    "<leader>q",
-    vim.diagnostic.setloclist,
-    { desc = "Open diagnostic [Q]uickfix list" }
-  )
-
-  -- diagnostic
   local diagnostic_goto = function(next, severity)
     return function()
       vim.diagnostic.jump({
@@ -159,7 +151,7 @@ function M.setup()
   )
   keymap.set(
     "n",
-    "<leader>Q",
+    "<leader>q",
     ":cquit<CR>",
     { desc = "[Q]uit Neovim", noremap = true, silent = true }
   )

@@ -387,11 +387,11 @@ return {
         desc = "Colorschemes",
       },
       {
-        "<leader>qp",
+        "<leader>sp",
         function()
           Snacks.picker.projects()
         end,
-        desc = "Projects",
+        desc = "[S]earch Projects",
       },
       -- LSP
       {
