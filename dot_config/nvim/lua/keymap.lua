@@ -1,6 +1,7 @@
 local M = {}
 
 local keymap = vim.keymap
+local map = vim.keymap.set
 function M.setup()
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
@@ -94,6 +95,32 @@ function M.setup()
     vim.diagnostic.setloclist,
     { desc = "Open diagnostic [Q]uickfix list" }
   )
+
+  -- diagnostic
+  local diagnostic_goto = function(next, severity)
+    return function()
+      vim.diagnostic.jump({
+        count = (next and 1 or -1) * vim.v.count1,
+        severity = severity and vim.diagnostic.severity[severity] or nil,
+        float = true,
+      })
+    end
+  end
+
+  map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
+  map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
+  map(
+    "n",
+    "<leader>cd",
+    vim.diagnostic.open_float,
+    { desc = "Line Diagnostics" }
+  )
+  map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
+  map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
+  map("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+  map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+  map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
+  map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which

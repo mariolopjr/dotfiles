@@ -305,6 +305,13 @@ return {
       {
         "<leader>sd",
         function()
+          Snacks.picker.diagnostics_buffer()
+        end,
+        desc = "Diagnostics (Buffer)",
+      },
+      {
+        "<leader>sD",
+        function()
           Snacks.picker.diagnostics()
         end,
         desc = "Diagnostics",
@@ -421,7 +428,14 @@ return {
         function()
           Snacks.picker.lsp_symbols()
         end,
-        desc = "LSP Symbols",
+        desc = "[S]earch [S]ymbols",
+      },
+      {
+        "<leader>sS",
+        function()
+          Snacks.picker.lsp_references()
+        end,
+        desc = "[S]earch References",
       },
       -- file explorer
       {
