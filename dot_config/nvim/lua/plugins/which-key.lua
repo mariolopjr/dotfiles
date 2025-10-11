@@ -50,7 +50,7 @@ return {
         { "<leader>f", group = "[F]iles" },
         { "<leader>g", group = "[G]it" },
         { "<leader>p", group = "[P]lugins" },
-        -- { "<leader>r",        group = "[R]un" },
+        { "<leader>r", group = "[R]un" },
         { "<leader>s", group = "[S]earch" },
         -- { "<leader>w", group = "[W]orkspace" },
         { "<leader>t", group = "[T]ests" },
