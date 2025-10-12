@@ -37,9 +37,10 @@ return {
         golang = { "gofmt" },
         python = { "isort", "ruff" },
         rust = { "rustfmt" },
-        json = { "fixjson" },
+        json = { "yq" },
         html = { "prettier" },
-        xml = { "xmlformatter" },
+        xml = { "yq" },
+        yaml = { "yq " },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
