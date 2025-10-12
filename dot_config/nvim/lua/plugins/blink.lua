@@ -3,6 +3,7 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "xzbdmw/colorful-menu.nvim",
+      "rafamadriz/friendly-snippets",
     },
     version = "*",
     ---@module 'blink.cmp'
@@ -14,7 +15,7 @@ return {
       },
       signature = { enabled = true },
       sources = {
-        default = { "lazydev", "lsp", "path", "buffer" },
+        default = { "lazydev", "lsp", "buffer", "snippets", "path" },
         providers = {
           lazydev = {
             name = "LazyDev",

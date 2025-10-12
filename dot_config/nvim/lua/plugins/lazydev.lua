@@ -8,6 +8,11 @@ local function find_src_path(arg)
   if vim.fn.filereadable(path .. "/main.lua") == 1 then
     return path
   end
+
+  path = path .. "/game"
+  if vim.fn.filereadable(path .. "/main.lua") == 1 then
+    return path
+  end
   return nil
 end
 
@@ -17,7 +22,7 @@ local function love_run(path)
     return
   end
   local love_bin = "love" -- assumes 'love' is in PATH
-  handle = luv.spawn(love_bin, { args = { path } }, function(code, signal)
+  handle = luv.spawn(love_bin, { args = { path } }, function(code, _)
     handle = nil
     if code ~= 0 then
       vim.notify("LÖVE exited with code " .. code, vim.log.levels.ERROR)
