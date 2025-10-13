@@ -13,6 +13,20 @@ function M.setup()
   keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
   keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
+  -- Add empty lines before and after cursor line
+  vim.keymap.set(
+    "n",
+    "gO",
+    "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>",
+    { desc = "Add line before no insert" }
+  )
+  vim.keymap.set(
+    "n",
+    "go",
+    "<Cmd>call append(line('.'),     repeat([''], v:count1))<CR>",
+    { desc = "Add line after no insert" }
+  )
+
   -- [[ Basic Autocommands ]]
   --  See `:help lua-guide-autocommands`
 
