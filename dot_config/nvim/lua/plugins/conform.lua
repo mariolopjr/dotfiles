@@ -5,15 +5,20 @@ return {
     cmd = { "ConformInfo" },
     keys = {
       {
-        "<leader>f",
+        "<leader>cf",
         function()
           require("conform").format({ async = true, lsp_format = "fallback" })
         end,
-        mode = "",
-        desc = "[F]ormat buffer",
+        desc = "[C]ode [F]ormat",
+      },
+      {
+        "<leader>pc",
+        ":ConformInfo<CR>",
+        desc = "Check Conform info",
       },
     },
     opts = {
+      log_level = vim.log.levels.DEBUG,
       notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
@@ -31,13 +36,28 @@ return {
           lsp_format = lsp_format_opt,
         }
       end,
+      formatters = {
+        yq_json = {
+          command = "yq",
+          args = {
+            "-P",
+            "--output-format",
+            "json",
+            "--input-format",
+            "json",
+            ".",
+          },
+          stdin = true,
+        },
+      },
       formatters_by_ft = {
         css = { "stylelint" },
         lua = { "stylua" },
         golang = { "gofmt" },
         python = { "isort", "ruff" },
         rust = { "rustfmt" },
-        json = { "yq" },
+        sh = { "shellcheck" },
+        json = { "yq_json" },
         html = { "prettier" },
         xml = { "yq" },
         yaml = { "yq " },
