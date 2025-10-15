@@ -5,6 +5,6 @@ README.md
 .hammerspoon
 Library
 {{- end }}
-.config/nvim/stylua.toml
-.config/nvim/selene.toml
 .hammerspoon/Spoons/EmmyLua.spoon
+selene.toml
+stylua.toml

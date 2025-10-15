@@ -1,4 +1,5 @@
 [tools]
+dotnet = "9"
 go = "latest"
 hugo = "latest"
 node = "latest"

@@ -3,6 +3,7 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "xzbdmw/colorful-menu.nvim",
+      "rafamadriz/friendly-snippets",
     },
     version = "*",
     ---@module 'blink.cmp'
@@ -14,7 +15,7 @@ return {
       },
       signature = { enabled = true },
       sources = {
-        default = { "lazydev", "lsp", "path", "buffer" },
+        default = { "lazydev", "lsp", "buffer", "snippets", "path" },
         providers = {
           lazydev = {
             name = "LazyDev",
@@ -37,8 +38,8 @@ return {
               label = {
                 width = { fill = true, max = 60 },
                 text = function(ctx)
-                  local highlights_info = require("colorful-menu")
-                  .blink_highlights(ctx)
+                  local highlights_info =
+                    require("colorful-menu").blink_highlights(ctx)
                   if highlights_info ~= nil then
                     return highlights_info.label
                   else
@@ -47,14 +48,16 @@ return {
                 end,
                 highlight = function(ctx)
                   local highlights = {}
-                  local highlights_info = require("colorful-menu")
-                  .blink_highlights(ctx)
+                  local highlights_info =
+                    require("colorful-menu").blink_highlights(ctx)
                   if highlights_info ~= nil then
                     highlights = highlights_info.highlights
                   end
                   for _, idx in ipairs(ctx.label_matched_indices) do
-                    table.insert(highlights,
-                      { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                    table.insert(
+                      highlights,
+                      { idx, idx + 1, group = "BlinkCmpLabelMatch" }
+                    )
                   end
                   return highlights
                 end,

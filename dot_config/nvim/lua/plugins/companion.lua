@@ -4,7 +4,10 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
+      {
+        "MeanderingProgrammer/render-markdown.nvim",
+        ft = { "markdown", "codecompanion" },
+      },
     },
     opts = {
       display = {
@@ -25,6 +28,14 @@ return {
       },
     },
     keys = {
+      {
+        "<C-a>",
+        function()
+          require("codecompanion").actions({})
+        end,
+        mode = { "n", "v" },
+        desc = "AI Code Actions",
+      },
       {
         "<leader>aa",
         function()

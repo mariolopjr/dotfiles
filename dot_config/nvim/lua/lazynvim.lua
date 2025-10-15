@@ -18,7 +18,8 @@ function M.setup()
   -- create LazyFile event
   local event = require("lazy.core.handler.event")
 
-  event.mappings.LazyFile = { id = "LazyFile", event = { "BufReadPost", "BufNewFile", "BufWritePre" } }
+  event.mappings.LazyFile =
+    { id = "LazyFile", event = { "BufReadPost", "BufNewFile", "BufWritePre" } }
   event.mappings["User LazyFile"] = event.mappings.LazyFile
 
   -- bootstrap lazy
@@ -34,7 +35,12 @@ function M.setup()
     },
 
     -- keymap
-    vim.keymap.set("n", "<leader>pL", require("lazy").home, { desc = "[P]lugin [L]azy" }),
+    vim.keymap.set(
+      "n",
+      "<leader>pL",
+      require("lazy").home,
+      { desc = "[P]lugin [L]azy" }
+    ),
 
     -- disable additional built-in plugins
     performance = {

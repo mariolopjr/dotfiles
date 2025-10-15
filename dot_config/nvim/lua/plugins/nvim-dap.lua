@@ -1,9 +1,7 @@
 ---@param config {type?:string, args?:string[]|fun():string[]?}
 local function get_args(config)
-  local args = type(config.args) == "function" and (config.args() or {}) or
-      config.args or {} --[[@as string[] | string ]]
-  local args_str = type(args) == "table" and table.concat(args, " ") or
-      args --[[@as string]]
+  local args = type(config.args) == "function" and (config.args() or {}) or config.args or {} --[[@as string[] | string ]]
+  local args_str = type(args) == "table" and table.concat(args, " ") or args --[[@as string]]
 
   config = vim.deepcopy(config)
   ---@cast args string[]
@@ -60,8 +58,7 @@ return {
     },
     config = function()
       -- change breakpoint icons
-      vim.api.nvim_set_hl(0, "DapStoppedLine",
-        { default = true, link = "Visual" })
+      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
       local breakpoint_icons = vim.g.have_nerd_font
           and {
             Breakpoint = "",
@@ -70,13 +67,13 @@ return {
             LogPoint = "",
             Stopped = "",
           }
-          or {
-            Breakpoint = "●",
-            BreakpointCondition = "⊜",
-            BreakpointRejected = "⊘",
-            LogPoint = "◆",
-            Stopped = "⭔",
-          }
+        or {
+          Breakpoint = "●",
+          BreakpointCondition = "⊜",
+          BreakpointRejected = "⊘",
+          LogPoint = "◆",
+          Stopped = "⭔",
+        }
       for type, icon in pairs(breakpoint_icons) do
         local tp = "Dap" .. type
         local hl = (type == "Stopped") and "DapStop" or "DapBreak"

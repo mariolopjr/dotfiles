@@ -19,6 +19,40 @@ local function get_root_dir()
   return vim.fn.getcwd()
 end
 
+local pick_chezmoi = function()
+  local results = require("chezmoi.commands").list({
+    args = {
+      "--path-style",
+      "absolute",
+      "--include",
+      "files",
+      "--exclude",
+      "externals",
+    },
+  })
+  local items = {}
+
+  for _, czFile in ipairs(results) do
+    table.insert(items, {
+      text = czFile,
+      file = czFile,
+    })
+  end
+
+  ---@type snacks.picker.Config
+  local opts = {
+    items = items,
+    confirm = function(picker, item)
+      picker:close()
+      require("chezmoi.commands").edit({
+        targets = { item.text },
+        args = { "--watch" },
+      })
+    end,
+  }
+  Snacks.picker.pick(opts)
+end
+
 return {
   {
     "folke/snacks.nvim",
@@ -31,7 +65,20 @@ return {
         enabled = true,
         sections = {
           { section = "header" },
-          { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
+          {
+            icon = " ",
+            title = "Keymaps",
+            section = "keys",
+            indent = 2,
+            padding = 1,
+          },
+          {
+            icon = " ",
+            title = "Projects",
+            section = "projects",
+            indent = 2,
+            padding = 1,
+          },
           {
             icon = " ",
             title = "Recent Files",
@@ -39,7 +86,6 @@ return {
             indent = 2,
             padding = 1,
           },
-          { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
           { section = "startup" },
         },
       },
@@ -50,11 +96,24 @@ return {
       indent = { enabled = true },
       input = { enabled = true },
       notifier = { enabled = true },
-      picker = {},
+      picker = {
+        win = {
+          input = {
+            keys = {
+              ["<Esc>"] = { "close", mode = { "n", "i" } },
+              -- scroll like lazygit
+              ["J"] = { "preview_scroll_down", mode = { "i", "n" } },
+              ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
+              ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
+              ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
+            },
+          },
+        },
+      },
       quickfile = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
-      terminal = { enabled = true },
+      terminal = { enabled = false },
       words = { enabled = true },
     },
     keys = {
@@ -93,24 +152,24 @@ return {
         end,
         desc = "Lazygit Log (cwd)",
       },
-      {
-        "<leader>rt",
-        function()
-          Snacks.terminal()
-        end,
-        mode = { "n", "v" },
-        desc = "[R]un [T]erminal",
-      },
-      {
-        "<leader>rc",
-        function()
-          Snacks.input("cmd> ", function(cmd)
-            Snacks.terminal(cmd)
-          end)
-        end,
-        mode = { "n", "v" },
-        desc = "[R]un [C]ommand in Terminal",
-      },
+      -- {
+      --   "<leader>rt",
+      --   function()
+      --     Snacks.terminal()
+      --   end,
+      --   mode = { "n", "v" },
+      --   desc = "[R]un [T]erminal",
+      -- },
+      -- {
+      --   "<leader>rc",
+      --   function()
+      --     Snacks.input("cmd> ", function(cmd)
+      --       Snacks.terminal(cmd)
+      --     end)
+      --   end,
+      --   mode = { "n", "v" },
+      --   desc = "[R]un [C]ommand in Terminal",
+      -- },
       -- picker
       {
         "<leader>,",
@@ -132,13 +191,6 @@ return {
           Snacks.picker.command_history()
         end,
         desc = "Command History",
-      },
-      {
-        "<leader><space>",
-        function()
-          Snacks.picker.files()
-        end,
-        desc = "Find Files",
       },
       -- find
       {
@@ -253,6 +305,13 @@ return {
       {
         "<leader>sd",
         function()
+          Snacks.picker.diagnostics_buffer()
+        end,
+        desc = "Diagnostics (Buffer)",
+      },
+      {
+        "<leader>sD",
+        function()
           Snacks.picker.diagnostics()
         end,
         desc = "Diagnostics",
@@ -328,11 +387,11 @@ return {
         desc = "Colorschemes",
       },
       {
-        "<leader>qp",
+        "<leader>sp",
         function()
           Snacks.picker.projects()
         end,
-        desc = "Projects",
+        desc = "[S]earch Projects",
       },
       -- LSP
       {
@@ -369,7 +428,14 @@ return {
         function()
           Snacks.picker.lsp_symbols()
         end,
-        desc = "LSP Symbols",
+        desc = "[S]earch [S]ymbols",
+      },
+      {
+        "<leader>sS",
+        function()
+          Snacks.picker.lsp_references()
+        end,
+        desc = "[S]earch References",
       },
       -- file explorer
       {
@@ -387,8 +453,18 @@ return {
         end,
         desc = "[F]ile [󰘶E]xplorer (cwd)",
       },
-      { "<leader>e", "<leader>fe", desc = "[F]ile [E]xplorer (root dir)", remap = true },
-      { "<leader>E", "<leader>fE", desc = "[F]ile [󰘶E]xplorer (cwd)", remap = true },
+      {
+        "<leader>e",
+        "<leader>fe",
+        desc = "[F]ile [E]xplorer (root dir)",
+        remap = true,
+      },
+      {
+        "<leader>E",
+        "<leader>fE",
+        desc = "[F]ile [󰘶E]xplorer (cwd)",
+        remap = true,
+      },
     },
     config = function(_, opts)
       require("snacks").setup(opts)
@@ -399,8 +475,7 @@ return {
         ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
         callback = function(ev)
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          local value = ev.data.params
-          .value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+          local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
           if not client or type(value) ~= "table" then
             return
           end
@@ -426,15 +501,25 @@ return {
             return table.insert(msg, v.msg) or not v.done
           end, p)
 
-          local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+          local spinner = {
+            "⠋",
+            "⠙",
+            "⠹",
+            "⠸",
+            "⠼",
+            "⠴",
+            "⠦",
+            "⠧",
+            "⠇",
+            "⠏",
+          }
           vim.notify(table.concat(msg, "\n"), "info", {
             id = "lsp_progress",
             title = client.name,
             opts = function(notif)
               notif.icon = #progress[client.id] == 0 and " "
-                  ---@diagnostic disable-next-line: undefined-field
-                  or spinner
-                  [math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+                ---@diagnostic disable-next-line: undefined-field
+                or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
             end,
           })
         end,

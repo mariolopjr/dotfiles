@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 return {
   {
     "smoka7/hop.nvim",
@@ -13,11 +14,17 @@ return {
 
       -- sneak motions
       map({ "n", "v" }, "f", function()
-        hop.hint_char2({ direction = direction.AFTER_CURSOR, current_line_only = true })
+        hop.hint_char2({
+          direction = direction.AFTER_CURSOR,
+          current_line_only = true,
+        })
       end)
 
       map({ "n", "v" }, "F", function()
-        hop.hint_char2({ direction = direction.BEFORE_CURSOR, current_line_only = true })
+        hop.hint_char2({
+          direction = direction.BEFORE_CURSOR,
+          current_line_only = true,
+        })
       end)
 
       map({ "n", "v" }, "t", function()
