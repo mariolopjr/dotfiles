@@ -9,7 +9,7 @@ local function find_src_path(arg)
     return path
   end
 
-  path = path .. "/game"
+  path = path .. "/src"
   if vim.fn.filereadable(path .. "/main.lua") == 1 then
     return path
   end
