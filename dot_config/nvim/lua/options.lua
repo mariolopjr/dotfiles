@@ -63,6 +63,9 @@ function M.setup()
   vim.opt.foldlevel = 5 -- ensure file is unfolded
   vim.opt.foldnestmax = 4 -- only fold up to 4 levels deep
 
+  -- Set tabs to 4 spaces by default
+  vim.opt.tabstop = 4
+
   -- force .h files to c
   vim.g.c_syntax_for_h = true
 end

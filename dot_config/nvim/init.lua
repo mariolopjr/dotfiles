@@ -15,4 +15,3 @@ vim.g.use_vim_pack = false
 require("options").setup()
 require("keymap").setup()
 require("lazynvim").setup()
-require("lsp").setup()
