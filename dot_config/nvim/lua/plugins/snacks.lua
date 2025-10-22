@@ -97,6 +97,19 @@ return {
       input = { enabled = true },
       notifier = { enabled = true },
       picker = {
+        sources = {
+          explorer = {
+            win = {
+              list = {
+                keys = {
+                  -- change how hidden files are displayed due to conflict with
+                  -- aerospace
+                  ["<A-.>"] = { "toggle_hidden", mode = { "n", "i" } },
+                },
+              },
+            },
+          },
+        },
         win = {
           input = {
             keys = {
@@ -106,6 +119,9 @@ return {
               ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
               ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
               ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
+              -- change how hidden files are displayed due to conflict with
+              -- aerospace
+              ["<A-.>"] = { "toggle_hidden", mode = { "n", "i" } },
             },
           },
         },

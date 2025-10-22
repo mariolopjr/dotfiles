@@ -32,3 +32,7 @@ TBD
 
 - configuration for steam deck
 - configuration for nas
+- configure sketchybar and enable service: `brew services start felixkratz/formulae/sketchybar`
+- configure sketchybar and enable service: `brew services start felixkratz/formulae/sketchybar`
+- configure sketchybar and enable service: `brew services start felixkratz/formulae/sketchybar`
+
