@@ -96,6 +96,7 @@ return {
         "gopls",
         "lua_ls",
         "marksman",
+        "nixd",
         "ty",
         "jsonls",
         "yamlls",
