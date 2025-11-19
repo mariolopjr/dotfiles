@@ -1,10 +1,16 @@
 README.md
-{{- if ne .chezmoi.os "darwin" }}
 .config/fish
 .config/ghostty
-.hammerspoon
-Library
-{{- end }}
-.hammerspoon/Spoons/EmmyLua.spoon
 selene.toml
 stylua.toml
+{{- if ne .chezmoi.os "darwin" }}
+.hammerspoon
+.hammerspoon/Spoons/EmmyLua.spoon
+.zshrc
+Library
+{{- end }}
+{{- if eq .chezmoi.os "darwin" }}
+.config/containers
+.config/distrobox
+{{- end }}
+

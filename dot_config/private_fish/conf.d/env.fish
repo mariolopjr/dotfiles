@@ -21,6 +21,3 @@ if type -q brew
     set -gx HOMEBREW_NO_ANALYTICS 1
 end
 
-if test -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-	fish_add_path "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-end

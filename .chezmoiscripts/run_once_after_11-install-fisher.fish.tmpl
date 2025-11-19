@@ -1,0 +1,9 @@
+{{ $hostname := .chezmoi.hostname }}
+{{ if eq .chezmoi.os "darwin" -}}
+    {{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{ end -}}
+{{- if or (hasKey .desktops $hostname) (hasKey .laptops $hostname) -}}
+#!/opt/homebrew/bin/fish
+
+curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+{{ end -}}
