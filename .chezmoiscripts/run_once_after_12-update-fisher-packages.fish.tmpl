@@ -1,5 +1,8 @@
-{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
-{{- if hasKey .macHosts $hostname -}}
+{{ $hostname := .chezmoi.hostname }}
+{{ if eq .chezmoi.os "darwin" -}}
+    {{ $hostname = output "scutil" "--get" "LocalHostName" | trim }}
+{{ end -}}
+{{- if or (hasKey .desktops $hostname) (hasKey .laptops $hostname) -}}
 #!/opt/homebrew/bin/fish
 
 # This script will run whenever there's an update in .config/fish/fish_plugins

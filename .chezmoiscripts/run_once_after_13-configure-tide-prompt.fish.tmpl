@@ -1,0 +1,9 @@
+{{ $hostname := .chezmoi.hostname }}
+{{ if eq .chezmoi.os "darwin" -}}
+    {{ $hostname = output "scutil" "--get" "LocalHostName" | trim }}
+{{ end -}}
+{{- if or (hasKey .desktops $hostname) (hasKey .laptops $hostname) -}}
+#!/opt/homebrew/bin/fish
+
+tide configure --auto --style=Lean --prompt_colors='True color' --show_time='24-hour format' --lean_prompt_height='Two lines' --prompt_connection=Solid --prompt_connection_andor_frame_color=Darkest --prompt_spacing=Sparse --icons='Few icons' --transient=Yes
+{{ end -}}

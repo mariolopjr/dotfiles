@@ -1,0 +1,11 @@
+{{ $hostname := .chezmoi.hostname }}
+{{ if eq .chezmoi.os "darwin" -}}
+    {{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
+{{ end -}}
+{{- if hasKey .desktops $hostname -}}
+#!/usr/bin/fish
+
+systemctl --user daemon-reload
+systemctl --user start devbox.service
+systemctl --user enable --now podman-auto-update.timer
+{{ end -}}

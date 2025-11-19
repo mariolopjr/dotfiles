@@ -1,14 +1,15 @@
 [core]
     pager = delta
-    excludesfile = ~/.gitignore_global
+    excludesfile = ~/.config/git/gitignore
 [user]
-	signingkey = ~/.ssh/id_ed25519.pub
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhF7/5agjGzrAiS7eOH+tY5GhqdLKqbCuvGwkbR0lyr
 	email = mariolopjr@users.noreply.github.com
-	name = Mario Lopez
+	name = Mario
 [gpg]
 	format = ssh
 [gpg "ssh"]
-	allowedSignersFile = ~/.ssh/allowed_signers
+    allowedSignersFile = ~/.ssh/allowed_signers
+    program = "/opt/1Password/op-ssh-sign"
 [commit]
 	gpgsign = true
 [pull]
@@ -19,3 +20,4 @@
     defaultBranch = main
 [push]
     autoSetupRemote = true
+
