@@ -1,5 +1,4 @@
-{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
-{{- if eq $hostname "targaryen" -}}
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
 # Install brew cask packages
