@@ -1,5 +1,4 @@
-{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
-{{- if and (hasKey .macHosts $hostname) (not (env "GITHUB_ACTION")) -}}
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
 # Install brew mas packages

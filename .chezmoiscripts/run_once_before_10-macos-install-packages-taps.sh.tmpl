@@ -1,5 +1,4 @@
-{{ $hostname := output "scutil" "--get" "LocalHostName" | trim }}
-{{- if hasKey .macHosts $hostname -}}
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
 # Install brew taps
