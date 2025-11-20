@@ -2,6 +2,6 @@ Host *
   AddKeysToAgent yes
   {{ if eq .chezmoi.os "darwin" -}}
   UseKeychain yes
-  {{- end }}
-  IdentityFile ~/.1password/agent.sock
+  {{ end -}}
+  IdentityAgent ~/.1password/agent.sock
 

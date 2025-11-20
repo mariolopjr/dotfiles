@@ -9,7 +9,7 @@ Environment=SHELL=%s
 Environment=HOME=%h
 Environment=container=podman
 Environment=TERMINFO_DIRS=/usr/share/terminfo:/run/host/usr/share/terminfo
-Exec=--verbose --name %u --user %U --group %G --home %h --init 0 --nvidia 1 --
+Exec=--verbose --name %u --user %U --group %G --home %h --init "0" --nvidia "1" -- " "
 Image=ghcr.io/mariolopjr/devbox:latest
 HostName=devbox.%l
 Label=manager=distrobox
@@ -25,6 +25,9 @@ User=root:root
 UserNS=keep-id
 Volume=/:/run/host:rslave
 Volume=/tmp:/tmp:rslave
+Volume=/usr/bin/distrobox-init:/usr/bin/entrypoint:ro
+Volume=/usr/bin/distrobox-export:/usr/bin/distrobox-export:ro
+Volume=/usr/bin/distrobox-host-exec:/usr/bin/distrobox-host-exec:ro
 Volume=%h:%h:rslave
 Volume=/dev:/dev:rslave
 Volume=/sys:/sys:rslave
@@ -32,6 +35,8 @@ Volume=/dev/pts
 Volume=/dev/null:/dev/ptmx
 Volume=/sys/fs/selinux
 Volume=/var/log/journal
+Volume=/var/opt:/opt:ro
+Volume=/usr/lib/1Password:/usr/lib/1Password:ro
 Volume=/var/home/%u:/var/home/%u:rslave
 Volume=%t:%t:rslave
 Volume=/etc/hosts:/etc/hosts:ro

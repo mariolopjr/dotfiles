@@ -32,4 +32,5 @@ TBD
 
 - configuration for steam deck
 - configuration for nas
+- configure alternative directory for go binaries, default of $HOME/go sucks
 

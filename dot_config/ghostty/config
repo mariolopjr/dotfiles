@@ -4,7 +4,7 @@
 # ghostty +list-fonts
 
 # Font
-font-family                    = JetBrainsMono NFM Light
+font-family                    = JetBrainsMono
 font-feature                   = calt,dlig,ss05
 font-thicken                   = true
 font-size                      = 14
@@ -17,7 +17,7 @@ mouse-hide-while-typing        = true
 theme                          = onehalfdark
 
 # Other
-command                        = /opt/homebrew/bin/fish -l
+command                        = /usr/bin/fish -l
 copy-on-select                 = true
 auto-update                    = off
 

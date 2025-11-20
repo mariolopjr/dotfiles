@@ -127,7 +127,7 @@ function M.apply_to_config(config)
 
     -- remap clear viewport
     {
-      key = "l",
+      key = "k",
       mods = "SUPER",
       action = action.Multiple({
         action.ClearScrollback("ScrollbackAndViewport"),

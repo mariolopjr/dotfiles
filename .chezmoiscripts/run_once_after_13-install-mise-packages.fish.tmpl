@@ -1,0 +1,9 @@
+{{ if hasKey .desktops .chezmoi.hostname -}}
+#!/usr/bin/fish
+
+# This script will run whenever there's an update in .config/mise/config.toml
+# .config/mise/config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+mise install
+mise completion fish > ~/.config/fish/completions/mise.fish
+{{ end -}}
