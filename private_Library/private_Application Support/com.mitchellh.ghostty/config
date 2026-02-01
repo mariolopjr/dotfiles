@@ -4,8 +4,21 @@
 # ghostty +list-fonts
 
 # Font
-font-family                    = JetBrainsMono
-font-feature                   = calt,dlig,ss05
+## Font features
+# calt: variable width / texture healing
+# ss01: equals ligatures: ==
+# ss02: less/greater than ligatures: <=
+# ss03: arrow ligatures: ->
+# ss04: markup ligatures: </
+# ss05: F# ligatures: |>
+# ss06: repeating character ligatures: ###
+# ss07: colon ligatures: ::
+# ss08: period ligatures: ..=
+# ss09: less/greater than ligatures with other characters: =<<
+# ss10: other tag ligatures: #[
+# liga: dynamic spacing for repeating char patterns
+font-family                    = Monaspace Neon Regular
+font-feature                   = calt,ss01,ss03,ss04,ss05,ss06,ss07,ss08,ss09,ss10,liga
 font-thicken                   = true
 font-size                      = 14
 
@@ -14,10 +27,10 @@ adjust-cursor-thickness        = 10
 adjust-underline-position      = 3
 bold-is-bright                 = true
 mouse-hide-while-typing        = true
-theme                          = onehalfdark
+theme                          = Catppuccin Macchiato
 
 # Other
-command                        = /usr/bin/fish -l
+command                        = /opt/homebrew/bin/fish -l
 copy-on-select                 = true
 auto-update                    = off
 
@@ -38,4 +51,4 @@ keybind                        = ctrl+alt+l=resize_split:right,30
 
 ## other
 keybind                        = super+alt+enter=new_split:auto
-keybind                        = global:ctrl+`=toggle_quick_terminal
+keybind                        = global:ctrl+shift+`=toggle_quick_terminal

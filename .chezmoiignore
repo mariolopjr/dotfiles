@@ -1,6 +1,4 @@
 README.md
-.config/fish
-.config/ghostty
 selene.toml
 stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
@@ -9,8 +7,3 @@ stylua.toml
 .zshrc
 Library
 {{- end }}
-{{- if eq .chezmoi.os "darwin" }}
-.config/containers
-.config/distrobox
-{{- end }}
-

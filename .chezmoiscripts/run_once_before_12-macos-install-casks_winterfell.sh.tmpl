@@ -1,9 +1,8 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{- if eq .chezmoi.hostname "winterfell" -}}
 #!/bin/bash
 
 # Install brew cask packages
 brew bundle --file=/dev/stdin <<EOF
-cask "ableton-live-suite"
 cask "adobe-digital-editions"
 cask "calibre"
 EOF

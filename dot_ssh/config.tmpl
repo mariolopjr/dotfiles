@@ -3,5 +3,4 @@ Host *
   {{ if eq .chezmoi.os "darwin" -}}
   UseKeychain yes
   {{ end -}}
-  IdentityAgent ~/.1password/agent.sock
-
+  IdentityFile ~/.ssh/id_ed25519
