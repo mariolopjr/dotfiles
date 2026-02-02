@@ -1,11 +1,10 @@
 # fish abbreviations
 
+## general
 lla ls -la
-
-# general
-
 swmon m1ddc set input 18
 
 # git
-
 gsurm git submodule update --recursive --remote --merge
+
+// code: language=plaintext insertSpaces=true tabSize=4
