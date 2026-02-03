@@ -17,8 +17,8 @@
 # ss09: less/greater than ligatures with other characters: =<<
 # ss10: other tag ligatures: #[
 # liga: dynamic spacing for repeating char patterns
-font-family                    = Monaspace Neon Regular
-font-feature                   = calt,ss01,ss03,ss04,ss05,ss06,ss07,ss08,ss09,ss10,liga
+font-family                    = Monaspace Neon
+font-feature                   = calt,liga,ss01,ss03,ss04,ss05,ss06,ss07,ss08,ss09,ss10
 font-thicken                   = true
 font-size                      = 14
 
@@ -28,6 +28,7 @@ adjust-underline-position      = 3
 bold-is-bright                 = true
 mouse-hide-while-typing        = true
 theme                          = Catppuccin Macchiato
+window-save-state              = always
 
 # Other
 command                        = /opt/homebrew/bin/fish -l
@@ -50,5 +51,6 @@ keybind                        = ctrl+alt+k=resize_split:up,30
 keybind                        = ctrl+alt+l=resize_split:right,30
 
 ## other
+keybind                        = super+r=reload_config
 keybind                        = super+alt+enter=new_split:auto
 keybind                        = global:ctrl+shift+`=toggle_quick_terminal

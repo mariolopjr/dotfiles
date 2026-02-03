@@ -1,8 +1,10 @@
 # fish abbreviations
 
 ## general
+gg lazygit
 lla ls -la
 swmon m1ddc set input 18
+v nvim
 
 # git
 gsurm git submodule update --recursive --remote --merge

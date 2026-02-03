@@ -38,5 +38,6 @@ Sometimes, fisher plugin install is wonky. If so, ensure chezmoi overwrites the 
 
 - configure and use sketchybar
 - configure macos spaces for easy switching
+- configure macos system and user settings
 - configuration for steam deck
 - configuration for nas
