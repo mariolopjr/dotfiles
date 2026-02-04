@@ -1,0 +1,23 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+dockutil --remove all
+
+apps=(
+  "/Applications/Safari.app"
+  "/System/Applications/Messages.app"
+  "/System/Applications/Mail.app"
+  "/System/Applications/Photos.app"
+  "/Applications/Ghostty.app"
+  "/System/Applications/Notes.app"
+  "/System/Applications/Music.app"
+)
+
+for app in "${apps[@]}"; do
+  dockutil --add "$app" --no-restart
+done
+
+dockutil --add '~/Downloads' --view grid --display folder --allhomes
+
+killall Dock
+{{ end -}}

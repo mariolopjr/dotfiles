@@ -4,6 +4,7 @@
 # ghostty +list-fonts
 
 # Font
+#
 ## Font features
 # calt: variable width / texture healing
 # ss01: equals ligatures: ==
@@ -53,4 +54,4 @@ keybind                        = ctrl+alt+l=resize_split:right,30
 ## other
 keybind                        = super+r=reload_config
 keybind                        = super+alt+enter=new_split:auto
-keybind                        = global:ctrl+shift+`=toggle_quick_terminal
+keybind                        = global:ctrl+`=toggle_quick_terminal
