@@ -1,8 +1,3 @@
-{{ if eq .chezmoi.os "darwin" -}}
-#!/bin/bash
-
-# Install brew packages
-brew bundle --file=/dev/stdin <<EOF
 brew "bat"
 brew "container"
 brew "bottom"
@@ -41,5 +36,21 @@ brew "terminal-notifier"
 brew "vscode-langservers-extracted"
 brew "wakeonlan"
 brew "zoxide"
-EOF
-{{ end -}}
+cask "carbon-copy-cloner"
+cask "crossover"
+cask "discord"
+cask "font-monaspace"
+cask "font-monaspace-nf"
+cask "ghostty"
+cask "hammerspoon"
+cask "little-snitch"
+cask "loopback"
+cask "micro-snitch"
+cask "microsoft-teams"
+cask "motu-m-series"
+cask "quicken"
+cask "rectangle-pro"
+cask "silicon-app"
+cask "starsector"
+cask "steam"
+cask "viable"
