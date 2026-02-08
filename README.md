@@ -26,17 +26,23 @@ chezmoi cd
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
+### storms-end
+
 #### Setup Linux dotfiles
 
-TBD
+*storms-end* is my main gaming PC running bazzite-nvidia-deck, so not much needs
+to be configured. The dotfiles are minimal -- mainly to configure LACT and
+Cooler Control fans, as well as load a module for fan support.
 
-#### Notes
+Since it's sole purpose is gaming, minimal dots are included, and Gaming Mode is
+the default.
 
-Sometimes, fisher plugin install is wonky. If so, ensure chezmoi overwrites the `fish_plugins` file, manually run `fisher update`, then run `chezmoi apply` again to complete setup.
+```
+chezmoi init --apply mariolopjr
+```
 
 ## Todo
 
-- configure and use sketchybar
 - configure macos spaces for easy switching
 - configure macos system and user settings
 - configuration for steam deck
