@@ -21,3 +21,7 @@ if type -q brew
     set -gx HOMEBREW_NO_ANALYTICS 1
 end
 
+if test -d ~/.local/bin
+    fish_add_path ~/.local/bin
+end
+
