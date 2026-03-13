@@ -17,5 +17,8 @@
       "Read(**/docker-compose*.yml)",
       "Read(**/config/database.yml)"
     ]
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   }
 }

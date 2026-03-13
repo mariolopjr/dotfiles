@@ -100,6 +100,7 @@ return {
         "ty",
         "jsonls",
         "yamlls",
+        "zls",
       })
     end),
     keys = {
