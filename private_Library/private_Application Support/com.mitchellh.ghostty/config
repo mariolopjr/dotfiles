@@ -35,6 +35,7 @@ window-save-state              = always
 command                        = /opt/homebrew/bin/fish -l
 copy-on-select                 = true
 auto-update                    = off
+tab-inherit-working-directory  = true
 
 # Key bindings
 ## splits
