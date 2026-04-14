@@ -6,22 +6,12 @@
 # Font
 #
 ## Font features
-# calt: variable width / texture healing
-# ss01: equals ligatures: ==
-# ss02: less/greater than ligatures: <=
-# ss03: arrow ligatures: ->
-# ss04: markup ligatures: </
-# ss05: F# ligatures: |>
-# ss06: repeating character ligatures: ###
-# ss07: colon ligatures: ::
-# ss08: period ligatures: ..=
-# ss09: less/greater than ligatures with other characters: =<<
-# ss10: other tag ligatures: #[
-# liga: dynamic spacing for repeating char patterns
-font-family                    = Monaspace Neon
-font-feature                   = calt,liga,ss01,ss03,ss04,ss05,ss06,ss07,ss08,ss09,ss10
+# calt: Contains all ligatures. Substitution for : between digits
+# zero: Changes 0 to slashed variant
+font-family                    = JetBrainsMono NFM
+font-feature                   = calt,zero
 font-thicken                   = true
-font-size                      = 14
+font-size                      = 16
 
 # Look and Feel
 adjust-cursor-thickness        = 10
@@ -35,7 +25,7 @@ window-save-state              = always
 command                        = /opt/homebrew/bin/fish -l
 copy-on-select                 = true
 auto-update                    = off
-tab-inherit-working-directory  = true
+tab-inherit-working-directory  = false
 
 # Key bindings
 ## splits
@@ -55,4 +45,3 @@ keybind                        = ctrl+alt+l=resize_split:right,30
 ## other
 keybind                        = super+r=reload_config
 keybind                        = super+alt+enter=new_split:auto
-keybind                        = global:ctrl+`=toggle_quick_terminal

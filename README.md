@@ -37,7 +37,7 @@ Cooler Control fans, as well as load a module for fan support.
 Since it's sole purpose is gaming, minimal dots are included, and Gaming Mode is
 the default.
 
-```
+```bash
 chezmoi init --apply mariolopjr
 ```
 

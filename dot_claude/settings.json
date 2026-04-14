@@ -1,10 +1,30 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "opusplan",
-  "enabledPlugins": {
-    "rust-analyzer-lsp@claude-plugins-official": true
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "includeCoAuthoredBy": false,
   "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git stash:*)",
+      "Bash(git submodule:*)",
+      "Bash(git worktree:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh run:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(mise exec:*)",
+      "Bash(zig:*)"
+    ],
     "deny": [
       "Read(**/.env*)",
       "Read(**/env.php*)",
@@ -18,7 +38,13 @@
       "Read(**/config/database.yml)"
     ]
   },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  }
+  "model": "opusplan",
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "medium"
 }

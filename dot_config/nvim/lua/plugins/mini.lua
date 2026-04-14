@@ -20,6 +20,15 @@ return {
       -- fast autopairs
       require("mini.pairs").setup()
 
+      -- mini.pairs is not aware of snacks_picker_input (unlike TelescopePrompt/fzf)
+      -- so disable it there to avoid interfering with backspace behavior
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "snacks_picker_input", "snacks_input" },
+        callback = function()
+          vim.b.minipairs_disable = true
+        end,
+      })
+
       -- sessions management
       local sessions = require("mini.sessions")
       sessions.setup({

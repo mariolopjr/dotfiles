@@ -94,7 +94,41 @@ return {
       },
       gitbrowse = {},
       indent = { enabled = true },
-      input = { enabled = true },
+      input = {
+        enabled = true,
+        win = {
+          keys = {
+            -- same buftype=prompt first-char deletion issue as the picker
+            i_bs = {
+              "<BS>",
+              function(win)
+                local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                local end_col = math.min(vim.fn.col(".") - 1, #line)
+                if end_col > 0 then
+                  vim.api.nvim_buf_set_text(win.buf, 0, end_col - 1, 0, end_col, {})
+                  vim.api.nvim_win_set_cursor(win.win, { 1, end_col - 1 })
+                end
+              end,
+              mode = { "i" },
+              desc = "delete char",
+            },
+            i_ctrl_w = {
+              "<C-w>",
+              function(win)
+                local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                local end_col = math.min(vim.fn.col(".") - 1, #line)
+                if end_col > 0 then
+                  local new_col = #line:sub(1, end_col):gsub("%s+$", ""):gsub("%S+$", "")
+                  vim.api.nvim_buf_set_text(win.buf, 0, new_col, 0, end_col, {})
+                  vim.api.nvim_win_set_cursor(win.win, { 1, new_col })
+                end
+              end,
+              mode = { "i" },
+              desc = "delete word",
+            },
+          },
+        },
+      },
       notifier = { enabled = true },
       picker = {
         sources = {
@@ -113,6 +147,33 @@ return {
         win = {
           input = {
             keys = {
+              -- buftype=prompt prevents <BS>/<C-w> from deleting the first
+              -- character via insert mode; bypass with direct buffer manipulation
+              ["<BS>"] = {
+                function(win)
+                  local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                  local end_col = math.min(vim.fn.col(".") - 1, #line)
+                  if end_col > 0 then
+                    vim.api.nvim_buf_set_text(win.buf, 0, end_col - 1, 0, end_col, {})
+                    vim.api.nvim_win_set_cursor(win.win, { 1, end_col - 1 })
+                  end
+                end,
+                mode = { "i" },
+                desc = "delete char",
+              },
+              ["<C-w>"] = {
+                function(win)
+                  local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                  local end_col = math.min(vim.fn.col(".") - 1, #line)
+                  if end_col > 0 then
+                    local new_col = #line:sub(1, end_col):gsub("%s+$", ""):gsub("%S+$", "")
+                    vim.api.nvim_buf_set_text(win.buf, 0, new_col, 0, end_col, {})
+                    vim.api.nvim_win_set_cursor(win.win, { 1, new_col })
+                  end
+                end,
+                mode = { "i" },
+                desc = "delete word",
+              },
               ["<Esc>"] = { "close", mode = { "n", "i" } },
               -- scroll like lazygit
               ["J"] = { "preview_scroll_down", mode = { "i", "n" } },
