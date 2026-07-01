@@ -37,6 +37,10 @@ return {
         }
       end,
       formatters = {
+        just = {
+          -- use two spaces for indentation
+          prepend_args = { "--indentation", "  " },
+        },
         yq_json = {
           command = "yq",
           args = {
@@ -51,9 +55,11 @@ return {
         },
       },
       formatters_by_ft = {
+        cs = { "csharpier" },
         css = { "stylelint" },
         lua = { "stylua" },
         golang = { "gofmt" },
+        just = { "just" },
         python = { "isort", "ruff" },
         rust = { "rustfmt" },
         sh = { "shellcheck" },

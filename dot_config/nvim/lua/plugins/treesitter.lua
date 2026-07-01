@@ -45,6 +45,7 @@ return {
         "gotmpl",
         "html",
         "just",
+        "ledger",
         "lua",
         "luadoc",
         "markdown",

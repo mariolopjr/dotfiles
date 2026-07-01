@@ -1,2 +1,8 @@
+[env]
+# csharpier (and other dotnet tools) need this to locate the mise-managed runtime
+DOTNET_ROOT = "{{env.HOME}}/.local/share/mise/installs/dotnet/10"
+
 [tools]
 rust = { version = "latest", components = "rust-analyzer,rust-src" }
+dotnet = "10"
+"dotnet:csharpier" = "latest"

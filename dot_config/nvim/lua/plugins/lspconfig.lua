@@ -62,7 +62,6 @@ return {
             },
           },
           yamlls = {
-
             settings = {
               yaml = {
                 schemaStore = {
@@ -77,6 +76,11 @@ return {
                 }),
               },
             },
+          },
+          qlab_lsp = {
+            cmd = { "qlab-lsp" }, -- on PATH via ~/.local/bin/qlab-lsp
+            filetypes = { "ledger" },
+            root_markers = { "main.ledger", ".git" },
           },
         },
       }
@@ -97,8 +101,10 @@ return {
         "lua_ls",
         "marksman",
         "nixd",
+        "qlab_lsp",
         "ty",
         "jsonls",
+        "just",
         "yamlls",
         "zls",
       })

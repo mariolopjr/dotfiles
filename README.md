@@ -26,21 +26,6 @@ chezmoi cd
 git remote set-url origin git@github.com:mariolopjr/dotfiles.git
 ```
 
-### storms-end
-
-#### Setup Linux dotfiles
-
-*storms-end* is my main gaming PC running bazzite-nvidia-deck, so not much needs
-to be configured. The dotfiles are minimal -- mainly to configure LACT and
-Cooler Control fans, as well as load a module for fan support.
-
-Since it's sole purpose is gaming, minimal dots are included, and Gaming Mode is
-the default.
-
-```bash
-chezmoi init --apply mariolopjr
-```
-
 ## Todo
 
 - configure macos spaces for easy switching

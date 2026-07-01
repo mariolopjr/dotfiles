@@ -1,6 +1,8 @@
 ---@param config {type?:string, args?:string[]|fun():string[]?}
 local function get_args(config)
-  local args = type(config.args) == "function" and (config.args() or {}) or config.args or {} --[[@as string[] | string ]]
+  local args = type(config.args) == "function" and (config.args() or {})
+    or config.args
+    or {} --[[@as string[] | string ]]
   local args_str = type(args) == "table" and table.concat(args, " ") or args --[[@as string]]
 
   config = vim.deepcopy(config)
@@ -57,8 +59,26 @@ return {
       { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
     },
     config = function()
+      local dap = require("dap")
+
+      -- adds support to debug .NET apps, mainly for Godot
+      local netcoredbg = vim.fn.exepath("netcoredbg")
+      if netcoredbg == "" then
+        netcoredbg = vim.fn.expand("~/.netcoredbg/netcoredbg/netcoredbg")
+      end
+
+      dap.adapters.coreclr = {
+        type = "executable",
+        command = netcoredbg,
+        args = { "--interpreter=vscode" },
+      }
+
       -- change breakpoint icons
-      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+      vim.api.nvim_set_hl(
+        0,
+        "DapStoppedLine",
+        { default = true, link = "Visual" }
+      )
       local breakpoint_icons = vim.g.have_nerd_font
           and {
             Breakpoint = "",

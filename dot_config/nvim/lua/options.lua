@@ -66,8 +66,16 @@ function M.setup()
   -- Set tabs to 4 spaces by default
   vim.opt.tabstop = 4
 
+  -- loads `.nvim.lua` from current working directory
+  vim.o.exrc = true
+
   -- force .h files to c
   vim.g.c_syntax_for_h = true
+
+  -- adds ledger file support
+  vim.filetype.add({
+    extension = { ledger = "ledger", ldg = "ledger", journal = "ledger" },
+  })
 end
 
 return M

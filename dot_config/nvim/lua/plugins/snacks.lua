@@ -102,10 +102,18 @@ return {
             i_bs = {
               "<BS>",
               function(win)
-                local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1]
+                  or ""
                 local end_col = math.min(vim.fn.col(".") - 1, #line)
                 if end_col > 0 then
-                  vim.api.nvim_buf_set_text(win.buf, 0, end_col - 1, 0, end_col, {})
+                  vim.api.nvim_buf_set_text(
+                    win.buf,
+                    0,
+                    end_col - 1,
+                    0,
+                    end_col,
+                    {}
+                  )
                   vim.api.nvim_win_set_cursor(win.win, { 1, end_col - 1 })
                 end
               end,
@@ -115,10 +123,12 @@ return {
             i_ctrl_w = {
               "<C-w>",
               function(win)
-                local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1]
+                  or ""
                 local end_col = math.min(vim.fn.col(".") - 1, #line)
                 if end_col > 0 then
-                  local new_col = #line:sub(1, end_col):gsub("%s+$", ""):gsub("%S+$", "")
+                  local new_col =
+                    #line:sub(1, end_col):gsub("%s+$", ""):gsub("%S+$", "")
                   vim.api.nvim_buf_set_text(win.buf, 0, new_col, 0, end_col, {})
                   vim.api.nvim_win_set_cursor(win.win, { 1, new_col })
                 end
@@ -133,6 +143,8 @@ return {
       picker = {
         sources = {
           explorer = {
+            -- hide Godot metadata companions from the explorer tree
+            exclude = { "*.uid", "*.import" },
             win = {
               list = {
                 keys = {
@@ -143,6 +155,24 @@ return {
               },
             },
           },
+          files = {
+            -- hide Godot metadata companions from the file picker
+            exclude = { "*.uid", "*.import" },
+          },
+          grep = {
+            -- hide Godot metadata companions from grep results
+            exclude = { "*.uid", "*.import" },
+          },
+          lsp_symbols = {
+            -- for ledger files, transactions are Event-kind symbols
+            -- so opt ledger out of the default kind filter
+            filter = { ledger = true },
+          },
+          lsp_workspace_symbols = {
+            -- for ledger files, transactions are Event-kind symbols
+            -- so opt ledger out of the default kind filter
+            filter = { ledger = true },
+          },
         },
         win = {
           input = {
@@ -151,10 +181,18 @@ return {
               -- character via insert mode; bypass with direct buffer manipulation
               ["<BS>"] = {
                 function(win)
-                  local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                  local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1]
+                    or ""
                   local end_col = math.min(vim.fn.col(".") - 1, #line)
                   if end_col > 0 then
-                    vim.api.nvim_buf_set_text(win.buf, 0, end_col - 1, 0, end_col, {})
+                    vim.api.nvim_buf_set_text(
+                      win.buf,
+                      0,
+                      end_col - 1,
+                      0,
+                      end_col,
+                      {}
+                    )
                     vim.api.nvim_win_set_cursor(win.win, { 1, end_col - 1 })
                   end
                 end,
@@ -163,11 +201,20 @@ return {
               },
               ["<C-w>"] = {
                 function(win)
-                  local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1] or ""
+                  local line = vim.api.nvim_buf_get_lines(win.buf, 0, 1, false)[1]
+                    or ""
                   local end_col = math.min(vim.fn.col(".") - 1, #line)
                   if end_col > 0 then
-                    local new_col = #line:sub(1, end_col):gsub("%s+$", ""):gsub("%S+$", "")
-                    vim.api.nvim_buf_set_text(win.buf, 0, new_col, 0, end_col, {})
+                    local new_col =
+                      #line:sub(1, end_col):gsub("%s+$", ""):gsub("%S+$", "")
+                    vim.api.nvim_buf_set_text(
+                      win.buf,
+                      0,
+                      new_col,
+                      0,
+                      end_col,
+                      {}
+                    )
                     vim.api.nvim_win_set_cursor(win.win, { 1, new_col })
                   end
                 end,

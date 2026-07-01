@@ -14,6 +14,7 @@ end
 
 if type -q dotnet
     set -gx DOTNET_CLI_TELEMETRY_OPTOUT true
+
     fish_add_path ~/.dotnet/tools
 end
 
@@ -24,4 +25,3 @@ end
 if test -d ~/.local/bin
     fish_add_path ~/.local/bin
 end
-

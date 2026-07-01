@@ -1,7 +1,9 @@
 return {
   {
     "folke/which-key.nvim",
-    cond = function() return not vim.g.vscode end,
+    cond = function()
+      return not vim.g.vscode
+    end,
     event = "VimEnter",
     opts = {
       preset = "helix",
@@ -39,6 +41,10 @@ return {
           F10 = "<F10>",
           F11 = "<F11>",
           F12 = "<F12>",
+        },
+        -- nf-fa-wrench for the buffer-local <leader>j just picker, see plugins/just.lua
+        rules = {
+          { pattern = "%[j%]ust", icon = "\u{f0ad}", color = "orange" },
         },
       },
 
