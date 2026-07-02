@@ -16,14 +16,41 @@ return {
         },
       },
       strategies = {
-        agent = {
-          adapter = "copilot",
-        },
+        -- chat and agentic edits run on the Claude subscription over ACP
         chat = {
-          adapter = "copilot",
+          adapter = "claude_code",
         },
+        -- inline and cmd use HTTP adapters so they cannot run on ACP
         inline = {
-          adapter = "copilot",
+          adapter = "claude_code",
+        },
+        cmd = {
+          adapter = "claude_code",
+        },
+        background = {
+          chat = {
+            opts = {
+              enabled = false,
+            },
+          },
+        },
+      },
+      adapters = {
+        acp = {
+          claude_code = function()
+            return require("codecompanion.adapters").extend("claude_code", {
+              -- default the session to Sonnet, the agent otherwise defaults to Opus
+              defaults = {
+                model = "sonnet",
+              },
+              env = {
+                -- No token by default, rely on the already-authenticated `claude` CLI login
+                CLAUDE_CODE_OAUTH_TOKEN = function()
+                  return vim.env.CLAUDE_CODE_OAUTH_TOKEN
+                end,
+              },
+            })
+          end,
         },
       },
     },
@@ -53,17 +80,26 @@ return {
         desc = "[A]I [C]hat",
       },
       {
+        -- inline doesn't work on the subscription, repurpose to instruct the agent,
+        -- in visual mode attach the selection first, then focus the chat in
+        -- insert so you can type the edit instruction (the agent edits files
+        -- over ACP). Distinct from `ga` which stays in the source buffer
         "<leader>ai",
         function()
-          local input = vim.fn.input("Enter text for [A]I [I]nline Chat: ")
-          if input ~= "" then
-            require("codecompanion").inline({
-              user_prompt = input,
-            })
+          local cc = require("codecompanion")
+          if vim.fn.mode():match("^[vV\022]") then
+            cc.add({})
           end
+          local chat = cc.last_chat() or cc.chat()
+          if chat and chat.ui then
+            chat.ui:open()
+          end
+          vim.schedule(function()
+            vim.cmd("startinsert")
+          end)
         end,
         mode = { "n", "v" },
-        desc = "[A]I [I]line Chat",
+        desc = "[A]I [I]nstruct edit",
       },
       {
         "ga",
@@ -76,6 +112,11 @@ return {
     },
     config = function(_, opts)
       require("codecompanion").setup(opts)
+
+      -- chat winbar, adapter/model, context count, tokens
+      pcall(function()
+        require("util.cc_winbar").setup()
+      end)
 
       vim.cmd([[cab cc CodeCompanion]])
     end,

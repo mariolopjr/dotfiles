@@ -128,6 +128,13 @@ return {
       { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
       { "<leader>gc", function() Snacks.picker.git_log() end, desc = "Git Log" },
       { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
+      -- claude cli
+      { "<leader>aC", function() require("util.claude").toggle() end, desc = "[C]laude Toggle", mode = { "n", "v" } },
+      { "<leader>aQ", function() require("util.claude").quit() end, desc = "Claude [Q]uit" },
+      { "<M-c>", function() require("util.claude").toggle() end, desc = "Claude Toggle", mode = { "n", "t" } },
+      -- chezmoi
+      { "<leader>pd", function() require("util.chezmoi").diff() end, desc = "Chezmoi [D]iff" },
+      { "<leader>pa", function() require("util.chezmoi").apply() end, desc = "Chezmoi [A]pply" },
       -- top pickers
       { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
