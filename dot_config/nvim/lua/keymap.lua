@@ -139,8 +139,13 @@ function M.setup()
   -- Add autosaving
   vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
     callback = function()
-      if vim.bo.modified and not vim.bo.readonly and vim.bo.buftype == "" then
-        vim.cmd("silent update")
+      if
+        vim.bo.modified
+        and not vim.bo.readonly
+        and vim.bo.buftype == ""
+        and vim.api.nvim_buf_get_name(0) ~= ""
+      then
+        vim.cmd("silent! update")
       end
     end,
   })

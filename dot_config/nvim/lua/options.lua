@@ -57,7 +57,7 @@ function M.setup()
 
   -- treesitter folding
   vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
   vim.opt.foldcolumn = "0"
   vim.opt.foldtext = "" -- first line of fold will have syntax highlighting
   vim.opt.foldlevel = 5 -- ensure file is unfolded
