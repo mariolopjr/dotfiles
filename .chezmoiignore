@@ -1,7 +1,5 @@
-packages
 README.md
 selene.toml
-stylua.toml
 {{- if ne .chezmoi.os "darwin" }}
 .hammerspoon
 .hammerspoon/Spoons/EmmyLua.spoon

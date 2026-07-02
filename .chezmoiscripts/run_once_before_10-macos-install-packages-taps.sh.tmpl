@@ -1,8 +1,0 @@
-{{ if eq .chezmoi.os "darwin" -}}
-#!/bin/bash
-
-# Install brew taps
-brew bundle --file=/dev/stdin <<EOF
-tap "osx-cross/arm"
-EOF
-{{ end -}}

@@ -1,9 +1,0 @@
-{{- if eq .chezmoi.hostname "winterfell" -}}
-#!/bin/bash
-
-# Install brew cask packages
-brew bundle --file=/dev/stdin <<EOF
-cask "adobe-digital-editions"
-cask "calibre"
-EOF
-{{ end -}}

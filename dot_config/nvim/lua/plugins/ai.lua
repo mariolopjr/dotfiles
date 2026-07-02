@@ -75,8 +75,7 @@ return {
       },
     },
     config = function(_, opts)
-      local codecompanion = require("codecompanion")
-      codecompanion.setup(opts)
+      require("codecompanion").setup(opts)
 
       vim.cmd([[cab cc CodeCompanion]])
     end,

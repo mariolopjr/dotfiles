@@ -4,15 +4,15 @@ return {
     name = "catppuccin",
     lazy = false,
     priority = 1000,
-    init = function()
-      vim.cmd.colorscheme("catppuccin-macchiato")
-    end,
     opts = {
       integrations = {
         blink_cmp = true,
-        leap = true,
+        dap = true,
+        dap_ui = true,
+        flash = true,
+        grug_far = true,
         markdown = true,
-        mini = true,
+        mini = { enabled = true },
         native_lsp = {
           enabled = true,
           underlines = {
@@ -23,10 +23,17 @@ return {
           },
         },
         neotest = true,
+        noice = true,
+        render_markdown = true,
+        snacks = true,
         treesitter = true,
-        treesitter_context = true,
         which_key = true,
       },
     },
+    config = function(_, opts)
+      -- setup must run before the colorscheme loads so integrations apply
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin-macchiato")
+    end,
   },
 }

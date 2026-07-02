@@ -72,7 +72,7 @@ return {
         lua = { "stylua" },
         go = { "gofmt" },
         just = { "just" },
-        python = { "isort", "ruff" },
+        python = { "isort", "ruff_format" },
         rust = { "rustfmt" },
         sh = { "shellcheck" },
         json = { "yq_json" },

@@ -1,7 +1,7 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
-dockutil --remove all
+dockutil --remove all --no-restart
 
 apps=(
   "/Applications/Safari.app"
@@ -17,7 +17,8 @@ for app in "${apps[@]}"; do
   dockutil --add "$app" --no-restart
 done
 
-dockutil --add '~/Downloads' --view grid --display folder --allhomes
+dockutil --add '~/Downloads' --view grid --display folder --allhomes --no-restart
 
-killall Dock
+# restart the Dock exactly once, kickstart works whether or not it is running
+launchctl kickstart -k "gui/$(id -u)/com.apple.Dock.agent"
 {{ end -}}

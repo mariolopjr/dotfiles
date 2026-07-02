@@ -1,6 +1,6 @@
--- Source a project's `.nvim.lua` when Neovim's cwd changes, not just at startup.
-
-local M = {}
+-- Source a project's `.nvim.lua` when Neovim's cwd changes.
+-- The built-in 'exrc' only runs at startup for the starting directory and
+-- its parents, this covers :cd into another project afterwards
 
 -- Checked in the cwd in this order, first readable one wins, matching the
 -- precedence of Neovim's built-in exrc
@@ -40,10 +40,12 @@ local function source(path)
   end
 end
 
-function M.setup()
-  local last_dir
+local last_dir
 
-  local function load(dir)
+vim.api.nvim_create_autocmd("DirChanged", {
+  group = vim.api.nvim_create_augroup("exrc", { clear = true }),
+  callback = function()
+    local dir = vim.v.event.cwd
     if dir == last_dir then
       return
     end
@@ -52,15 +54,5 @@ function M.setup()
     if path then
       source(path)
     end
-  end
-
-  local group = vim.api.nvim_create_augroup("exrc", { clear = true })
-  vim.api.nvim_create_autocmd("DirChanged", {
-    group = group,
-    callback = function()
-      load(vim.v.event.cwd)
-    end,
-  })
-end
-
-return M
+  end,
+})
