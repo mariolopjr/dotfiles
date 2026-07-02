@@ -23,9 +23,6 @@ return {
   -- keymap hints popup
   {
     "folke/which-key.nvim",
-    cond = function()
-      return not vim.g.vscode
-    end,
     event = "VimEnter",
     opts = {
       preset = "helix",

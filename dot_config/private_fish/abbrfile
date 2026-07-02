@@ -9,4 +9,3 @@ v nvim
 # git
 gsurm git submodule update --recursive --remote --merge
 
-// code: language=plaintext insertSpaces=true tabSize=4

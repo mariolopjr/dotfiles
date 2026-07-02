@@ -1,4 +1,4 @@
---- Prompt for arguments before launching the debuggee
+--- Prompt for arguments before launching the debugger
 --- @param config {args?:string[]|fun():string[]?}
 local function get_args(config)
   local args = type(config.args) == "function" and (config.args() or {})
@@ -69,11 +69,11 @@ return {
       )
       local breakpoint_icons = vim.g.have_nerd_font
           and {
-            Breakpoint = "",
-            BreakpointCondition = "",
-            BreakpointRejected = "",
-            LogPoint = "",
-            Stopped = "",
+            Breakpoint = "",
+            BreakpointCondition = "",
+            BreakpointRejected = "",
+            LogPoint = "",
+            Stopped = "",
           }
         or {
           Breakpoint = "●",

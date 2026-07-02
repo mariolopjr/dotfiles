@@ -1,4 +1,3 @@
-# Single source of truth for machine packages
 # Scripts in .chezmoiscripts iterate this data, edit here then `chezmoi apply`
 
 [packages.darwin]
@@ -27,7 +26,6 @@ brews = [
   "ledger",
   "libpng",
   "lua-language-server",
-  "m1ddc",
   "macchina",
   "marksman",
   "mas",
