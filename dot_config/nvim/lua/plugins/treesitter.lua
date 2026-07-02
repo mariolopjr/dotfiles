@@ -1,6 +1,7 @@
 local ensure_installed = {
   "bash",
   "c",
+  "c_sharp",
   "diff",
   "fish",
   "gotmpl",

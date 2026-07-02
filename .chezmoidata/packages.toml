@@ -63,13 +63,13 @@ casks = [
   "micro-snitch",
   "microsoft-teams",
   "motu-m-series",
-  "quicken",
+  "mpluginmanager",
+  "nvidia-geforce-now",
   "rectangle-pro",
   "silicon-app",
   "starsector",
   "steam",
   "viable",
-  "zed",
 ]
 mas = [
   { name = "Amphetamine", id = 937984704 },
@@ -87,4 +87,5 @@ mas = [
 
 # Host-specific additions, keyed by hostname
 [packages.darwin.hosts.winterfell]
-casks = ["adobe-digital-editions", "calibre"]
+casks = ["ableton-live-suite", "adobe-digital-editions", "calibre"]
+
