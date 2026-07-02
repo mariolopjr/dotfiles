@@ -6,3 +6,4 @@ DOTNET_ROOT = "{{env.HOME}}/.local/share/mise/installs/dotnet/10"
 rust = { version = "latest", components = "rust-analyzer,rust-src" }
 dotnet = "10"
 "dotnet:csharpier" = "latest"
+"dotnet:roslyn-language-server" = { version = "latest", prerelease = true }

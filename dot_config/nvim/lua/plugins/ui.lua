@@ -45,6 +45,7 @@ return {
         { "<leader>p", group = "[P]lugins" },
         { "<leader>r", group = "[R]un" },
         { "<leader>s", group = "[S]earch" },
+        { "<leader>S", group = "[S]ession" },
         { "<leader>t", group = "[T]ests" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
       },

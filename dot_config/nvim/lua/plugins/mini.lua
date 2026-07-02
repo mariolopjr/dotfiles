@@ -29,14 +29,23 @@ return {
         end,
       })
 
-      -- session management, autoread restores .session.nvim when nvim is
-      -- started without file arguments, autowrite only writes back sessions
-      -- that were read so random directories are not littered with files
-      require("mini.sessions").setup({
-        autoread = true,
+      local sessions = require("mini.sessions")
+      sessions.setup({
+        autoread = false,
         autowrite = true,
         file = ".session.nvim",
       })
+
+      -- <leader>S session menu, see the which-key group in plugins/ui.lua
+      vim.keymap.set("n", "<leader>Ss", function()
+        sessions.write(".session.nvim")
+      end, { desc = "[S]ave session (this dir)" })
+      vim.keymap.set("n", "<leader>Sl", function()
+        sessions.select("read")
+      end, { desc = "[L]oad session" })
+      vim.keymap.set("n", "<leader>Sd", function()
+        sessions.select("delete")
+      end, { desc = "[D]elete session" })
 
       -- icons
       require("mini.icons").setup({
