@@ -39,13 +39,10 @@ brews = [
   "shfmt",
   "smartmontools",
   "stylua",
-  "swift-format",
   "terminal-notifier",
   "tree-sitter-cli",
   "vscode-langservers-extracted",
   "wakeonlan",
-  "xcbeautify",
-  "xcode-build-server",
   "zoxide",
 ]
 casks = [

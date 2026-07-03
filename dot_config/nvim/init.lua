@@ -15,3 +15,6 @@ require("config.autocmds")
 require("config.miseenv")
 require("config.exrc")
 require("config.lazy")
+
+-- tmux-style tabline, set up after lazy so the catppuccin palette is available
+require("util.tabline").setup()

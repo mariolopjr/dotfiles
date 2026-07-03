@@ -132,6 +132,8 @@ return {
       { "<leader>aC", function() require("util.claude").toggle() end, desc = "[C]laude Toggle", mode = { "n", "v" } },
       { "<leader>aQ", function() require("util.claude").quit() end, desc = "Claude [Q]uit" },
       { "<M-c>", function() require("util.claude").toggle() end, desc = "Claude Toggle", mode = { "n", "t" } },
+      -- floating shell terminal
+      { "<M-t>", function() require("util.terminal").toggle() end, desc = "Terminal Toggle", mode = { "n", "t" } },
       -- chezmoi
       { "<leader>pd", function() require("util.chezmoi").diff() end, desc = "Chezmoi [D]iff" },
       { "<leader>pa", function() require("util.chezmoi").apply() end, desc = "Chezmoi [A]pply" },
@@ -168,7 +170,7 @@ return {
       { "<leader>sp", function() Snacks.picker.projects() end, desc = "[S]earch Projects" },
       { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
       { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
-      { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+      { "<leader>pC", function() Snacks.picker.colorschemes() end, desc = "[C]olorschemes" },
       -- LSP
       { "gd", function() Snacks.picker.lsp_definitions() end, desc = "[G]oto [D]efinition" },
       { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "[G]oto [R]eferences" },

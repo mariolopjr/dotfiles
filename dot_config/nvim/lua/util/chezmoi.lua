@@ -16,11 +16,19 @@ local function float(title)
   }
 end
 
---- Show the full pending diff
+--- Show the full pending diff, or report when the target is already in sync
 function M.diff()
-  Snacks.terminal.open("chezmoi diff", {
-    win = float(" chezmoi diff "),
-  })
+  vim.system({ "chezmoi", "diff" }, { text = true }, function(res)
+    vim.schedule(function()
+      if res.code == 0 and vim.trim(res.stdout or "") == "" then
+        vim.notify("No changes detected", vim.log.levels.INFO)
+        return
+      end
+      Snacks.terminal.open("chezmoi diff", {
+        win = float(" chezmoi diff "),
+      })
+    end)
+  end)
 end
 
 --- apply pending changes after confirmation, output stays until dismissed

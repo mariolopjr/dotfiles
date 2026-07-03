@@ -82,6 +82,21 @@ map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
+-- tab pages
+map("n", "<leader>tn", "<cmd>tabnew<CR>", { desc = "[N]ew tab" })
+map(
+  "n",
+  "<leader>tf",
+  "<cmd>tabedit %<CR>",
+  { desc = "Current [F]ile in new tab" }
+)
+map("n", "<leader>tc", "<cmd>tabclose<CR>", { desc = "[C]lose tab" })
+map("n", "<leader>to", "<cmd>tabonly<CR>", { desc = "Close [O]ther tabs" })
+map("n", "<leader>tl", "<cmd>tabnext<CR>", { desc = "Next tab ([L])" })
+map("n", "<leader>th", "<cmd>tabprevious<CR>", { desc = "Previous tab ([H])" })
+map("n", "<leader>t.", "<cmd>tabmove +1<CR>", { desc = "Move tab right" })
+map("n", "<leader>t,", "<cmd>tabmove -1<CR>", { desc = "Move tab left" })
+
 -- buffers and files
 map("n", "<leader>bd", ":bd<CR>", { desc = "[B]uffer [D]elete", silent = true })
 map("n", "<leader>fs", ":w<CR>", { desc = "[F]ile [S]ave", silent = true })
