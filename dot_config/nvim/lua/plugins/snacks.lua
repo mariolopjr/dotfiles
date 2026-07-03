@@ -135,6 +135,7 @@ return {
       -- chezmoi
       { "<leader>pd", function() require("util.chezmoi").diff() end, desc = "Chezmoi [D]iff" },
       { "<leader>pa", function() require("util.chezmoi").apply() end, desc = "Chezmoi [A]pply" },
+      { "<leader>pI", function() require("util.chezmoi").init() end, desc = "Chezmoi [I]nit" },
       -- top pickers
       { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },

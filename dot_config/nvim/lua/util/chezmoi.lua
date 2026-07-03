@@ -41,4 +41,18 @@ function M.apply()
   end
 end
 
+--- regenerate the config file and run init scripts, output stays until dismissed
+function M.init()
+  local term = Snacks.terminal.open("chezmoi init", {
+    win = float(" chezmoi init "),
+    auto_close = false,
+  })
+  if term and term.buf then
+    -- exit terminal mode with <Esc><Esc>q
+    vim.keymap.set("n", "q", function()
+      term:close()
+    end, { buffer = term.buf, nowait = true, desc = "Close" })
+  end
+end
+
 return M
