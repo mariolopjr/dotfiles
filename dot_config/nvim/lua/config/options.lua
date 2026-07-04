@@ -43,6 +43,10 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- drop nofile/scratch windows (snacks explorer, pickers) and terminal windows
+-- from saved sessions so mksession does not restore them as empty panes
+vim.opt.sessionoptions:remove({ "blank", "terminal" })
+
 -- display certain whitespace characters, see :help 'listchars'
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
