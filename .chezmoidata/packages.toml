@@ -5,6 +5,7 @@ taps = ["osx-cross/arm"]
 brews = [
   "bat",
   "bottom",
+  "chezmoi",
   "container",
   "ctop",
   "curl",
@@ -17,6 +18,7 @@ brews = [
   "fzf",
   "gh",
   "git",
+  "git-lfs",
   "git-delta",
   "glow",
   "jq",
@@ -52,13 +54,10 @@ casks = [
   "discord",
   "font-jetbrains-mono",
   "font-jetbrains-mono-nerd-font",
-  "ghostty",
   "hammerspoon",
   "little-snitch",
   "loopback",
-  "mgba-app",
   "micro-snitch",
-  "microsoft-teams",
   "motu-m-series",
   "mpluginmanager",
   "nvidia-geforce-now",
@@ -67,7 +66,7 @@ casks = [
   "slack",
   "starsector",
   "steam",
-  "viable",
+  "wezterm@nightly",
 ]
 mas = [
   { name = "Amphetamine", id = 937984704 },

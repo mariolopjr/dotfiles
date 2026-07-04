@@ -89,6 +89,7 @@ return {
     "mrjones2014/smart-splits.nvim",
     version = ">=v1.0.0",
     lazy = false,
+    opts = { float_win_behavior = "mux" },
     -- stylua: ignore
     keys = {
       { "<C-h>", function() require("smart-splits").move_cursor_left() end },

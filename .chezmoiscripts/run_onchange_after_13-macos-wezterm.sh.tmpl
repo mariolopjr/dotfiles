@@ -1,0 +1,17 @@
+{{ if and (eq .chezmoi.os "darwin") (not (env "GITHUB_ACTION")) -}}
+#!/bin/bash
+
+# Compile the wezterm terminfo
+
+set -euo pipefail
+
+# TERM=wezterm needs the terminfo compiled locally to enable undercurl and
+# styled underlines in neovim
+if ! infocmp wezterm &>/dev/null; then
+  tmp="$(mktemp)"
+  curl -fsSL -o "$tmp" \
+    https://raw.githubusercontent.com/wezterm/wezterm/main/termwiz/data/wezterm.terminfo
+  tic -x -o "$HOME/.terminfo" "$tmp"
+  rm -f "$tmp"
+fi
+{{ end -}}

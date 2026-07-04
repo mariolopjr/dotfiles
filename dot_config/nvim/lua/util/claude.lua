@@ -56,6 +56,8 @@ function M.toggle()
     return
   end
   if created then
+    -- Ctrl+hjkl navigates out of the float instead of going to claude
+    require("util.termnav").attach(term.buf)
     -- wipe the buffer when claude exits so the next toggle starts a fresh
     -- session instead of showing a dead terminal
     vim.api.nvim_create_autocmd("TermClose", {

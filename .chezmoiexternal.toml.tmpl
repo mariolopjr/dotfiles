@@ -6,11 +6,16 @@ type = "archive"
 url = "https://github.com/Hammerspoon/Spoons/raw/master/Spoons/EmmyLua.spoon.zip"
 stripComponents = 1
 
-# netcoredbg, the .NET debug adapter used by nvim-dap for Godot, dap.lua looks
-# for it at ~/.netcoredbg/netcoredbg/netcoredbg so the archive keeps its inner
-# folder (no stripComponents), the zip ships a __MACOSX sibling we drop.
+# netcoredbg, the .NET debug adapter used by nvim-dap for Godot, dap.lua loads
+# it from ~/.netcoredbg/netcoredbg/netcoredbg
 [".netcoredbg"]
 type = "archive"
 url = "https://github.com/Samsung/netcoredbg/releases/latest/download/netcoredbg-osx-{{ .chezmoi.arch }}.zip"
 exclude = ["__MACOSX/**"]
+
+# smart-splits wezterm plugin
+[".config/wezterm/plugins/smart-splits.lua"]
+type = "file"
+url = "https://raw.githubusercontent.com/mrjones2014/smart-splits.nvim/ba2850ff3d3b09785a7105c69d06a12117d4b97d/plugin/init.lua"
+refreshPeriod = "8760h"
 {{- end }}

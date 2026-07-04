@@ -91,11 +91,23 @@ return {
           input = {
             keys = {
               ["<Esc>"] = { "close", mode = { "n", "i" } },
+              -- alt+h resizes splits everywhere, remap toggling hidden files to
+              -- M-.
+              ["<a-h>"] = false,
+              ["<a-.>"] = { "toggle_hidden", mode = { "i", "n" } },
               -- scroll like lazygit
               ["J"] = { "preview_scroll_down", mode = { "i", "n" } },
               ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
               ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
               ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
+            },
+          },
+          list = {
+            keys = {
+              -- alt+h resizes splits everywhere, remap toggling hidden files to
+              -- M-.
+              ["<a-h>"] = false,
+              ["<a-.>"] = "toggle_hidden",
             },
           },
         },
