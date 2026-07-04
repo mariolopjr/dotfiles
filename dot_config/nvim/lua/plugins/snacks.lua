@@ -67,15 +67,6 @@ return {
           explorer = {
             -- hide Godot metadata companions from the explorer tree
             exclude = { "*.uid", "*.import" },
-            win = {
-              list = {
-                keys = {
-                  -- change how hidden files are displayed due to conflict with
-                  -- aerospace
-                  ["<A-.>"] = { "toggle_hidden", mode = { "n", "i" } },
-                },
-              },
-            },
           },
           files = {
             -- hide Godot metadata companions from the file picker
@@ -105,9 +96,6 @@ return {
               ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
               ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
               ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
-              -- change how hidden files are displayed due to conflict with
-              -- aerospace
-              ["<A-.>"] = { "toggle_hidden", mode = { "n", "i" } },
             },
           },
         },
