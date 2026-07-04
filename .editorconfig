@@ -7,10 +7,10 @@ max_line_length = 80
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.fish,*.fish.tmpl]
+[*.{fish,fish.tmpl}]
 indent_style = tab
 
-[*.json,*.jsonc]
+[*.{json,jsonc}]
 indent_size = 2
 
 [*.lua]
@@ -19,3 +19,8 @@ indent_size = 2
 [*.md]
 trim_trailing_whitespace = false
 
+[*.toml]
+indent_size = 2
+
+[*.{yaml,yml}]
+indent_size = 2

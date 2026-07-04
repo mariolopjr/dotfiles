@@ -19,40 +19,6 @@ local function get_root_dir()
   return vim.fn.getcwd()
 end
 
-local pick_chezmoi = function()
-  local results = require("chezmoi.commands").list({
-    args = {
-      "--path-style",
-      "absolute",
-      "--include",
-      "files",
-      "--exclude",
-      "externals",
-    },
-  })
-  local items = {}
-
-  for _, czFile in ipairs(results) do
-    table.insert(items, {
-      text = czFile,
-      file = czFile,
-    })
-  end
-
-  ---@type snacks.picker.Config
-  local opts = {
-    items = items,
-    confirm = function(picker, item)
-      picker:close()
-      require("chezmoi.commands").edit({
-        targets = { item.text },
-        args = { "--watch" },
-      })
-    end,
-  }
-  Snacks.picker.pick(opts)
-end
-
 return {
   {
     "folke/snacks.nvim",
@@ -66,21 +32,21 @@ return {
         sections = {
           { section = "header" },
           {
-            icon = " ",
+            icon = " ",
             title = "Keymaps",
             section = "keys",
             indent = 2,
             padding = 1,
           },
           {
-            icon = " ",
+            icon = " ",
             title = "Projects",
             section = "projects",
             indent = 2,
             padding = 1,
           },
           {
-            icon = " ",
+            icon = " ",
             title = "Recent Files",
             section = "recent_files",
             indent = 2,
@@ -99,15 +65,26 @@ return {
       picker = {
         sources = {
           explorer = {
-            win = {
-              list = {
-                keys = {
-                  -- change how hidden files are displayed due to conflict with
-                  -- aerospace
-                  ["<A-.>"] = { "toggle_hidden", mode = { "n", "i" } },
-                },
-              },
-            },
+            -- hide Godot metadata companions from the explorer tree
+            exclude = { "*.uid", "*.import" },
+          },
+          files = {
+            -- hide Godot metadata companions from the file picker
+            exclude = { "*.uid", "*.import" },
+          },
+          grep = {
+            -- hide Godot metadata companions from grep results
+            exclude = { "*.uid", "*.import" },
+          },
+          lsp_symbols = {
+            -- for ledger files, transactions are Event-kind symbols
+            -- so opt ledger out of the default kind filter
+            filter = { ledger = true },
+          },
+          lsp_workspace_symbols = {
+            -- for ledger files, transactions are Event-kind symbols
+            -- so opt ledger out of the default kind filter
+            filter = { ledger = true },
           },
         },
         win = {
@@ -119,9 +96,6 @@ return {
               ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
               ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
               ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
-              -- change how hidden files are displayed due to conflict with
-              -- aerospace
-              ["<A-.>"] = { "toggle_hidden", mode = { "n", "i" } },
             },
           },
         },
@@ -132,327 +106,66 @@ return {
       terminal = { enabled = false },
       words = { enabled = true },
     },
+    -- stylua: ignore
     keys = {
-      {
-        "<leader>gb",
-        function()
-          Snacks.git.blame_line()
-        end,
-        desc = "[G]it [B]lame",
-      },
-      {
-        "<leader>gB",
-        function()
-          Snacks.gitbrowse()
-        end,
-        desc = "[G]it [B]rowse",
-      },
-      {
-        "<leader>gf",
-        function()
-          Snacks.lazygit.log_file()
-        end,
-        desc = "Lazygit Current File History",
-      },
-      {
-        "<leader>gg",
-        function()
-          Snacks.lazygit()
-        end,
-        desc = "Lazygit",
-      },
-      {
-        "<leader>gl",
-        function()
-          Snacks.lazygit.log()
-        end,
-        desc = "Lazygit Log (cwd)",
-      },
-      -- {
-      --   "<leader>rt",
-      --   function()
-      --     Snacks.terminal()
-      --   end,
-      --   mode = { "n", "v" },
-      --   desc = "[R]un [T]erminal",
-      -- },
-      -- {
-      --   "<leader>rc",
-      --   function()
-      --     Snacks.input("cmd> ", function(cmd)
-      --       Snacks.terminal(cmd)
-      --     end)
-      --   end,
-      --   mode = { "n", "v" },
-      --   desc = "[R]un [C]ommand in Terminal",
-      -- },
-      -- picker
-      {
-        "<leader>,",
-        function()
-          Snacks.picker.buffers()
-        end,
-        desc = "Buffers",
-      },
-      {
-        "<leader>/",
-        function()
-          Snacks.picker.grep()
-        end,
-        desc = "Grep",
-      },
-      {
-        "<leader>:",
-        function()
-          Snacks.picker.command_history()
-        end,
-        desc = "Command History",
-      },
-      -- find
-      {
-        "<leader>fb",
-        function()
-          Snacks.picker.buffers()
-        end,
-        desc = "Buffers",
-      },
-      {
-        "<leader>fc",
-        function()
-          Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
-        end,
-        desc = "Find Config File",
-      },
-      {
-        "<leader>ff",
-        function()
-          Snacks.picker.files()
-        end,
-        desc = "Find Files",
-      },
-      {
-        "<leader>fg",
-        function()
-          Snacks.picker.git_files()
-        end,
-        desc = "Find Git Files",
-      },
-      {
-        "<leader>fr",
-        function()
-          Snacks.picker.recent()
-        end,
-        desc = "Recent",
-      },
       -- git
-      {
-        "<leader>gc",
-        function()
-          Snacks.picker.git_log()
-        end,
-        desc = "Git Log",
-      },
-      {
-        "<leader>gs",
-        function()
-          Snacks.picker.git_status()
-        end,
-        desc = "Git Status",
-      },
-      -- Grep
-      {
-        "<leader>sb",
-        function()
-          Snacks.picker.lines()
-        end,
-        desc = "Buffer Lines",
-      },
-      {
-        "<leader>sB",
-        function()
-          Snacks.picker.grep_buffers()
-        end,
-        desc = "Grep Open Buffers",
-      },
-      {
-        "<leader>sg",
-        function()
-          Snacks.picker.grep()
-        end,
-        desc = "Grep",
-      },
-      {
-        "<leader>sw",
-        function()
-          Snacks.picker.grep_word()
-        end,
-        desc = "Visual selection or word",
-        mode = { "n", "x" },
-      },
+      { "<leader>gb", function() Snacks.git.blame_line() end, desc = "[G]it [B]lame" },
+      { "<leader>gB", function() Snacks.gitbrowse() end, desc = "[G]it [B]rowse" },
+      { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
+      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+      { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
+      { "<leader>gc", function() Snacks.picker.git_log() end, desc = "Git Log" },
+      { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
+      -- claude cli
+      { "<leader>aC", function() require("util.claude").toggle() end, desc = "[C]laude Toggle", mode = { "n", "v" } },
+      { "<leader>aQ", function() require("util.claude").quit() end, desc = "Claude [Q]uit" },
+      { "<M-c>", function() require("util.claude").toggle() end, desc = "Claude Toggle", mode = { "n", "t" } },
+      -- floating shell terminal
+      { "<M-t>", function() require("util.terminal").toggle() end, desc = "Terminal Toggle", mode = { "n", "t" } },
+      -- chezmoi
+      { "<leader>pd", function() require("util.chezmoi").diff() end, desc = "Chezmoi [D]iff" },
+      { "<leader>pa", function() require("util.chezmoi").apply() end, desc = "Chezmoi [A]pply" },
+      { "<leader>pI", function() require("util.chezmoi").init() end, desc = "Chezmoi [I]nit" },
+      -- top pickers
+      { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
+      { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
+      -- find
+      { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
+      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
+      -- grep
+      { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
+      { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
+      { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
+      { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
       -- search
-      {
-        '<leader>s"',
-        function()
-          Snacks.picker.registers()
-        end,
-        desc = "Registers",
-      },
-      {
-        "<leader>sa",
-        function()
-          Snacks.picker.autocmds()
-        end,
-        desc = "Autocmds",
-      },
-      {
-        "<leader>sc",
-        function()
-          Snacks.picker.command_history()
-        end,
-        desc = "Command History",
-      },
-      {
-        "<leader>sC",
-        function()
-          Snacks.picker.commands()
-        end,
-        desc = "Commands",
-      },
-      {
-        "<leader>sd",
-        function()
-          Snacks.picker.diagnostics_buffer()
-        end,
-        desc = "Diagnostics (Buffer)",
-      },
-      {
-        "<leader>sD",
-        function()
-          Snacks.picker.diagnostics()
-        end,
-        desc = "Diagnostics",
-      },
-      {
-        "<leader>sh",
-        function()
-          Snacks.picker.help()
-        end,
-        desc = "Help Pages",
-      },
-      {
-        "<leader>sH",
-        function()
-          Snacks.picker.highlights()
-        end,
-        desc = "Highlights",
-      },
-      {
-        "<leader>sj",
-        function()
-          Snacks.picker.jumps()
-        end,
-        desc = "Jumps",
-      },
-      {
-        "<leader>sk",
-        function()
-          Snacks.picker.keymaps()
-        end,
-        desc = "Keymaps",
-      },
-      {
-        "<leader>sl",
-        function()
-          Snacks.picker.loclist()
-        end,
-        desc = "Location List",
-      },
-      {
-        "<leader>sM",
-        function()
-          Snacks.picker.man()
-        end,
-        desc = "Man Pages",
-      },
-      {
-        "<leader>sm",
-        function()
-          Snacks.picker.marks()
-        end,
-        desc = "Marks",
-      },
-      {
-        "<leader>sR",
-        function()
-          Snacks.picker.resume()
-        end,
-        desc = "Resume",
-      },
-      {
-        "<leader>sq",
-        function()
-          Snacks.picker.qflist()
-        end,
-        desc = "Quickfix List",
-      },
-      {
-        "<leader>uC",
-        function()
-          Snacks.picker.colorschemes()
-        end,
-        desc = "Colorschemes",
-      },
-      {
-        "<leader>sp",
-        function()
-          Snacks.picker.projects()
-        end,
-        desc = "[S]earch Projects",
-      },
+      { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
+      { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
+      { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
+      { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands" },
+      { "<leader>sd", function() Snacks.picker.diagnostics_buffer() end, desc = "Diagnostics (Buffer)" },
+      { "<leader>sD", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+      { "<leader>sh", function() Snacks.picker.help() end, desc = "Help Pages" },
+      { "<leader>sH", function() Snacks.picker.highlights() end, desc = "Highlights" },
+      { "<leader>sj", function() Snacks.picker.jumps() end, desc = "Jumps" },
+      { "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+      { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Location List" },
+      { "<leader>sm", function() Snacks.picker.marks() end, desc = "Marks" },
+      { "<leader>sM", function() Snacks.picker.man() end, desc = "Man Pages" },
+      { "<leader>sp", function() Snacks.picker.projects() end, desc = "[S]earch Projects" },
+      { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
+      { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
+      { "<leader>pC", function() Snacks.picker.colorschemes() end, desc = "[C]olorschemes" },
       -- LSP
-      {
-        "gd",
-        function()
-          Snacks.picker.lsp_definitions()
-        end,
-        desc = "[G]oto [D]efinition",
-      },
-      {
-        "gr",
-        function()
-          Snacks.picker.lsp_references()
-        end,
-        nowait = true,
-        desc = "[G]oto [R]eferences",
-      },
-      {
-        "gI",
-        function()
-          Snacks.picker.lsp_implementations()
-        end,
-        desc = "[G]oto [I]mplementation",
-      },
-      {
-        "gy",
-        function()
-          Snacks.picker.lsp_type_definitions()
-        end,
-        desc = "[G]oto T[y]pe Definition",
-      },
-      {
-        "<leader>ss",
-        function()
-          Snacks.picker.lsp_symbols()
-        end,
-        desc = "[S]earch [S]ymbols",
-      },
-      {
-        "<leader>sS",
-        function()
-          Snacks.picker.lsp_references()
-        end,
-        desc = "[S]earch References",
-      },
+      { "gd", function() Snacks.picker.lsp_definitions() end, desc = "[G]oto [D]efinition" },
+      { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "[G]oto [R]eferences" },
+      { "gI", function() Snacks.picker.lsp_implementations() end, desc = "[G]oto [I]mplementation" },
+      { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "[G]oto T[y]pe Definition" },
+      { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "[S]earch [S]ymbols" },
+      { "<leader>sS", function() Snacks.picker.lsp_references() end, desc = "[S]earch References" },
       -- file explorer
       {
         "<leader>fe",
@@ -462,30 +175,14 @@ return {
         end,
         desc = "[F]ile [E]xplorer (root dir)",
       },
-      {
-        "<leader>fE",
-        function()
-          Snacks.explorer()
-        end,
-        desc = "[F]ile [󰘶E]xplorer (cwd)",
-      },
-      {
-        "<leader>e",
-        "<leader>fe",
-        desc = "[F]ile [E]xplorer (root dir)",
-        remap = true,
-      },
-      {
-        "<leader>E",
-        "<leader>fE",
-        desc = "[F]ile [󰘶E]xplorer (cwd)",
-        remap = true,
-      },
+      { "<leader>fE", function() Snacks.explorer() end, desc = "[F]ile [󰘶E]xplorer (cwd)" },
+      { "<leader>e", "<leader>fe", desc = "[F]ile [E]xplorer (root dir)", remap = true },
+      { "<leader>E", "<leader>fE", desc = "[F]ile [󰘶E]xplorer (cwd)", remap = true },
     },
     config = function(_, opts)
       require("snacks").setup(opts)
 
-      -- fancy LSP progress
+      -- fancy LSP progress in the notifier
       local progress = vim.defaulttable()
       vim.api.nvim_create_autocmd("LspProgress", {
         ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
@@ -533,7 +230,7 @@ return {
             id = "lsp_progress",
             title = client.name,
             opts = function(notif)
-              notif.icon = #progress[client.id] == 0 and " "
+              notif.icon = #progress[client.id] == 0 and " "
                 ---@diagnostic disable-next-line: undefined-field
                 or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
             end,

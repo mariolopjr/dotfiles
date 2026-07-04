@@ -1,0 +1,9 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/opt/homebrew/bin/fish
+
+# Sync fish plugins whenever fish_plugins changes, fisher update installs
+# new plugins and updates existing ones from that file
+# fish_plugins hash: {{ include "dot_config/private_fish/fish_plugins" | sha256sum }}
+
+fisher update
+{{ end -}}

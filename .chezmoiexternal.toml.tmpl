@@ -1,7 +1,16 @@
 {{- if eq .chezmoi.os "darwin" }}
+# refresh with `chezmoi apply -R` when a new netcoredbg is released
+
 [".hammerspoon/Spoons/EmmyLua.spoon"]
 type = "archive"
 url = "https://github.com/Hammerspoon/Spoons/raw/master/Spoons/EmmyLua.spoon.zip"
-exact = true
 stripComponents = 1
+
+# netcoredbg, the .NET debug adapter used by nvim-dap for Godot, dap.lua looks
+# for it at ~/.netcoredbg/netcoredbg/netcoredbg so the archive keeps its inner
+# folder (no stripComponents), the zip ships a __MACOSX sibling we drop.
+[".netcoredbg"]
+type = "archive"
+url = "https://github.com/Samsung/netcoredbg/releases/latest/download/netcoredbg-osx-{{ .chezmoi.arch }}.zip"
+exclude = ["__MACOSX/**"]
 {{- end }}

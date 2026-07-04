@@ -1,0 +1,14 @@
+{{ if and (eq .chezmoi.os "darwin") (not (env "GITHUB_ACTION")) -}}
+#!/bin/bash
+
+# Install brew casks, shared plus host-specific
+# Package list lives in .chezmoidata/packages.toml
+brew bundle --file=/dev/stdin <<EOF
+{{ range .packages.darwin.casks -}}
+cask "{{ . }}"
+{{ end -}}
+{{ range dig .chezmoi.hostname "casks" (list) .packages.darwin.hosts -}}
+cask "{{ . }}"
+{{ end -}}
+EOF
+{{ end -}}

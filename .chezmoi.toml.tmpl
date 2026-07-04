@@ -8,13 +8,14 @@
 {{- end }}
 
 [diff]
-    command = "delta"
     pager = "delta"
 
 [data]
     username = "mario"
-    macHosts = { targaryen = true }
-    desktops = { winterfell = true }
-    laptops = { targaryen = true }
-    servers = { pyke = true }
-
+    {{ if eq .chezmoi.os "darwin" -}}
+    hostname = "{{ output "scutil" "--get" "HostName" | trim }}"
+    {{- else if eq .chezmoi.os "linux" -}}
+    hostname = "{{ output "hostnamectl" "--static" | trim }}"
+    {{- else -}}
+    hostname = "{{ output "hostname" }}"
+    {{- end -}}

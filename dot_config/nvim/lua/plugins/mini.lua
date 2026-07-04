@@ -1,16 +1,16 @@
 return {
-  { -- Collection of various small independent plugins/modules
+  { -- collection of small independent plugin modules
     "echasnovski/mini.nvim",
     config = function()
-      -- Better Around/Inside textobjects
+      -- better around/inside textobjects
       --
-      -- Examples:
+      -- examples:
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
       require("mini.ai").setup({ n_lines = 500 })
 
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
+      -- add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
@@ -20,30 +20,32 @@ return {
       -- fast autopairs
       require("mini.pairs").setup()
 
-      -- sessions management
+      -- mini.pairs is not aware of snacks_picker_input (unlike TelescopePrompt/fzf)
+      -- so disable it there to avoid interfering with backspace behavior
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "snacks_picker_input", "snacks_input" },
+        callback = function()
+          vim.b.minipairs_disable = true
+        end,
+      })
+
       local sessions = require("mini.sessions")
       sessions.setup({
         autoread = false,
-        autowrite = false,
+        autowrite = true,
         file = ".session.nvim",
       })
 
-      -- auto-save session on exit
-      vim.api.nvim_create_autocmd("VimLeavePre", {
-        callback = function()
-          sessions.write(sessions.config.file)
-        end,
-      })
-
-      -- auto-load session on startup if it exists
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          local session_file = vim.fn.getcwd() .. sessions.config.file
-          if vim.fn.filereadable(session_file) == 1 then
-            sessions.read(sessions.config.file)
-          end
-        end,
-      })
+      -- <leader>S session menu, see the which-key group in plugins/ui.lua
+      vim.keymap.set("n", "<leader>Ss", function()
+        sessions.write(".session.nvim")
+      end, { desc = "[S]ave session (this dir)" })
+      vim.keymap.set("n", "<leader>Sl", function()
+        sessions.select("read")
+      end, { desc = "[L]oad session" })
+      vim.keymap.set("n", "<leader>Sd", function()
+        sessions.select("delete")
+      end, { desc = "[D]elete session" })
 
       -- icons
       require("mini.icons").setup({
@@ -70,18 +72,8 @@ return {
       -- statusline
       require("mini.statusline").setup()
 
-      -- snippets support
-      -- TODO: actually load snippets
-      require("mini.snippets").setup()
-
       -- diff
       require("mini.diff").setup()
-
-      -- dashboard
-      -- require("mini.starter").setup()
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
 }

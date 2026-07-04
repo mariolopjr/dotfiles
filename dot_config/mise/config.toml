@@ -1,4 +1,15 @@
-[tools]
-go = "latest"
-rust = "latest"
+# the dotnet major version to install and set DOTNET_ROOT to
+[vars]
+dotnet_version = "10"
 
+[env]
+# csharpier (and other dotnet tools) locate the mise-managed runtime only through DOTNET_ROOT
+DOTNET_ROOT = "{{ env.HOME }}/.local/share/mise/installs/dotnet/{{ vars.dotnet_version }}"
+
+[tools]
+rust = { version = "latest", components = "rust-analyzer,rust-src" }
+dotnet = "{{ vars.dotnet_version }}"
+"dotnet:Chickensoft.GodotEnv" = "latest"
+"dotnet:csharpier" = "latest"
+"dotnet:roslyn-language-server" = { version = "latest", prerelease = true }
+"npm:@agentclientprotocol/claude-agent-acp" = "latest"

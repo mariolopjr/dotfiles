@@ -4,11 +4,6 @@ if status is-interactive
     if type -q /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv fish)
     end
-
-    ## Launch homebrew on linux
-    if type -q /home/linuxbrew/.linuxbrew/bin/brew
-        eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)
-    end
 end
 
 ## Source profile.d configs
@@ -35,6 +30,3 @@ end
 if type -q mise
     mise activate fish | source
 end
-
-## add llvm to path
-fish_add_path $(brew --prefix)/opt/llvm/bin

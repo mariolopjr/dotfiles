@@ -1,17 +1,20 @@
--- set <space> as the leader key
+-- leader keys must be set before plugins load
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- enable nerd fonts
 vim.g.have_nerd_font = true
 
--- disable netrw at the start of your config
+-- disable netrw, the snacks explorer replaces it
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- enable vim.pack
-vim.g.use_vim_pack = false
+require("config.options")
+require("config.keymaps")
+require("config.autocmds")
+require("config.miseenv")
+require("config.exrc")
+require("config.lazy")
 
-require("options").setup()
-require("keymap").setup()
-require("lazynvim").setup()
+-- tmux-style tabline, set up after lazy so the catppuccin palette is available
+require("util.tabline").setup()

@@ -37,6 +37,10 @@ return {
         }
       end,
       formatters = {
+        just = {
+          -- use two spaces for indentation
+          prepend_args = { "--indentation", "  " },
+        },
         yq_json = {
           command = "yq",
           args = {
@@ -49,18 +53,33 @@ return {
           },
           stdin = true,
         },
+        -- xmllint --format pretty-prints XML. --encode UTF-8 keeps literals
+        -- like © instead of entity-escaping them, and tail -n +2 strips the
+        -- <?xml?> declaration xmllint always prepends
+        xmllint = {
+          command = "sh",
+          args = {
+            "-c",
+            "set -o pipefail; xmllint --format --encode UTF-8 - | tail -n +2",
+          },
+          env = { XMLLINT_INDENT = "  " },
+          stdin = true,
+        },
       },
       formatters_by_ft = {
+        cs = { "csharpier" },
         css = { "stylelint" },
         lua = { "stylua" },
-        golang = { "gofmt" },
-        python = { "isort", "ruff" },
+        go = { "gofmt" },
+        just = { "just" },
+        python = { "isort", "ruff_format" },
         rust = { "rustfmt" },
         sh = { "shellcheck" },
         json = { "yq_json" },
         html = { "prettier" },
-        xml = { "yq" },
-        yaml = { "yq " },
+        xml = { "xmllint" },
+        yaml = { "yq" },
+        zig = { "zigfmt" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },

@@ -1,5 +1,5 @@
 return {
-  -- search/replace in multiple files
+  -- search and replace in multiple files
   {
     "MagicDuck/grug-far.nvim",
     opts = { headerMaxWidth = 80 },
@@ -23,46 +23,33 @@ return {
     },
   },
 
-  -- Flash enhances the built-in search functionality by showing labels
-  -- at the end of each match, letting you quickly jump to a specific
-  -- location.
+  -- labeled jump motions, char mode also enhances f/F/t/T with labels
   {
     "folke/flash.nvim",
     event = "VeryLazy",
     ---@type Flash.Config
-    opts = {},
+    ---@diagnostic disable-next-line: missing-fields
+    opts = {
+      modes = {
+        char = { jump_labels = true },
+      },
+    },
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,   desc = "Flash" },
-      {
-        "S",
-        mode = { "n", "o", "x" },
-        function()
-          require("flash")
-              .treesitter()
-        end,
-        desc = "Flash Treesitter"
-      },
-      { "r", mode = "o",               function() require("flash").remote() end, desc = "Remote Flash" },
-      {
-        "R",
-        mode = { "o", "x" },
-        function()
-          require("flash")
-              .treesitter_search()
-        end,
-        desc = "Treesitter Search"
-      },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
   },
 
-  -- Finds and lists all of the TODO, HACK, BUG, etc comment
-  -- in your project and loads them into a browsable list.
+  -- highlight and browse TODO, HACK, BUG comments
   {
     "folke/todo-comments.nvim",
     event = "LazyFile",
-    opts = {},
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = { signs = false },
     keys = {
       {
         "]t",
@@ -94,6 +81,24 @@ return {
         end,
         desc = "Todo/Fix/Fixme",
       },
+    },
+  },
+
+  -- split navigation and resizing
+  {
+    "mrjones2014/smart-splits.nvim",
+    version = ">=v1.0.0",
+    lazy = false,
+    -- stylua: ignore
+    keys = {
+      { "<C-h>", function() require("smart-splits").move_cursor_left() end },
+      { "<C-j>", function() require("smart-splits").move_cursor_down() end },
+      { "<C-k>", function() require("smart-splits").move_cursor_up() end },
+      { "<C-l>", function() require("smart-splits").move_cursor_right() end },
+      { "<A-h>", function() require("smart-splits").resize_left() end },
+      { "<A-j>", function() require("smart-splits").resize_down() end },
+      { "<A-k>", function() require("smart-splits").resize_up() end },
+      { "<A-l>", function() require("smart-splits").resize_right() end },
     },
   },
 }
