@@ -84,7 +84,7 @@ return {
     },
   },
 
-  -- split navigation and resizing that cooperates with terminal panes
+  -- split navigation and resizing
   {
     "mrjones2014/smart-splits.nvim",
     version = ">=v1.0.0",
