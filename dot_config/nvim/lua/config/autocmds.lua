@@ -25,6 +25,26 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   end,
 })
 
+-- report neovim's cwd to the terminal via OSC 7
+-- wezterm uses this for the tab name, and new panes
+-- will also open in that directory
+vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
+  desc = "Emit OSC 7 with the current working directory",
+  group = vim.api.nvim_create_augroup("osc7-cwd", { clear = true }),
+  callback = function()
+    local cwd = vim.uv.cwd()
+    if not cwd then
+      return
+    end
+    local host = vim.uv.os_gethostname() or ""
+    local path = cwd:gsub("([^%w/._~-])", function(c)
+      return string.format("%%%02X", string.byte(c))
+    end)
+    io.write(("\027]7;file://%s%s\027\\"):format(host, path))
+    io.flush()
+  end,
+})
+
 -- save the buffer when leaving it or when nvim loses focus
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
   desc = "Autosave modified buffers",
