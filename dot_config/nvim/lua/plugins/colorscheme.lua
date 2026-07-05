@@ -5,6 +5,13 @@ return {
     lazy = false,
     priority = 1000,
     opts = {
+      -- floats share the editor background so the rounded border blends into it
+      custom_highlights = function(c)
+        return {
+          NormalFloat = { bg = c.base },
+          FloatBorder = { bg = c.base, fg = c.blue },
+        }
+      end,
       integrations = {
         blink_cmp = true,
         dap = true,

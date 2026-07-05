@@ -23,6 +23,7 @@ return {
       vim.diagnostic.config({
         underline = true,
         update_in_insert = false,
+        float = { border = "rounded" },
         virtual_text = {
           prefix = function(diagnostic)
             return icons[diagnostic.severity] or "●"
@@ -76,6 +77,7 @@ return {
 
       vim.lsp.enable({
         "clangd",
+        "codebook",
         "fish_lsp",
         "gopls",
         "jsonls",

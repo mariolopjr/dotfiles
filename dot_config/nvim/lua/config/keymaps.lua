@@ -57,6 +57,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.lsp.buf.code_action,
       { desc = "[C]ode [A]ction", buffer = buf }
     )
+    map(
+      { "n", "x" },
+      "ga",
+      vim.lsp.buf.code_action,
+      { desc = "Code Action", buffer = buf }
+    )
+    map("n", "<leader>cA", function()
+      vim.lsp.buf.code_action({
+        context = { only = { "source.fixAll" }, diagnostics = {} },
+        apply = true,
+      })
+    end, { desc = "[C]ode Fix [A]ll (whole document)", buffer = buf })
     map("n", "<leader>ch", function()
       vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })

@@ -83,7 +83,7 @@ return {
         -- inline doesn't work on the subscription, repurpose to instruct the agent,
         -- in visual mode attach the selection first, then focus the chat in
         -- insert so you can type the edit instruction (the agent edits files
-        -- over ACP). Distinct from `ga` which stays in the source buffer
+        -- over ACP). Distinct from `gA` which stays in the source buffer
         "<leader>ai",
         function()
           local cc = require("codecompanion")
@@ -102,11 +102,11 @@ return {
         desc = "[A]I [I]nstruct edit",
       },
       {
-        "ga",
+        "gA",
         function()
           require("codecompanion").add({})
         end,
-        mode = { "n", "v" },
+        mode = { "x" },
         desc = "Send selected text to AI Chat",
       },
     },

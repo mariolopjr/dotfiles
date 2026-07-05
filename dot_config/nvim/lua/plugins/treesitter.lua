@@ -18,8 +18,10 @@ local ensure_installed = {
 }
 
 -- filetypes that should keep their native indent instead of treesitter indent
+-- use the filetype and not the parser name
 local no_ts_indent = {
   ruby = true,
+  cs = true,
 }
 
 -- treesitter aware motions, applied the same way in all four directions

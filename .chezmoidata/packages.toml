@@ -6,6 +6,7 @@ brews = [
   "bat",
   "bottom",
   "chezmoi",
+  "codebook-lsp",
   "container",
   "ctop",
   "curl",

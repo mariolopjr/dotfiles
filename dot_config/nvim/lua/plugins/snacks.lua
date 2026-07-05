@@ -135,6 +135,9 @@ return {
       { "<M-c>", function() require("util.claude").toggle() end, desc = "Claude Toggle", mode = { "n", "t" } },
       -- floating shell terminal
       { "<M-t>", function() require("util.terminal").toggle() end, desc = "Terminal Toggle", mode = { "n", "t" } },
+      -- zen / zoom, zoom maximizes the current window, zen is distraction free
+      { "<leader>z", function() Snacks.zen.zoom() end, desc = "[Z]oom (maximize window)" },
+      { "<leader>Z", function() Snacks.zen() end, desc = "[Z]en Mode" },
       -- chezmoi
       { "<leader>pd", function() require("util.chezmoi").diff() end, desc = "Chezmoi [D]iff" },
       { "<leader>pa", function() require("util.chezmoi").apply() end, desc = "Chezmoi [A]pply" },

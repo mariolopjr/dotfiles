@@ -17,6 +17,13 @@ return {
         command_palette = true, -- position the cmdline and popupmenu together
         long_message_to_split = true, -- long messages go to a split
       },
+      views = {
+        -- rounded, padded K hover popup
+        hover = {
+          border = { style = "rounded", padding = { 0, 1 } },
+          size = { max_width = 90 },
+        },
+      },
     },
   },
 
