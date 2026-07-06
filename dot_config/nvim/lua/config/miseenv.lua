@@ -83,6 +83,9 @@ vim.api.nvim_create_autocmd("DirChanged", {
   end,
 })
 
--- cover the startup cwd before the first LSP attaches, synchronous on
--- purpose so spawned servers inherit the right environment
-reload()
+-- defer until scheduled callbacks run
+if vim.fn.argc(-1) > 0 then
+  reload()
+else
+  vim.schedule(reload)
+end

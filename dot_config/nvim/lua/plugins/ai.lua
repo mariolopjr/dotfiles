@@ -1,6 +1,15 @@
 return {
   {
     "olimorris/codecompanion.nvim",
+    cmd = {
+      "CodeCompanion",
+      "CodeCompanionActions",
+      "CodeCompanionChat",
+      "CodeCompanionCmd",
+    },
+    init = function()
+      vim.cmd([[cab cc CodeCompanion]])
+    end,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -117,8 +126,6 @@ return {
       pcall(function()
         require("util.cc_winbar").setup()
       end)
-
-      vim.cmd([[cab cc CodeCompanion]])
     end,
   },
 }

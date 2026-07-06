@@ -1,6 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "xzbdmw/colorful-menu.nvim",
       "rafamadriz/friendly-snippets",

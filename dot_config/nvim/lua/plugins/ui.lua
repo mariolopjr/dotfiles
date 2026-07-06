@@ -30,7 +30,7 @@ return {
   -- keymap hints popup
   {
     "folke/which-key.nvim",
-    event = "VimEnter",
+    event = "VeryLazy",
     opts = {
       preset = "helix",
       icons = {
