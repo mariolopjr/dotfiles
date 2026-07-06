@@ -11,7 +11,7 @@ local function toggle_scratch(win, pane)
   if current == "scratch" then
     win:perform_action(
       act.SwitchToWorkspace({
-        name = wezterm.GLOBAL.previous_workspace or "main",
+        name = wezterm.GLOBAL.previous_workspace or "default",
       }),
       pane
     )

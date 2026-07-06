@@ -45,6 +45,31 @@ vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
   end,
 })
 
+-- underline urls and bare domains in buffers
+local function set_url_hl()
+  vim.api.nvim_set_hl(0, "UrlUnderline", { underline = true })
+end
+set_url_hl()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  desc = "Redefine the URL underline after a colorscheme clears highlights",
+  group = vim.api.nvim_create_augroup("url-underline-hl", { clear = true }),
+  callback = set_url_hl,
+})
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+  desc = "Underline urls and bare domains in the window",
+  group = vim.api.nvim_create_augroup("url-underline", { clear = true }),
+  callback = function(ev)
+    if vim.bo[ev.buf].buftype ~= "" or vim.w.url_match then
+      return
+    end
+    local ok, id =
+      pcall(vim.fn.matchadd, "UrlUnderline", require("util.url").regex, 10)
+    if ok and id ~= -1 then
+      vim.w.url_match = id
+    end
+  end,
+})
+
 -- save the buffer when leaving it or when nvim loses focus
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
   desc = "Autosave modified buffers",

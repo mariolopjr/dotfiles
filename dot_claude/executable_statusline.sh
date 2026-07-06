@@ -46,7 +46,11 @@ bar() { # pct width -> colored filled/empty block bar
 }
 
 # directory
-name=$(basename "$DIR")
+if [ "$DIR" = "$HOME" ]; then
+  name="~"
+else
+  name=$(basename "$DIR")
+fi
 [ -z "$name" ] && name="~"
 out="${BLD}${CYAN}${name}${RST}"
 

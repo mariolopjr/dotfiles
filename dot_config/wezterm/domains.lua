@@ -3,7 +3,7 @@ local wezterm = require("wezterm")
 local M = {}
 
 function M.apply(config)
-  config.default_workspace = "main"
+  config.default_workspace = "default"
 
   -- SSH: and SSHMUX: domains for every host in ~/.ssh/config
   config.ssh_domains = wezterm.default_ssh_domains()

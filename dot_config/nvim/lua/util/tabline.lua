@@ -191,8 +191,9 @@ function M.render()
   -- close the click region and fill the rest of the line
   segs[#segs + 1] = "%T%#TmuxTabFill#%="
 
-  -- project chip, the cwd basename, mirroring tmux status-right
-  local cwd = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+  -- project chip, the cwd basename (~ at home), mirroring tmux status-right
+  local dir = vim.fn.getcwd()
+  local cwd = dir == vim.env.HOME and "~" or vim.fn.fnamemodify(dir, ":t")
   if cwd ~= "" then
     segs[#segs + 1] = "%#TmuxTabChip# " .. FOLDER .. " " .. esc(cwd) .. " "
   end

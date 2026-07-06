@@ -14,20 +14,6 @@ map("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 -- exit terminal mode with something easier than <C-\><C-n>
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- open the github page of the plugin, or the url, under the cursor
-local function open_url_or_repo()
-  local line = vim.api.nvim_get_current_line()
-  -- match { "author/repo", then plain "author/repo",
-  local repo = line:match('{%s*"([%w%-_]+/[%w%-_%.]+)",')
-    or line:match('"([%w%-_]+/[%w%-_%.]+)",')
-  if repo then
-    vim.ui.open("https://github.com/" .. repo)
-    return
-  end
-  vim.ui.open(vim.fn.expand("<cfile>"))
-end
-map("n", "gx", open_url_or_repo, { desc = "Open URL or plugin repo" })
-
 -- LSP keymaps for attached buffers
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),

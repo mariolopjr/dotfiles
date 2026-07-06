@@ -48,7 +48,8 @@ local function tab_label(tab)
   end
   local cwd = pane.current_working_dir
   if cwd and cwd.file_path then
-    local dir = basename(cwd.file_path)
+    local p = cwd.file_path:gsub("/+$", "")
+    local dir = (p == wezterm.home_dir) and "~" or basename(p)
     if dir then
       return dir, glyph
     end
