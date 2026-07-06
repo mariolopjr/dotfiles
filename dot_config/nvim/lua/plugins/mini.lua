@@ -34,6 +34,22 @@ return {
         autoread = false,
         autowrite = true,
         file = ".session.nvim",
+        hooks = {
+          pre = {
+            -- ensure roslyn generated buffers are not saved
+            write = function()
+              for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if
+                  vim.api
+                    .nvim_buf_get_name(buf)
+                    :match("^roslyn%-source%-generated://")
+                then
+                  vim.api.nvim_buf_delete(buf, { force = true })
+                end
+              end
+            end,
+          },
+        },
       })
 
       -- <leader>S session menu, see the which-key group in plugins/ui.lua
