@@ -17,13 +17,6 @@ local ensure_installed = {
   "ron",
 }
 
--- filetypes that should keep their native indent instead of treesitter indent
--- use the filetype and not the parser name
-local no_ts_indent = {
-  ruby = true,
-  cs = true,
-}
-
 -- treesitter aware motions, applied the same way in all four directions
 local moves = {
   goto_next_start = {
@@ -70,19 +63,11 @@ return {
         ts.install(missing):await(function() end)
       end
 
-      -- installable parsers, looked up lazily so we only pay for it on a miss
+      -- installable parsers
       local available
       local installing = {}
 
-      local function set_indent(buf, ft)
-        if not no_ts_indent[ft] then
-          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end
-      end
-
-      -- start highlighting and indent per buffer, installing parsers on demand.
-      -- neovim only auto starts treesitter for its few bundled languages, so we
-      -- drive it here for everything else
+      -- start highlighting per buffer, installing parsers on demand
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup(
           "treesitter_highlight",
@@ -95,7 +80,6 @@ return {
           end
 
           if pcall(vim.treesitter.start, ev.buf, lang) then
-            set_indent(ev.buf, ev.match)
             return
           end
 
@@ -108,11 +92,8 @@ return {
           ts.install(lang):await(function()
             installing[lang] = nil
             vim.schedule(function()
-              if
-                vim.api.nvim_buf_is_valid(ev.buf)
-                and pcall(vim.treesitter.start, ev.buf, lang)
-              then
-                set_indent(ev.buf, ev.match)
+              if vim.api.nvim_buf_is_valid(ev.buf) then
+                pcall(vim.treesitter.start, ev.buf, lang)
               end
             end)
           end)

@@ -29,6 +29,19 @@ return {
       bigfile = { enabled = true },
       dashboard = {
         enabled = true,
+        preset = {
+          -- stylua: ignore
+          keys = {
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.picker.projects()" },
+            { icon = " ", key = "v", desc = "Vaults", action = ":ObsidianVaults" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
+        },
         sections = {
           { section = "header" },
           {
@@ -48,9 +61,10 @@ return {
           {
             icon = " ",
             title = "Recent Files",
-            section = "recent_files",
             indent = 2,
             padding = 1,
+            -- only files opened directly on the command line (nvim file.txt)
+            require("util.startup_files").section({ limit = 5 }),
           },
           { section = "startup" },
         },
@@ -146,6 +160,7 @@ return {
       { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
+      { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
       -- find
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
@@ -158,6 +173,7 @@ return {
       { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
       -- search
+      { "<leader>s.", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
       { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
       { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
       { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
@@ -201,6 +217,18 @@ return {
     },
     config = function(_, opts)
       require("snacks").setup(opts)
+
+      -- persist command-line file arguments
+      if vim.v.vim_did_enter == 1 then
+        require("util.startup_files").record()
+      else
+        vim.api.nvim_create_autocmd("VimEnter", {
+          once = true,
+          callback = function()
+            require("util.startup_files").record()
+          end,
+        })
+      end
 
       -- fancy LSP progress in the notifier
       local progress = vim.defaulttable()

@@ -10,6 +10,7 @@ return {
     opts = {
       library = {
         { plugins = { "nvim-dap-ui" }, types = true },
+        { path = "snacks.nvim", words = { "Snacks" } },
       },
     },
   },

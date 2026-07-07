@@ -1,17 +1,60 @@
 -- Obsidian integration with id-addressed zettelkasten
 
-local vault = vim.fn.expand("~")
-  .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes"
+--- Obsidian vaults
+--- @type { name: string, path: string }[]
+local vaults = {
+  {
+    name = "notes",
+    path = vim.fn.expand("~")
+      .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes",
+  },
+}
+
+--- Snacks vaults picker
+local function pick_vaults()
+  local items = {}
+  for _, v in ipairs(vaults) do
+    items[#items + 1] = { text = v.name, file = v.path }
+  end
+  Snacks.picker.pick({
+    items = items,
+    title = "Obsidian Vaults",
+    format = "text",
+    confirm = function(picker, item)
+      picker:close()
+      if item then
+        vim.schedule(function()
+          Snacks.picker.files({ cwd = item.file })
+        end)
+      end
+    end,
+  })
+end
 
 return {
   {
     "obsidian-nvim/obsidian.nvim",
     version = "*",
     event = {
-      "BufReadPre " .. vault .. "/*.md",
-      "BufNewFile " .. vault .. "/*.md",
+      "BufReadPre " .. vaults[1].path .. "/*.md",
+      "BufNewFile " .. vaults[1].path .. "/*.md",
     },
     cmd = "Obsidian",
+    init = function()
+      -- load the picker so the dashboard and keymap can open it
+      -- without loading obsidian.nvim
+      vim.api.nvim_create_user_command(
+        "ObsidianVaults",
+        pick_vaults,
+        { desc = "Pick an Obsidian vault" }
+      )
+      vim.keymap.set(
+        "n",
+        "<leader>so",
+        pick_vaults,
+        { desc = "[O]bsidian Vaults" }
+      )
+    end,
     -- stylua: ignore
     keys = {
       -- pickers
@@ -39,7 +82,7 @@ return {
       { "<leader>oO", "<cmd>Obsidian open<cr>", desc = "Open in Obsidian app" },
     },
     opts = {
-      workspaces = { { name = "notes", path = vault } },
+      workspaces = vaults,
       legacy_commands = false,
 
       picker = { name = "snacks.picker" },
