@@ -49,6 +49,7 @@ return {
         { "<leader>d", group = "[D]ebug" },
         { "<leader>f", group = "[F]iles" },
         { "<leader>g", group = "[G]it" },
+        { "<leader>o", group = "[O]bsidian", mode = { "n", "x" } },
         { "<leader>p", group = "[P]lugins" },
         { "<leader>r", group = "[R]un" },
         { "<leader>s", group = "[S]earch" },

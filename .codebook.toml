@@ -1,5 +1,6 @@
 dictionaries = ["en_us"]
 words = [
+    "CLI",
     "Esc",
     "OSC",
     "autocommands",
@@ -13,6 +14,7 @@ words = [
     "clangd",
     "dragonstone",
     "folke",
+    "frontmatter",
     "gfm",
     "gopls",
     "hlsearch",
@@ -36,6 +38,7 @@ words = [
     "rtp",
     "shiftwidth",
     "signcolumn",
+    "stylua",
     "tabstop",
     "targaryen",
     "tohtml",
@@ -43,6 +46,7 @@ words = [
     "wezterm",
     "winterfell",
     "yamlls",
+    "zettelkasten",
     "zls",
 ]
 ignore_paths = [
