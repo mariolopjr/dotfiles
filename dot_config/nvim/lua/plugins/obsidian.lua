@@ -22,11 +22,18 @@ local function pick_vaults()
     format = "text",
     confirm = function(picker, item)
       picker:close()
-      if item then
-        vim.schedule(function()
-          Snacks.picker.files({ cwd = item.file })
-        end)
+      if not item then
+        return
       end
+      vim.schedule(function()
+        -- switch into the vault
+        vim.cmd.cd(vim.fn.fnameescape(item.file))
+        if vim.fn.filereadable(item.file .. "/.session.nvim") == 1 then
+          require("mini.sessions").read(".session.nvim")
+        else
+          Snacks.explorer({ cwd = item.file })
+        end
+      end)
     end,
   })
 end
@@ -67,6 +74,37 @@ return {
       -- create
       { "<leader>on", "<cmd>Obsidian new<cr>", desc = "New note" },
       { "<leader>oN", "<cmd>Obsidian new_from_template<cr>", desc = "New note from template" },
+      { "<leader>oG", function()
+          local root = vaults[1].path .. "/projects"
+          local items = {}
+          for name, ty in vim.fs.dir(root) do
+            if ty == "directory" then
+              items[#items + 1] = { text = name, file = root .. "/" .. name }
+            end
+          end
+          table.sort(items, function(a, b) return a.text < b.text end)
+          Snacks.picker.pick({
+            items = items,
+            title = "Game concept: pick project",
+            format = "text",
+            confirm = function(picker, item)
+              picker:close()
+              if not item then return end
+              local file = item.file .. "/game-concept.md"
+              local exists = vim.fn.filereadable(file) == 1
+              vim.schedule(function()
+                vim.cmd.edit(vim.fn.fnameescape(file))
+                if exists then
+                  vim.notify("game-concept.md already exists, opened it", vim.log.levels.WARN)
+                  return
+                end
+                local tmpl = vaults[1].path .. "/_templates/Game Concept.md"
+                vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.fn.readfile(tmpl))
+                vim.cmd("normal! gg")
+              end)
+            end,
+          })
+        end, desc = "[G]ame concept from template" },
       { "<leader>ot", "<cmd>Obsidian today<cr>", desc = "Today's daily" },
       { "<leader>oy", "<cmd>Obsidian yesterday<cr>", desc = "Yesterday's daily" },
       { "<leader>oT", "<cmd>Obsidian tomorrow<cr>", desc = "Tomorrow's daily" },

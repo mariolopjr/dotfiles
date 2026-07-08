@@ -14,6 +14,31 @@ map("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 -- exit terminal mode with something easier than <C-\><C-n>
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- codebook has suggested replacement words before adding to dictionary which is
+-- annoying, this forces add to dictionary to be first
+local function code_action()
+  local orig_select = vim.ui.select
+  vim.ui.select = function(items, opts, on_choice)
+    vim.ui.select = orig_select
+    if opts and opts.kind == "codeaction" then
+      local first, rest = {}, {}
+      for _, item in ipairs(items) do
+        if item.action.title:lower():find("to dictionary", 1, true) then
+          first[#first + 1] = item
+        else
+          rest[#rest + 1] = item
+        end
+      end
+      for _, item in ipairs(rest) do
+        first[#first + 1] = item
+      end
+      items = first
+    end
+    return orig_select(items, opts, on_choice)
+  end
+  vim.lsp.buf.code_action()
+end
+
 -- LSP keymaps for attached buffers
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
@@ -40,15 +65,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map(
       { "n", "x" },
       "<leader>ca",
-      vim.lsp.buf.code_action,
+      code_action,
       { desc = "[C]ode [A]ction", buffer = buf }
     )
-    map(
-      { "n", "x" },
-      "ga",
-      vim.lsp.buf.code_action,
-      { desc = "Code Action", buffer = buf }
-    )
+    map({ "n", "x" }, "ga", code_action, { desc = "Code Action", buffer = buf })
     map("n", "<leader>cA", function()
       vim.lsp.buf.code_action({
         context = { only = { "source.fixAll" }, diagnostics = {} },

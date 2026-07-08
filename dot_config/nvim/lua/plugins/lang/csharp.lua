@@ -9,6 +9,10 @@ return {
     ---@type RoslynNvimConfig
     opts = {},
     init = function()
+      -- hover-docs extends roslyn's anemic docs hover with extra
+      -- information
+      require("hover-docs").setup()
+
       -- Roslyn generates the /// doc-comment stub using the VS-internal textDocument/_vs_onAutoInsert method
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup(

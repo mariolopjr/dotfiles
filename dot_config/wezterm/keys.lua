@@ -126,6 +126,8 @@ function M.apply(config)
       action = act.SpawnCommandInNewTab({ cwd = wezterm.home_dir }),
     },
     { key = ",", mods = "LEADER", action = rename_tab },
+    { key = ">", mods = "LEADER", action = act.MoveTabRelative(1) },
+    { key = "<", mods = "LEADER", action = act.MoveTabRelative(-1) },
 
     -- Workspaces
     {
