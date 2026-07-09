@@ -75,6 +75,11 @@ return {
         root_markers = { "main.ledger", ".git" },
       })
 
+      -- chezmoi.vim gives lua template sources the compound filetype lua.chezmoitmpl
+      vim.lsp.config("lua_ls", {
+        filetypes = { "lua", "lua.chezmoitmpl" },
+      })
+
       vim.lsp.enable({
         "clangd",
         "codebook",

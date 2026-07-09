@@ -7,11 +7,24 @@ return {
     ft = "cs",
     ---@module 'roslyn.config'
     ---@type RoslynNvimConfig
-    opts = {},
+    -- let roslyn's own file watcher handle changes
+    opts = { filewatching = "roslyn" },
     init = function()
-      -- hover-docs extends roslyn's anemic docs hover with extra
-      -- information
-      require("hover-docs").setup()
+      -- ensure roslyn starts file watching before vim.lsp.enable
+      vim.lsp.config("roslyn", {
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = { dynamicRegistration = false },
+          },
+        },
+      })
+
+      -- hover-docs extends roslyn's docs hover with extra information
+      -- ensure the lua glue code exists before loading
+      local ok, hover_docs = pcall(require, "hover-docs")
+      if ok then
+        hover_docs.setup()
+      end
 
       -- Roslyn generates the /// doc-comment stub using the VS-internal textDocument/_vs_onAutoInsert method
       vim.api.nvim_create_autocmd("LspAttach", {

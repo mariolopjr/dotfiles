@@ -1,0 +1,15 @@
+# Obsidian vaults consumed by dot_config/nvim/lua/util/obsidian_vaults.lua.tmpl
+# Paths are relative to the home directory
+# The default list applies to every host, add a host key to override it entirely
+
+[obsidian]
+vaults = [
+  { name = "notes", path = "Library/Mobile Documents/iCloud~md~obsidian/Documents/notes" },
+]
+
+# Per-host overrides, replace the default vaults list on the matching machine
+[obsidian.hosts]
+# [obsidian.hosts.work-hostname]
+# vaults = [
+#   { name = "work", path = "Documents/work-vault" },
+# ]

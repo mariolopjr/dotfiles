@@ -14,6 +14,16 @@ map("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 -- exit terminal mode with something easier than <C-\><C-n>
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- allows clearing the shell inside a floating terminal
+-- wezterm forwards cmd+k here when nvim is focused since clearing wezterm's own grid corrupts the nvim redraw
+-- send ctrl-l straight to the job so termnav's <C-l> split mapping is bypassed
+map({ "n", "t" }, "<D-k>", function()
+  local job = vim.b.terminal_job_id
+  if job then
+    vim.fn.chansend(job, "\f") -- form feed, the shell's clear-screen widget
+  end
+end, { desc = "Clear terminal screen" })
+
 -- codebook has suggested replacement words before adding to dictionary which is
 -- annoying, this forces add to dictionary to be first
 local function code_action()

@@ -160,10 +160,25 @@ function M.apply(config)
     {
       key = "k",
       mods = "SUPER",
-      action = act.Multiple({
-        act.ClearScrollback("ScrollbackAndViewport"),
-        act.SendKey({ key = "l", mods = "CTRL" }),
-      }),
+      action = wezterm.action_callback(function(win, pane)
+        -- nvim owns the whole screen and hosts its own floating terminal,
+        -- clearing wezterm's grid corrupts its redraw, so forward the chord
+        -- and let nvim clear the inner terminal itself
+        if require("plugins.smart-splits").is_vim(pane) then
+          -- SendKey encodes with the legacy scheme, which cannot represent
+          -- super, so cmd+k would reach nvim as a bare k. write the kitty
+          -- keyboard sequence for super+k which nvim decodes it as <D-k>
+          win:perform_action(act.SendString("\x1b[107;9u"), pane)
+        else
+          win:perform_action(
+            act.Multiple({
+              act.ClearScrollback("ScrollbackAndViewport"),
+              act.SendKey({ key = "l", mods = "CTRL" }),
+            }),
+            pane
+          )
+        end
+      end),
     },
     { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
     { key = "D", mods = "LEADER", action = act.ShowDebugOverlay },

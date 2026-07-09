@@ -1,14 +1,9 @@
 -- Obsidian integration with id-addressed zettelkasten
 
---- Obsidian vaults
+--- Obsidian vaults, generated from chezmoi data into util/obsidian_vaults.lua,
+--- edit .chezmoidata/obsidian.toml to change them
 --- @type { name: string, path: string }[]
-local vaults = {
-  {
-    name = "notes",
-    path = vim.fn.expand("~")
-      .. "/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes",
-  },
-}
+local vaults = require("util.obsidian_vaults")
 
 --- Snacks vaults picker
 local function pick_vaults()
@@ -74,6 +69,52 @@ return {
       -- create
       { "<leader>on", "<cmd>Obsidian new<cr>", desc = "New note" },
       { "<leader>oN", "<cmd>Obsidian new_from_template<cr>", desc = "New note from template" },
+      { "<leader>of", function()
+          -- pick a vault folder, then create a zettel there via note_id_func
+          local root = vaults[1].path
+          local skip = {
+            [".git"] = true, [".obsidian"] = true, [".claude"] = true,
+            ["_templates"] = true, ["_data"] = true,
+          }
+          local items = { { text = "(vault root)", file = root } }
+          local function walk(dir, rel)
+            for name, ty in vim.fs.dir(dir) do
+              if ty == "directory" and not skip[name] and name:sub(1, 1) ~= "." then
+                local abs = dir .. "/" .. name
+                local display = rel == "" and name or (rel .. "/" .. name)
+                items[#items + 1] = { text = display, file = abs }
+                walk(abs, display)
+              end
+            end
+          end
+          walk(root, "")
+          table.sort(items, function(a, b) return a.text < b.text end)
+          Snacks.picker.pick({
+            items = items,
+            title = "New note: pick folder",
+            format = "text",
+            confirm = function(picker, item)
+              picker:close()
+              if not item then return end
+              vim.schedule(function()
+                local api = require("obsidian.api")
+                local title = api.input("Title (optional): ")
+                if title == nil then
+                  return vim.notify("Aborted", vim.log.levels.WARN)
+                end
+                title = vim.trim(title)
+                local id = title ~= "" and title or nil
+                local note = require("obsidian.note").create({
+                  id = id,
+                  title = id,
+                  dir = item.file,
+                })
+                note:write()
+                note:open({ sync = true })
+              end)
+            end,
+          })
+        end, desc = "New note in [f]older" },
       { "<leader>oG", function()
           local root = vaults[1].path .. "/projects"
           local items = {}

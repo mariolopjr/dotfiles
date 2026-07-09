@@ -1,0 +1,14 @@
+-- Obsidian vaults generated from chezmoi data, edit .chezmoidata/obsidian.toml
+
+--- @type { name: string, path: string }[]
+{{- $vaults := .obsidian.vaults -}}
+{{- $override := dig .chezmoi.hostname "vaults" (list) .obsidian.hosts -}}
+{{- if $override }}{{ $vaults = $override }}{{ end }}
+return {
+{{- range $vaults }}
+  {
+    name = {{ .name | quote }},
+    path = vim.fn.expand("~") .. "/" .. {{ .path | quote }},
+  },
+{{- end }}
+}
