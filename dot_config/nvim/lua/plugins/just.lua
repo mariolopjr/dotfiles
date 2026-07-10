@@ -47,7 +47,10 @@ local function pick_just(root)
     vim.notify("no justfile here", vim.log.levels.WARN)
     return
   end
-  local ok, parsed = pcall(vim.json.decode, dump.stdout)
+  -- just emits null for a recipe with no doc comment so convert that to nil
+  local ok, parsed = pcall(vim.json.decode, dump.stdout, {
+    luanil = { object = true },
+  })
   if not ok or type(parsed.recipes) ~= "table" then
     vim.notify("could not parse justfile", vim.log.levels.ERROR)
     return
@@ -56,8 +59,11 @@ local function pick_just(root)
   local items = {}
   for name, recipe in pairs(parsed.recipes) do
     if not recipe.private then
-      items[#items + 1] =
-        { text = name, doc = recipe.doc, detached = is_detached(recipe) }
+      items[#items + 1] = {
+        text = name,
+        doc = type(recipe.doc) == "string" and recipe.doc or nil,
+        detached = is_detached(recipe),
+      }
     end
   end
   table.sort(items, function(a, b)

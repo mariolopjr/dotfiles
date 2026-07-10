@@ -1,5 +1,5 @@
 README.md
-selene.toml
+TODO.md
 {{- if ne .chezmoi.os "darwin" }}
 .hammerspoon
 .hammerspoon/Spoons/EmmyLua.spoon

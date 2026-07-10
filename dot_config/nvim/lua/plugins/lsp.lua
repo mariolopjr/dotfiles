@@ -5,6 +5,14 @@ local icons = {
   [vim.diagnostic.severity.INFO] = "",
 }
 
+--- @param fn string A function name in util.lsp
+--- @return fun()
+local function lsp(fn)
+  return function()
+    require("util.lsp")[fn]()
+  end
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -12,12 +20,18 @@ return {
     dependencies = {
       "b0o/schemastore.nvim",
     },
+    -- lspconfig leaves :LspRestart undefined here because core owns :lsp
+    init = function()
+      vim.api.nvim_create_user_command("LspRestart", lsp("restart"), {
+        desc = "Restart project LSP clients",
+      })
+    end,
     keys = {
-      {
-        "<leader>pl",
-        ":checkhealth vim.lsp<CR>",
-        desc = "Check LSP health",
-      },
+      { "<leader>lr", lsp("restart"), desc = "[R]estart LSP" },
+      { "<leader>ls", lsp("stop"), desc = "[S]top LSP" },
+      { "<leader>le", lsp("enable"), desc = "[E]nable LSP" },
+      { "<leader>ll", lsp("log"), desc = "LSP [L]og" },
+      { "<leader>li", "<cmd>checkhealth vim.lsp<CR>", desc = "LSP [I]nfo" },
     },
     config = function()
       vim.diagnostic.config({
