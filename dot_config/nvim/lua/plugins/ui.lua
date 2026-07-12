@@ -57,6 +57,7 @@ return {
         { "<leader>S", group = "[S]ession" },
         { "<leader>t", group = "[T]abs" },
         { "<leader>T", group = "[T]ests" },
+        { "<leader>x", group = "[x] Todos" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
       },
     },

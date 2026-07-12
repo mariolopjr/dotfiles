@@ -5,28 +5,50 @@ return {
     "bngarren/checkmate.nvim",
     version = "*",
     ft = "markdown",
-    opts = {},
+    -- checkmate's own maps default to <leader>T*, which collides with the
+    -- Tests menu, rebind them onto <leader>x
+    opts = function()
+      local defaults = require("checkmate.config").get_defaults()
+      local keys = {}
+      for lhs, spec in pairs(defaults.keys) do
+        keys[(lhs:gsub("^<leader>T", "<leader>x"))] = spec
+      end
+      local metadata = defaults.metadata
+      for _, meta in pairs(metadata) do
+        if type(meta.key) == "string" then
+          meta.key = meta.key:gsub("^<leader>T", "<leader>x")
+        end
+      end
+      return { keys = keys, metadata = metadata }
+    end,
     -- global entry points, the in-buffer todo keymaps are checkmate's own
-    -- buffer local <leader>T* set
+    -- buffer local <leader>x* set
     keys = {
       {
-        "<leader>To",
+        "<leader>xo",
         function()
           require("util.todo").open()
         end,
         desc = "Open project TODO",
       },
       {
-        "<leader>Ti",
+        "<leader>xi",
         function()
           require("util.todo").add()
         end,
         desc = "Add to project TODO",
       },
       {
-        "<leader>Tg",
+        "<leader>xg",
         function()
           require("util.todo").grep()
+        end,
+        desc = "Grep project TODOs",
+      },
+      {
+        "<leader>xG",
+        function()
+          require("util.todo").grep_all()
         end,
         desc = "Grep all project TODOs",
       },

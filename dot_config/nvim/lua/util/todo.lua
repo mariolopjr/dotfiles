@@ -28,7 +28,24 @@ function M.open()
     border = "rounded",
     title = " todo ",
     title_pos = "center",
-    keys = { q = "close" },
+    -- snacks opens `file` as a read only preview, checkmate needs to edit it
+    bo = { modifiable = true, readonly = false },
+    keys = {
+      q = "close",
+      -- the todo keymaps live under <leader>x, both checkmate's buffer local
+      -- set and the global entry points
+      ["?"] = function()
+        require("which-key").show({ keys = "<leader>x", loop = true })
+      end,
+    },
+    -- the float is an editable file buffer, flush edits when it closes
+    on_close = function(self)
+      if vim.api.nvim_buf_is_valid(self.buf) and vim.bo[self.buf].modified then
+        vim.api.nvim_buf_call(self.buf, function()
+          vim.cmd("silent! write")
+        end)
+      end
+    end,
   })
 end
 
@@ -38,8 +55,27 @@ M.roots = {
   "~/.local/share/chezmoi",
 }
 
--- list open todos across every TODO.md under the configured roots
+-- picker over unchecked todo lines across a set of dirs
+local function grep(title, dirs)
+  Snacks.picker.grep({
+    title = title,
+    dirs = dirs,
+    glob = { "TODO.md", "todo.md", "*.todo.md" },
+    -- unchecked checkbox lines only, matched literally
+    search = "- [ ]",
+    regex = false,
+    live = false,
+    need_search = false,
+  })
+end
+
+-- list open todos in the current project only
 function M.grep()
+  grep("Project TODOs", { root() })
+end
+
+-- list open todos across every TODO.md under the configured roots
+function M.grep_all()
   local dirs = {}
   for _, d in ipairs(M.roots) do
     d = vim.fs.normalize(d)
@@ -51,16 +87,7 @@ function M.grep()
     vim.notify("no todo roots found", vim.log.levels.WARN)
     return
   end
-  Snacks.picker.grep({
-    title = "Project TODOs",
-    dirs = dirs,
-    glob = { "TODO.md", "todo.md", "*.todo.md" },
-    -- unchecked checkbox lines only, matched literally
-    search = "- [ ]",
-    regex = false,
-    live = false,
-    need_search = false,
-  })
+  grep("All Project TODOs", dirs)
 end
 
 -- append a task to the project TODO.md without leaving the current buffer
@@ -70,9 +97,19 @@ function M.add()
       return
     end
     local p = ensure()
-    local lines = vim.fn.readfile(p)
-    table.insert(lines, "- [ ] " .. text)
-    vim.fn.writefile(lines, p)
+    local line = "- [ ] " .. text
+    -- go through the buffer when the file is already open
+    local buf = vim.fn.bufnr(p)
+    if buf ~= -1 and vim.api.nvim_buf_is_loaded(buf) then
+      vim.api.nvim_buf_set_lines(buf, -1, -1, false, { line })
+      vim.api.nvim_buf_call(buf, function()
+        vim.cmd("silent! write")
+      end)
+    else
+      local lines = vim.fn.readfile(p)
+      table.insert(lines, line)
+      vim.fn.writefile(lines, p)
+    end
     vim.notify("todo added: " .. text, vim.log.levels.INFO)
   end)
 end
