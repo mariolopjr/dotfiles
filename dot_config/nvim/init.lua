@@ -18,3 +18,7 @@ require("config.lazy")
 
 -- tmux-style tabline, set up after lazy so the catppuccin palette is available
 require("util.tabline").setup()
+
+-- coverage gutters, set up after lazy so the colorscheme cannot clear the
+-- highlight links it defines
+require("util.coverage").setup()

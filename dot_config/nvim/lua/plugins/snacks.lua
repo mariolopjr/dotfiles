@@ -128,7 +128,16 @@ return {
       },
       quickfile = { enabled = true },
       scroll = { enabled = true },
-      statuscolumn = { enabled = true },
+      statuscolumn = {
+        enabled = true,
+        -- the statuscolumn has two sign slots, left ("mark"/"sign") and right
+        -- ("fold"/"git"), and shows one sign in each. Diagnostics already own
+        -- the left one, so a coverage bar placed there loses the slot to any
+        -- line carrying a diagnostic. Using the right slot, which mini.diff
+        -- leaves empty since it draws in the number column, means coverage
+        -- can use the right column as 'git'
+        git = { patterns = { "GitSign", "MiniDiffSign", "Coverage" } },
+      },
       terminal = { enabled = false },
       words = { enabled = true },
     },

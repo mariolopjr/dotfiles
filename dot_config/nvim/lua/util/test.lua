@@ -22,7 +22,7 @@ local function adapter_root(adapter)
   return adapter:match("^[^:]+:(.*)$") or adapter
 end
 
---- The nearest enclosing namespace, the class in C# and the suite in Go
+-- The nearest enclosing namespace, the class in C# and the suite in Go
 --- @param node neotest.Tree
 --- @return string?
 local function scope_of(node)
@@ -191,6 +191,20 @@ end
 --- Discover in the background
 function M.warm()
   discovered(function() end)
+end
+
+--- Open every directory and file in the summary.
+function M.expand_summary()
+  local neotest = require("neotest")
+
+  discovered(function()
+    for _, adapter in ipairs(neotest.state.adapter_ids()) do
+      local tree = neotest.state.positions(adapter)
+      if tree then
+        neotest.summary:expand(tree:data().id, true)
+      end
+    end
+  end)
 end
 
 --- Rescan the project for test files it has not seen.

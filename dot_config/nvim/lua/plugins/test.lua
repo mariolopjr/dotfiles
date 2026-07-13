@@ -129,10 +129,53 @@ return {
         table.insert(adapters, rust)
       end
 
+      -- display neotest summary in floating window
+      local function summary_window()
+        local width = math.min(math.floor(vim.o.columns * 0.5), 80)
+        local height = math.floor(vim.o.lines * 0.8)
+
+        -- neotest swaps its own buffer in
+        local buf = vim.api.nvim_create_buf(false, true)
+        vim.bo[buf].bufhidden = "wipe"
+
+        -- entered on purpose. neotest saves the current window before calling
+        -- this and restores it itself unless it was asked to enter
+        return vim.api.nvim_open_win(buf, true, {
+          relative = "editor",
+          width = width,
+          height = height,
+          row = math.floor((vim.o.lines - height) / 2) - 1,
+          col = math.floor((vim.o.columns - width) / 2),
+          style = "minimal",
+          border = "rounded",
+          title = " Tests ",
+          title_pos = "center",
+        })
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        desc = "Summary keys neotest does not bind itself",
+        group = vim.api.nvim_create_augroup(
+          "neotest-summary",
+          { clear = true }
+        ),
+        pattern = "neotest-summary",
+        callback = function(ev)
+          vim.keymap.set("n", "q", function()
+            require("neotest").summary.close()
+          end, { buffer = ev.buf, desc = "Close the summary" })
+
+          vim.keymap.set("n", "E", function()
+            require("util.test").expand_summary()
+          end, { buffer = ev.buf, desc = "Expand the whole tree" })
+        end,
+      })
+
       require("neotest").setup({
         adapters = adapters,
         status = { virtual_text = true },
         output = { open_on_run = true },
+        summary = { open = summary_window },
         quickfix = {
           open = function()
             vim.cmd("copen")
@@ -150,7 +193,8 @@ return {
       { "<leader>Tt", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Run File" },
       { "<leader>TT", function() require("util.test").run_all() end, desc = "Run All 󰘶Tests" },
       { "<leader>Tl", function() require("neotest").run.run_last() end, desc = "Run [L]ast" },
-      { "<leader>Ts", function() require("neotest").summary.toggle() end, desc = "Toggle [S]ummary" },
+      -- enter it, a float you are not in cannot be dismissed with q. E expands the tree
+      { "<leader>Ts", function() require("neotest").summary.toggle({ enter = true }) end, desc = "Toggle [S]ummary" },
       { "<leader>To", function() require("neotest").output.open({ enter = true, auto_close = true }) end, desc = "Show [O]utput" },
       { "<leader>TO", function() require("neotest").output_panel.toggle() end, desc = "Toggle 󰘶Output Panel" },
       { "<leader>TS", function() require("neotest").run.stop() end, desc = "[󰘶S]top" },

@@ -63,8 +63,8 @@ if [ -z "$CLAUDE_NVIM_FLOAT" ]; then
   add "${BLD}${CYAN}${name}${RST}"
 fi
 
-# git branch + PR. the branch is still resolved in the float, the PR lookup
-# keys off it and the PR is not shown anywhere in nvim
+# git branch + PR. the branch is still resolved in the float because the PR
+# lookup keys off it, but only the PR is printed there
 branch=$(git -C "$DIR" branch --show-current 2>/dev/null)
 [ -z "$branch" ] && branch=$(git -C "$DIR" rev-parse --short HEAD 2>/dev/null)
 if [ -n "$branch" ]; then

@@ -1,3 +1,3 @@
 # chezmoi todo
 
-- [ ] figure out a toggle-able way to show coverage. similar to coverage gutters in vscode
+- [ ] add more refactoring items, either with refactoring.nvim or custom refactoring
