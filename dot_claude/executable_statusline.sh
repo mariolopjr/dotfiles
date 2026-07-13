@@ -2,7 +2,8 @@
 # Claude Code status line
 # Layout: <dir> · <branch> · PR#<n> · <model> · ctx <bar> <pct>% · 5h <bar> <pct>%
 # Reads the session JSON on stdin. The PR lookup hits the network, so it is
-# cached per repo+branch and refreshed in the background to keep this fast
+# cached per repo+branch and refreshed in the background to keep this fast.
+# Inside the neovim float the dir and branch are dropped
 
 input=$(cat)
 
@@ -21,6 +22,12 @@ CYAN=$'\033[36m'; BLUE=$'\033[34m'; MAG=$'\033[35m'
 GRN=$'\033[32m'; YEL=$'\033[33m'; RED=$'\033[31m'
 
 SEP=" ${DIM}·${RST} "
+
+out=""
+add() { # append a segment, separated only when one already precedes it
+  [ -n "$out" ] && out+="$SEP"
+  out+="$1"
+}
 
 lvlcol() { # pct -> severity color
   local p=$1
@@ -45,20 +52,23 @@ bar() { # pct width -> colored filled/empty block bar
   printf '%s' "$s"
 }
 
-# directory
-if [ "$DIR" = "$HOME" ]; then
-  name="~"
-else
-  name=$(basename "$DIR")
+# directory, skipped in the nvim float
+if [ -z "$CLAUDE_NVIM_FLOAT" ]; then
+  if [ "$DIR" = "$HOME" ]; then
+    name="~"
+  else
+    name=$(basename "$DIR")
+  fi
+  [ -z "$name" ] && name="~"
+  add "${BLD}${CYAN}${name}${RST}"
 fi
-[ -z "$name" ] && name="~"
-out="${BLD}${CYAN}${name}${RST}"
 
-# git branch + PR
+# git branch + PR. the branch is still resolved in the float, the PR lookup
+# keys off it and the PR is not shown anywhere in nvim
 branch=$(git -C "$DIR" branch --show-current 2>/dev/null)
 [ -z "$branch" ] && branch=$(git -C "$DIR" rev-parse --short HEAD 2>/dev/null)
 if [ -n "$branch" ]; then
-  out+="${SEP}${MAG}${branch}${RST}"
+  [ -z "$CLAUDE_NVIM_FLOAT" ] && add "${MAG}${branch}${RST}"
 
   root=$(git -C "$DIR" rev-parse --show-toplevel 2>/dev/null)
   cdir="$HOME/.claude/.cache/statusline"
@@ -82,20 +92,20 @@ if [ -n "$branch" ]; then
 
   pr=""
   [ -f "$cf" ] && pr=$(cat "$cf" 2>/dev/null)
-  [ -n "$pr" ] && out+="${SEP}${GRN}PR#${pr}${RST}"
+  [ -n "$pr" ] && add "${GRN}PR#${pr}${RST}"
 fi
 
 # model
-out+="${SEP}${BLUE}${MODEL}${RST}"
+add "${BLUE}${MODEL}${RST}"
 
 # context window bar
 if [ "$CTX" -ge 0 ] 2>/dev/null; then
-  out+="${SEP}${DIM}ctx${RST} $(bar "$CTX" 8) $(lvlcol "$CTX")${CTX}%${RST}"
+  add "${DIM}ctx${RST} $(bar "$CTX" 8) $(lvlcol "$CTX")${CTX}%${RST}"
 fi
 
 # 5-hour rolling usage bar, with shorthand reset clock time in parens
 if [ "$FIVE" -ge 0 ] 2>/dev/null; then
-  seg="${SEP}${DIM}5h${RST} $(bar "$FIVE" 6) $(lvlcol "$FIVE")${FIVE}%${RST}"
+  seg="${DIM}5h${RST} $(bar "$FIVE" 6) $(lvlcol "$FIVE")${FIVE}%${RST}"
   if [ "$RESET" -gt 0 ] 2>/dev/null; then
     (( RESET > 100000000000 )) && RESET=$(( RESET / 1000 ))   # ms -> s safety
     rt=$(date -r "$RESET" '+%-I:%M%p' 2>/dev/null || date -d "@$RESET" '+%-I:%M%p' 2>/dev/null)
@@ -104,7 +114,7 @@ if [ "$FIVE" -ge 0 ] 2>/dev/null; then
       seg+=" ${DIM}(${rt})${RST}"
     fi
   fi
-  out+="$seg"
+  add "$seg"
 fi
 
 printf '%s' "$out"

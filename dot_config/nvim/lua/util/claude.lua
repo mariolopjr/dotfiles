@@ -10,6 +10,8 @@ local function opts()
   return {
     cwd = vim.fn.getcwd(-1, -1),
     count = 1,
+    -- the claude statusline reads this and drops its dir and branch segments
+    env = { CLAUDE_NVIM_FLOAT = "1" },
     win = {
       position = "float",
       width = 0.9,
