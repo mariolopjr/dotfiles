@@ -863,6 +863,9 @@ local function start_watch()
   end
 
   local timer = vim.uv.new_timer()
+  if not timer then
+    return
+  end
   state.timer = timer
 
   for _, dir in ipairs(state.watch_dirs) do

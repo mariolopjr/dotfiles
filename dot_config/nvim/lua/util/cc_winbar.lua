@@ -125,12 +125,15 @@ local function start_timer()
     return
   end
   timer = vim.uv.new_timer()
+  if not timer then
+    return
+  end
   timer:start(
     0,
     SPINNER_MS,
     vim.schedule_wrap(function()
       frame = frame % #SPINNER + 1
-      pcall(vim.cmd, "redrawstatus!")
+      pcall(vim.api.nvim_command, "redrawstatus!")
     end)
   )
 end
@@ -181,7 +184,7 @@ function M.setup()
         streaming[bufnr] = nil
       end
       stop_timer_if_idle()
-      pcall(vim.cmd, "redrawstatus!")
+      pcall(vim.api.nvim_command, "redrawstatus!")
     end,
   })
 end

@@ -1,3 +1,7 @@
+-- neotest's config and run argument types mark every field required, while the
+-- API takes partial tables
+---@diagnostic disable: missing-fields
+
 return {
   {
     "nvim-neotest/neotest",
@@ -42,7 +46,7 @@ return {
         end
 
         local root = client.root_dir or vim.uv.cwd()
-        if warmed[root] then
+        if not root or warmed[root] then
           return
         end
         warmed[root] = true
@@ -64,7 +68,7 @@ return {
           end
 
           local root = client.root_dir or vim.uv.cwd()
-          if warmed[root] then
+          if not root or warmed[root] then
             return
           end
 
@@ -94,11 +98,14 @@ return {
       vim.diagnostic.config({
         virtual_text = {
           format = function(diagnostic)
-            return diagnostic.message
+            -- bound to a local, returning the chain directly would also return
+            -- gsub's replacement count
+            local message = diagnostic.message
               :gsub("\n", " ")
               :gsub("\t", " ")
               :gsub("%s+", " ")
               :gsub("^%s+", "")
+            return message
           end,
         },
       }, neotest_ns)

@@ -15,8 +15,9 @@ return {
       end
       local metadata = defaults.metadata
       for _, meta in pairs(metadata) do
-        if type(meta.key) == "string" then
-          meta.key = meta.key:gsub("^<leader>T", "<leader>x")
+        local key = meta.key
+        if type(key) == "string" then
+          meta.key = key:gsub("^<leader>T", "<leader>x")
         end
       end
       return { keys = keys, metadata = metadata }

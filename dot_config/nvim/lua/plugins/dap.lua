@@ -1,10 +1,17 @@
 --- Prompt for arguments before launching the debugger
---- @param config {args?:string[]|fun():string[]?}
+--- @param config {args?:string[]|string|fun():string[]?}
 local function get_args(config)
-  local args = type(config.args) == "function" and (config.args() or {})
-    or config.args
-    or {}
-  local args_str = type(args) == "table" and table.concat(args, " ") or args
+  local args = config.args or {}
+  if type(args) == "function" then
+    args = args() or {}
+  end
+  -- a launch config may carry args as one already-joined string
+  local args_str
+  if type(args) == "table" then
+    args_str = table.concat(args, " ")
+  else
+    args_str = args
+  end
 
   config = vim.deepcopy(config)
   config.args = function()

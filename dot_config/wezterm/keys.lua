@@ -9,12 +9,10 @@ local M = {}
 local function toggle_scratch(win, pane)
   local current = mux.get_active_workspace()
   if current == "scratch" then
-    win:perform_action(
-      act.SwitchToWorkspace({
-        name = wezterm.GLOBAL.previous_workspace or "default",
-      }),
-      pane
-    )
+    local previous = wezterm.GLOBAL.previous_workspace or "default"
+    -- GLOBAL is an untyped store, this key only ever holds a workspace name
+    ---@cast previous string
+    win:perform_action(act.SwitchToWorkspace({ name = previous }), pane)
     return
   end
   wezterm.GLOBAL.previous_workspace = current

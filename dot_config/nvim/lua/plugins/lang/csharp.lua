@@ -93,6 +93,8 @@ return {
               -- before Roslyn computes the stub against the updated document
               vim.defer_fn(function()
                 client:request(
+                  -- a Roslyn extension, not part of the LSP method enum
+                  ---@diagnostic disable-next-line: param-type-mismatch
                   "textDocument/_vs_onAutoInsert",
                   params,
                   function(err, result)

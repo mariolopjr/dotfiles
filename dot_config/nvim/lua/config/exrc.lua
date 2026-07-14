@@ -17,9 +17,9 @@ end
 
 local function source(path)
   -- routes through the trust database, prompts once for an untrusted file,
-  -- returns nil when denied or unreadable
+  -- returns nil when denied or unreadable, and true when path is a directory
   local contents = vim.secure.read(path)
-  if not contents then
+  if type(contents) ~= "string" then
     return
   end
   if path:sub(-4) == ".lua" then

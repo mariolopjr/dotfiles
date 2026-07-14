@@ -207,6 +207,8 @@ local function render()
     return
   end
   local buf = win.buf
+  -- buf_valid() above already guarantees it
+  ---@cast buf integer
 
   local rows = collect()
   local width = 30

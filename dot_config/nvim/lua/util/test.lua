@@ -174,6 +174,9 @@ local function discovered(callback)
   notify_begin("discovering tests")
 
   require("nio").run(function()
+    -- neotest marks this private, there is no public entry point that discovers
+    -- without also running
+    ---@diagnostic disable-next-line: invisible, missing-fields
     neotest.run.get_tree_from_args({ suite = true }, false)
   end, function()
     vim.schedule(function()
@@ -263,6 +266,7 @@ local function run_position(pos, strategy)
   if pos.suite then
     neotest.run.run({ suite = true, adapter = pos.adapter, strategy = strategy })
   else
+    ---@diagnostic disable-next-line: missing-fields
     neotest.run.run({ pos.id, adapter = pos.adapter, strategy = strategy })
   end
 end

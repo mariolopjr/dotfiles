@@ -22,7 +22,7 @@ local ICONS = {
   python = wezterm.nerdfonts.dev_python,
   python3 = wezterm.nerdfonts.dev_python,
   rustc = wezterm.nerdfonts.dev_rust,
-  ssh = wezterm.nerdfonts.mdi_lan_connect,
+  ssh = wezterm.nerdfonts.md_lan_connect,
   vim = wezterm.nerdfonts.custom_vim,
   zsh = TERMINAL,
 }

@@ -28,6 +28,7 @@ end, { desc = "Clear terminal screen" })
 -- annoying, this forces add to dictionary to be first
 local function code_action()
   local orig_select = vim.ui.select
+  ---@diagnostic disable-next-line: duplicate-set-field
   vim.ui.select = function(items, opts, on_choice)
     vim.ui.select = orig_select
     if opts and opts.kind == "codeaction" then

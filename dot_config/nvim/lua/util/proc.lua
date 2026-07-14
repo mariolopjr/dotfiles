@@ -23,6 +23,8 @@ function M.get(name)
       vim.notify(name .. " is already running", vim.log.levels.WARN)
       return
     end
+    -- luv's option type marks every field required, they are all optional
+    ---@diagnostic disable-next-line: missing-fields
     handle = vim.uv.spawn(cmd, { args = args, cwd = cwd }, function(code)
       handle = nil
       if code ~= 0 then
