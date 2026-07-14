@@ -128,6 +128,9 @@ return {
       local adapters = {
         vstest,
         require("neotest-golang")({}),
+        -- godot C# in-engine tests, which VSTest cannot find and run
+        -- this is a custom bridging adapter
+        require("neotest-godottest"),
       }
 
       -- rustaceanvim carries its own adapter

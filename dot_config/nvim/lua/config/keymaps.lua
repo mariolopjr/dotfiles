@@ -98,7 +98,9 @@ local function diagnostic_goto(next, severity)
     vim.diagnostic.jump({
       count = (next and 1 or -1) * vim.v.count1,
       severity = severity and vim.diagnostic.severity[severity] or nil,
-      float = true,
+      on_jump = function(_, buf)
+        vim.diagnostic.open_float({ bufnr = buf, scope = "cursor", focus = false })
+      end,
     })
   end
 end
