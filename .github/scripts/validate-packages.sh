@@ -28,7 +28,8 @@ casks=()
 mas_ids=()
 
 while IFS= read -r line; do taps+=("$line"); done < <(jq -r '.packages.darwin.taps[]?' "$data")
-while IFS= read -r line; do brews+=("$line"); done < <(jq -r '.packages.darwin.brews[]?' "$data")
+# a brew is either a bare name or { name, args } for extras like HEAD
+while IFS= read -r line; do brews+=("$line"); done < <(jq -r '.packages.darwin.brews[]? | if type == "object" then .name else . end' "$data")
 # shared casks plus every host-specific list
 while IFS= read -r line; do casks+=("$line"); done < <(jq -r '[.packages.darwin.casks[]?, (.packages.darwin.hosts[]?.casks[]?)] | unique[]' "$data")
 while IFS= read -r line; do mas_ids+=("$line"); done < <(jq -r '.packages.darwin.mas[]? | "\(.id)\t\(.name)"' "$data")

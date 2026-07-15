@@ -13,7 +13,11 @@ brew bundle --file=/dev/stdin <<EOF
 tap "{{ . }}"
 {{ end -}}
 {{ range .packages.darwin.brews -}}
+{{ if kindIs "string" . -}}
 brew "{{ . }}"
+{{ else -}}
+brew "{{ .name }}"{{ with .args }}, args: [{{ range $i, $a := . }}{{ if $i }}, {{ end }}"{{ $a }}"{{ end }}]{{ end }}
+{{ end -}}
 {{ end -}}
 EOF
 {{ end -}}

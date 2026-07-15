@@ -37,7 +37,7 @@ brews = [
   "mas",
   "mise",
   "ncdu",
-  "neovim",
+  { name = "neovim", args = ["HEAD"] },
   "osx-cross/arm/arm-none-eabi-gcc@8",
   "ripgrep",
   "rust-analyzer",
