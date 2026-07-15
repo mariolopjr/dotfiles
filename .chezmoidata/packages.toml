@@ -4,10 +4,12 @@
 taps = ["osx-cross/arm"]
 brews = [
   "age",
+  "bacon",
   "bat",
   "bottom",
   "cargo-deny",
   "cargo-llvm-cov",
+  "cargo-nextest",
   "chezmoi",
   "codebook-lsp",
   "container",
@@ -31,6 +33,7 @@ brews = [
   "lazygit",
   "ledger",
   "libpng",
+  "llvm",
   "lua-language-server",
   "macchina",
   "marksman",

@@ -1,4 +1,4 @@
--- C# development, mainly for Godot
+-- C# development
 -- the coreclr debug adapter is configured in plugins/dap.lua
 
 return {
@@ -18,38 +18,6 @@ return {
           },
         },
       })
-
-      -- hover-docs extends roslyn's docs hover with extra information
-      -- ensure the lua glue code exists before loading
-      local ok, hover_docs = pcall(require, "hover-docs")
-      if ok then
-        hover_docs.setup()
-
-        vim.api.nvim_create_autocmd("LspAttach", {
-          group = vim.api.nvim_create_augroup(
-            "roslyn-hover-docs-definition",
-            { clear = true }
-          ),
-          callback = function(args)
-            local client = vim.lsp.get_client_by_id(args.data.client_id)
-            if
-              not client
-              or (client.name ~= "roslyn" and client.name ~= "roslyn_ls")
-            then
-              return
-            end
-
-            vim.keymap.set("n", "gd", function()
-              hover_docs.goto_definition(function()
-                Snacks.picker.lsp_definitions()
-              end)
-            end, {
-              buffer = args.buf,
-              desc = "[G]oto [D]efinition (+inheritdoc)",
-            })
-          end,
-        })
-      end
 
       -- Roslyn generates the /// doc-comment stub using the VS-internal textDocument/_vs_onAutoInsert method
       vim.api.nvim_create_autocmd("LspAttach", {

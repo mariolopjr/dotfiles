@@ -8,7 +8,6 @@ DOTNET_ROOT = "{{ env.HOME }}/.local/share/mise/installs/dotnet/{{ vars.dotnet_v
 
 [tools]
 dotnet = "{{ vars.dotnet_version }}"
-"dotnet:Chickensoft.GodotEnv" = "latest"
 "dotnet:csharpier" = "latest"
 "dotnet:roslyn-language-server" = { version = "latest", prerelease = true }
 "npm:@agentclientprotocol/claude-agent-acp" = "latest"

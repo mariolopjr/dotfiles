@@ -77,6 +77,18 @@ return {
       input = { enabled = true },
       notifier = { enabled = true },
       picker = {
+        actions = {
+          -- override builtin yank to skip the markdown codeblock in the notification
+          yank = function(_, item)
+            if not item then
+              return
+            end
+            local value = item.data or item.text
+            local reg = vim.v.register
+            vim.fn.setreg(reg, value)
+            Snacks.notify(("Yanked to register `%s`: %s"):format(reg, value), { title = "Snacks Picker" })
+          end,
+        },
         sources = {
           explorer = {
             -- hide Godot metadata companions from the explorer tree
@@ -114,6 +126,8 @@ return {
               ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
               ["H"] = { "preview_scroll_left", mode = { "i", "n" } },
               ["L"] = { "preview_scroll_right", mode = { "i", "n" } },
+              -- yank the current entry
+              ["<c-y>"] = { "yank", mode = { "i", "n" } },
             },
           },
           list = {
@@ -122,6 +136,7 @@ return {
               -- M-.
               ["<a-h>"] = false,
               ["<a-.>"] = "toggle_hidden",
+              ["<c-y>"] = "yank",
             },
           },
         },

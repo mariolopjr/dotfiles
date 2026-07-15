@@ -13,6 +13,14 @@ type = "archive"
 url = "https://github.com/Samsung/netcoredbg/releases/latest/download/netcoredbg-osx-{{ .chezmoi.arch }}.zip"
 exclude = ["__MACOSX/**"]
 
+# codelldb, the Rust debug adapter used by rustaceanvim
+[".local/share/codelldb"]
+type = "archive"
+format = "zip"
+url = "https://github.com/vadimcn/codelldb/releases/latest/download/codelldb-darwin-{{ if eq .chezmoi.arch "arm64" }}arm64{{ else }}x64{{ end }}.vsix"
+stripComponents = 1
+refreshPeriod = "8760h"
+
 # smart-splits wezterm plugin
 [".config/wezterm/plugins/smart-splits.lua"]
 type = "file"

@@ -1,5 +1,5 @@
 -- Named singleton background processes with start/stop notifications.
--- Used by the LÖVE and cargo run commands
+-- Used by the cargo run command
 
 local M = {}
 
