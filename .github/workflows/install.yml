@@ -1,36 +1,50 @@
 name: install
-
 on:
   push:
     branches:
       - main
   pull_request:
+  # run on a schedule to catch upstream brew package issues
   schedule:
-    - cron: "0 13 * * 6"
-
+    - cron: 0 13 * * 6
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  HOMEBREW_NO_ANALYTICS: 1
+  HOMEBREW_NO_AUTO_UPDATE: 1
+  HOMEBREW_NO_ENV_HINTS: 1
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
 jobs:
-  install_dots:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        # once linux support is added for servers, update this
-        # os: [macos-latest, ubuntu-latest]
-        os: [macos-latest]
-
+  packages:
+    name: packages resolve
+    runs-on: macos-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - name: Install brew
+      - uses: actions/checkout@v5
+      - name: Install chezmoi
+        run: brew install chezmoi
+      - name: Validate packages
+        run: .github/scripts/validate-packages.sh
+  bootstrap:
+    name: bootstrap a fresh machine
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install chezmoi
+        run: brew install chezmoi
+      - name: Stage this commit as the chezmoi source
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      - name: Install dotfiles
+          mkdir -p "$HOME/.local/share/chezmoi"
+          cp -R "$GITHUB_WORKSPACE"/. "$HOME/.local/share/chezmoi/"
+      - name: Bootstrap
+        run: chezmoi init --apply --verbose
+      - name: Verify bootstrap
+        run: .github/scripts/verify-bootstrap.sh
+      - name: Installed versions
+        if: always()
         run: |
-          brew install chezmoi
-          chezmoi init --apply mariolopjr
-        env:
-          CHEZMOI_GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check installed versions
-        run: |
-          brew --version
+          chezmoi --version
           brew list --versions
-          brew list --cask --versions

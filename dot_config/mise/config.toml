@@ -7,7 +7,6 @@ dotnet_version = "10"
 DOTNET_ROOT = "{{ env.HOME }}/.local/share/mise/installs/dotnet/{{ vars.dotnet_version }}"
 
 [tools]
-rust = { version = "latest", components = "rust-analyzer,rust-src" }
 dotnet = "{{ vars.dotnet_version }}"
 "dotnet:Chickensoft.GodotEnv" = "latest"
 "dotnet:csharpier" = "latest"

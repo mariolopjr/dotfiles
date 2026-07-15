@@ -1,8 +1,11 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{ if and (eq .chezmoi.os "darwin") (not (env "CI")) -}}
 #!/bin/bash
 
 # Install Mac App Store apps
 # App list lives in .chezmoidata/packages.toml
+# Skipped in CI, mas cannot sign in to the App Store there and blocks forever
+# waiting on it. CI checks the ids still resolve instead, see
+# .github/scripts/validate-packages.sh
 brew bundle --file=/dev/stdin <<EOF
 {{ range .packages.darwin.mas -}}
 mas "{{ .name }}", id: {{ .id }}

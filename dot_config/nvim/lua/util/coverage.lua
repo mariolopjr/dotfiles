@@ -4,6 +4,7 @@
 ---   opencover coverlet
 ---   cobertura `dotnet test --collect:"XPlat Code Coverage"`
 ---   go `go test -coverprofile`
+---   lcov `cargo llvm-cov --lcov`, and whatever else can be asked for it
 ---
 --- Every report found under the project root is merged, so a solution whose
 --- godot tests and libs tests report separately still reads as one picture
@@ -63,7 +64,7 @@ local defaults = {
   -- the summary window only shows repo code
   summary_hide_external = true,
   -- exclude generated code
-  summary_exclude = { "/obj/", "/bin/", ".g.cs" },
+  summary_exclude = { "/obj/", "/bin/", ".g.cs", "/target/" },
   -- globs searched under the project root and every match is merged
   reports = {
     opencover = {
@@ -79,6 +80,12 @@ local defaults = {
       "coverage.out",
       "cover.out",
       "coverage/coverage.out",
+    },
+    lcov = {
+      "lcov.info",
+      "coverage/lcov.info",
+      "coverage/*.lcov",
+      "target/llvm-cov/lcov.info",
     },
   },
 }
@@ -190,6 +197,13 @@ end
 --- @return boolean
 local function is_absolute(path)
   return path:sub(1, 1) == "/" or path:match("^%a:[\\/]") ~= nil
+end
+
+--- @param path string
+--- @param root string
+--- @return boolean
+local function within(path, root)
+  return path == root or path:sub(1, #root + 1) == root .. "/"
 end
 
 --- @param files CoverageFiles
@@ -465,11 +479,11 @@ local function parse_cobertura(content)
   return { files = files, methods = methods, groups = groups }
 end
 
---- every go.mod under the root, longest module path first, so the most specific
---- module wins when resolving a profile entry in a multi-module repo
+--- every manifest of a given name under the root
 --- @param root string
---- @return { path: string, dir: string }[]
-local function go_modules(root)
+--- @param basename string
+--- @return string[] absolute paths
+local function manifests(root, basename)
   local skip = {
     [".git"] = true,
     ["node_modules"] = true,
@@ -479,7 +493,7 @@ local function go_modules(root)
     ["target"] = true,
   }
 
-  local mods = {}
+  local found = {}
   local iter = vim.fs.dir(root, {
     depth = 4,
     skip = function(dir)
@@ -487,13 +501,24 @@ local function go_modules(root)
     end,
   })
   for name, type in iter do
-    if type == "file" and vim.fs.basename(name) == "go.mod" then
-      local file = vim.fs.normalize(root .. "/" .. name)
-      local content = read(file)
-      local mod = content and content:match("module%s+(%S+)")
-      if mod then
-        mods[#mods + 1] = { path = mod, dir = vim.fs.dirname(file) }
-      end
+    if type == "file" and vim.fs.basename(name) == basename then
+      found[#found + 1] = vim.fs.normalize(root .. "/" .. name)
+    end
+  end
+  return found
+end
+
+--- every go.mod under the root, longest module path first, so the most specific
+--- module wins when resolving a profile entry in a multi-module repo
+--- @param root string
+--- @return { path: string, dir: string }[]
+local function go_modules(root)
+  local mods = {}
+  for _, file in ipairs(manifests(root, "go.mod")) do
+    local content = read(file)
+    local mod = content and content:match("module%s+(%S+)")
+    if mod then
+      mods[#mods + 1] = { path = mod, dir = vim.fs.dirname(file) }
     end
   end
 
@@ -501,6 +526,60 @@ local function go_modules(root)
     return #a.path > #b.path
   end)
   return mods
+end
+
+--- the crate a Cargo.toml declares. A workspace root that carries only
+--- [workspace] declares none and owns no source of its own, and a `name` key
+--- outside [package], a dependency's or [workspace.package]'s, is not it
+--- @param content string
+--- @return string?
+local function cargo_name(content)
+  local section
+  for line in vim.gsplit(content, "\n", { plain = true }) do
+    local header = line:match("^%s*%[([^%]]+)%]")
+    if header then
+      section = header
+    elseif section == "package" then
+      local name = line:match('^%s*name%s*=%s*"([^"]*)"')
+      if name then
+        return name
+      end
+    end
+  end
+  return nil
+end
+
+--- every crate under the root, deepest directory first, so a crate nested
+--- inside another crate's tree still owns its own files
+--- @param root string
+--- @return { name: string, dir: string }[]
+local function cargo_crates(root)
+  local crates = {}
+  for _, file in ipairs(manifests(root, "Cargo.toml")) do
+    local content = read(file)
+    local name = content and cargo_name(content)
+    if name then
+      crates[#crates + 1] = { name = name, dir = vim.fs.dirname(file) }
+    end
+  end
+
+  table.sort(crates, function(a, b)
+    return #a.dir > #b.dir
+  end)
+  return crates
+end
+
+--- the crate a file was compiled into, the closest thing rust has to an assembly
+--- @param path string
+--- @param crates { name: string, dir: string }[]
+--- @return string?
+local function crate_for(path, crates)
+  for _, crate in ipairs(crates) do
+    if within(path, crate.dir) then
+      return crate.name
+    end
+  end
+  return nil
 end
 
 --- a go profile addresses files by import path, map it back onto disk
@@ -556,10 +635,92 @@ local function parse_go(content, root)
   return { files = files, methods = {}, groups = groups }
 end
 
+--- lcov, what `cargo llvm-cov --lcov` writes and what most other toolchains can
+--- be asked for
+---
+--- Paths are absolute, so nothing has to be resolved against a source root the
+--- way cobertura does, and functions carry a hit count of their own, so unlike a
+--- go profile the methods no test ever entered are known
+---
+--- Branch records are only there when the compiler was asked to emit them. Rust
+--- needs a nightly toolchain and `--branch`, and on stable the branch column
+--- stays empty, which reads the same way go does
+--- @param content string
+--- @param root string
+--- @return CoverageReport
+local function parse_lcov(content, root)
+  local files, methods, groups = {}, {}, {}
+  local crates = cargo_crates(root)
+
+  --- @type string?
+  local path
+  -- a producer writes every FN record before any of the FNDA ones, so a
+  -- function's line and its hit count only meet by name, and neither can be
+  -- acted on until the record ends
+  local line_of, hits_of = {}, {}
+
+  local function flush()
+    if path then
+      for fn, lnum in pairs(line_of) do
+        add_method(methods, path, lnum, (hits_of[fn] or 0) > 0)
+      end
+    end
+    path, line_of, hits_of = nil, {}, {}
+  end
+
+  for line in vim.gsplit(content, "\n", { plain = true }) do
+    line = (line:gsub("%s+$", ""))
+    local tag, rest = line:match("^(%a+):(.*)$")
+
+    if line == "end_of_record" then
+      flush()
+    elseif tag == "SF" then
+      -- a producer that leaves end_of_record out still closes the record here
+      flush()
+      path = is_absolute(rest) and vim.fs.normalize(rest)
+        or vim.fs.normalize(root .. "/" .. rest)
+      groups[path] = groups[path] or crate_for(path, crates)
+    elseif path and tag == "DA" then
+      -- DA:<line>,<hits>[,<checksum>]
+      local lnum, hits = rest:match("^(%d+),(%d+)")
+      if lnum then
+        add_line(files, path, tonumber(lnum), tonumber(hits))
+      end
+    elseif path and tag == "FN" then
+      -- FN:<line>,<name>, which lcov 2 widened to FN:<start>,<end>,<name>
+      local lnum, fn = rest:match("^(%d+),%d+,(.+)$")
+      if not lnum then
+        lnum, fn = rest:match("^(%d+),(.+)$")
+      end
+      if lnum then
+        line_of[fn] = tonumber(lnum)
+      end
+    elseif path and tag == "FNDA" then
+      -- FNDA:<hits>,<name>
+      local hits, fn = rest:match("^(%d+),(.+)$")
+      if hits then
+        hits_of[fn] = math.max(hits_of[fn] or 0, tonumber(hits))
+      end
+    elseif path and tag == "BRDA" then
+      -- BRDA:<line>,<block>,<branch>,<taken>, one record per path out of the
+      -- line, so they add up, and "-" where the block holding it never ran
+      local lnum, taken = rest:match("^(%d+),[^,]*,[^,]*,(.+)$")
+      if lnum then
+        local hit = taken ~= "-" and (tonumber(taken) or 0) > 0
+        add_branch(files, path, tonumber(lnum), 1, hit and 1 or 0, true)
+      end
+    end
+  end
+
+  flush()
+  return { files = files, methods = methods, groups = groups }
+end
+
 local parsers = {
   opencover = parse_opencover,
   cobertura = parse_cobertura,
   go = parse_go,
+  lcov = parse_lcov,
 }
 
 --- @param buf integer?
@@ -572,8 +733,24 @@ local function find_root(buf)
       or entry == "go.mod"
       or entry:match("%.slnx?$") ~= nil
   end, { path = start, upward = true, limit = 1 })[1]
-  return marker and vim.fs.dirname(marker)
-    or vim.fs.normalize(vim.uv.cwd() --[[@as string]])
+  if marker then
+    return vim.fs.dirname(marker)
+  end
+
+  -- cargo writes one report for the whole workspace, and the workspace root is
+  -- the OUTERMOST Cargo.toml of the chain. A member crate carries one of its
+  -- own, so stopping at the nearest, the way the markers above do, would look
+  -- for the report inside the member
+  local cargo = vim.fs.find("Cargo.toml", {
+    path = start,
+    upward = true,
+    limit = math.huge,
+  })
+  if #cargo > 0 then
+    return vim.fs.dirname(cargo[#cargo])
+  end
+
+  return vim.fs.normalize(vim.uv.cwd() --[[@as string]])
 end
 
 --- a fresh `dotnet test` writes a whole new guid directory beside the previous
@@ -623,13 +800,6 @@ local function is_guid_dir(dir)
   return vim.fs.basename(dir):match("^%x+%-%x+%-%x+%-%x+%-%x+$") ~= nil
 end
 
---- @param path string
---- @param root string
---- @return boolean
-local function within(path, root)
-  return path == root or path:sub(1, #root + 1) == root .. "/"
-end
-
 --- @param root string
 --- @return table<string, string[]> format to report paths
 local function discover(root)
@@ -674,6 +844,9 @@ local declarations = {
   -- go
   function_declaration = true,
   func_literal = true,
+  -- rust
+  function_item = true,
+  closure_expression = true,
 }
 
 --- a report anchors a method to its first *coverable* line, which in C# is the
@@ -990,6 +1163,7 @@ function M.load(opts)
     local format = content:match("<CoverageSession") and "opencover"
       or content:match("<coverage") and "cobertura"
       or content:match("^mode:") and "go"
+      or (content:match("^SF:") or content:match("\nSF:")) and "lcov"
     if not format then
       return vim.notify(
         "coverage: unrecognised report format in " .. path,

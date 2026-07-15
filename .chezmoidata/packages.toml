@@ -3,8 +3,11 @@
 [packages.darwin]
 taps = ["osx-cross/arm"]
 brews = [
+  "age",
   "bat",
   "bottom",
+  "cargo-deny",
+  "cargo-llvm-cov",
   "chezmoi",
   "codebook-lsp",
   "container",
@@ -37,6 +40,7 @@ brews = [
   "neovim",
   "osx-cross/arm/arm-none-eabi-gcc@8",
   "ripgrep",
+  "rust-analyzer",
   "rustup",
   "shellcheck",
   "shfmt",
@@ -86,4 +90,9 @@ mas = [
 # Host-specific additions, keyed by hostname
 [packages.darwin.hosts.winterfell]
 casks = ["ableton-live-suite", "adobe-digital-editions", "calibre"]
+
+# Global rust
+[rust]
+toolchain = "1.97.0"
+components = ["rust-src", "llvm-tools-preview"]
 

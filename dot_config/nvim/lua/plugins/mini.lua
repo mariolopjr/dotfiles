@@ -89,7 +89,16 @@ return {
       require("mini.statusline").setup()
 
       -- diff
-      require("mini.diff").setup()
+      -- the git-filters source first: the builtin one reads the raw index blob, so an
+      -- age-encrypted *.ledger diffs plaintext against ciphertext and marks every line changed
+      -- It declines any unfiltered path, which falls back to the builtin source
+      local diff = require("mini.diff")
+      diff.setup({
+        source = {
+          require("util.minidiff_git_filters").source,
+          diff.gen_source.git(),
+        },
+      })
     end,
   },
 }

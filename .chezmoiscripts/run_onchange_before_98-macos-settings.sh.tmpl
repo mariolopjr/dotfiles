@@ -1,5 +1,7 @@
-{{ if eq .chezmoi.os "darwin" -}}
+{{ if and (eq .chezmoi.os "darwin") (not (env "CI")) -}}
 #!/bin/bash
+
+# Skipped in CI as these are GUI preferences on a headless runner
 
 ### Configure macOS settings
 

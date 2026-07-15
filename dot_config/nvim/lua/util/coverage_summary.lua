@@ -85,8 +85,13 @@ local function noise(rel, external)
   if external and config.summary_hide_external then
     return true
   end
+  -- the patterns are written "/target/" so that they cannot catch a directory
+  -- merely ending in one, which leaves them unable to match a path that starts
+  -- with it, and cargo's target/ sits at the workspace root. Match against the
+  -- rooted path so a top level directory reads the same as a nested one
+  local path = "/" .. rel
   for _, pattern in ipairs(config.summary_exclude) do
-    if rel:find(pattern, 1, true) then
+    if path:find(pattern, 1, true) then
       return true
     end
   end

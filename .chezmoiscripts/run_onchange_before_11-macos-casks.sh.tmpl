@@ -1,8 +1,10 @@
-{{ if and (eq .chezmoi.os "darwin") (not (env "GITHUB_ACTION")) -}}
+{{ if and (eq .chezmoi.os "darwin") (not (env "CI")) -}}
 #!/bin/bash
 
 # Install brew casks, shared plus host-specific
 # Package list lives in .chezmoidata/packages.toml
+# Skipped in CI, casks need GUI installers and admin approval there. CI checks
+# the tokens still resolve instead, see .github/scripts/validate-packages.sh
 brew bundle --file=/dev/stdin <<EOF
 {{ range .packages.darwin.casks -}}
 cask "{{ . }}"
