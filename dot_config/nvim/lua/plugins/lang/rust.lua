@@ -73,6 +73,31 @@ return {
                 },
               },
             },
+            -- rust-analyzer defaults to `cargo check --all-targets`, which builds
+            -- the crate as a test binary and links libtest. libtest needs std, so
+            -- on a bare-metal `*-none-*` target the check fails with E0463. Detect
+            -- such crates from .cargo/config.toml and drop --all-targets for them
+            settings = function(project_root, default_settings)
+              local rs = require("rustaceanvim.config.server")
+              -- preserves rustaceanvim's clippy-on-save injection
+              local settings = rs.load_rust_analyzer_settings(project_root, {
+                default_settings = default_settings,
+              })
+              for _, name in ipairs({ ".cargo/config.toml", ".cargo/config" }) do
+                local f = io.open((project_root or ".") .. "/" .. name, "r")
+                if f then
+                  local body = f:read("*a")
+                  f:close()
+                  if body and body:match('target%s*=%s*"[^"]*none[^"]*"') then
+                    local ra = settings["rust-analyzer"]
+                    ra.cargo = ra.cargo or {}
+                    ra.cargo.allTargets = false
+                    break
+                  end
+                end
+              end
+              return settings
+            end,
           },
         }
       end

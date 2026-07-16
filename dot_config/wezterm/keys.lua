@@ -83,6 +83,14 @@ local new_workspace = act.PromptInputLine({
   end),
 })
 
+-- move the active tab to a 1-based slot, clamping past the last tab
+local function move_tab_to(slot)
+  return wezterm.action_callback(function(window, pane)
+    local tabs = window:mux_window():tabs()
+    window:perform_action(act.MoveTab(math.min(slot, #tabs) - 1), pane)
+  end)
+end
+
 function M.apply(config)
   config.leader = { key = ",", mods = "CTRL", timeout_milliseconds = 2000 }
 
@@ -181,6 +189,15 @@ function M.apply(config)
     { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
     { key = "D", mods = "LEADER", action = act.ShowDebugOverlay },
   }
+
+  -- leader+1..9 and leader+0 (=10) shifts the active tab to that slot, clamped to the last tab
+  for slot = 1, 10 do
+    table.insert(config.keys, {
+      key = tostring(slot % 10),
+      mods = "LEADER",
+      action = move_tab_to(slot),
+    })
+  end
 
   -- ctrl+hjkl moves and alt+hjkl resizes across wezterm and nvim splits
   require("plugins.smart-splits").apply_to_config(config, {

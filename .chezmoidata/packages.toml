@@ -8,6 +8,7 @@ brews = [
   "bat",
   "bottom",
   "cargo-deny",
+  "cargo-generate",
   "cargo-llvm-cov",
   "cargo-nextest",
   "chezmoi",
