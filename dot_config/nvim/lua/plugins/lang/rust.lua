@@ -71,6 +71,12 @@ return {
                   memoryLayout = { niches = true },
                   show = { traitAssocItems = 5 },
                 },
+                -- hoverboard resolves doc references through workspace/symbol,
+                -- whose fuzzy matching buries exact short names under the
+                -- default cap of 128
+                workspace = {
+                  symbol = { search = { limit = 2048 } },
+                },
               },
             },
             -- rust-analyzer defaults to `cargo check --all-targets`, which builds

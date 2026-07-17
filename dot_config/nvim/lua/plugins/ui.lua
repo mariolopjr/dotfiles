@@ -6,11 +6,8 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     opts = {
       lsp = {
-        -- override markdown rendering so hover and signature docs use treesitter
-        override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = true,
-        },
+        -- keep hover on the native float since hoverboard styles it
+        hover = { enabled = false },
       },
       presets = {
         bottom_search = true, -- classic bottom cmdline for search
@@ -22,6 +19,20 @@ return {
         hover = {
           border = { style = "rounded", padding = { 0, 1 } },
           size = { max_width = 90 },
+        },
+      },
+    },
+  },
+
+  -- render-markdown attaches to nofile floats by default
+  -- disable it for floats as hoverboard styles those
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    optional = true,
+    opts = {
+      overrides = {
+        buftype = {
+          nofile = { enabled = false },
         },
       },
     },

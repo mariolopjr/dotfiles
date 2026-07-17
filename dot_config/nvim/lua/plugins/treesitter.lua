@@ -4,6 +4,7 @@ local ensure_installed = {
   "c_sharp",
   "diff",
   "fish",
+  "gdscript",
   "go",
   "gomod",
   "gosum",
@@ -55,16 +56,20 @@ return {
       local ts = require("nvim-treesitter")
       ts.setup()
 
-      -- install any wanted parsers that are missing
+      -- install any wanted parsers and queries that are missing
       local have = {}
       for _, lang in ipairs(ts.get_installed("parsers")) do
         have[lang] = true
       end
+      local have_queries = {}
+      for _, lang in ipairs(ts.get_installed("queries")) do
+        have_queries[lang] = true
+      end
       local missing = vim.tbl_filter(function(lang)
-        return not have[lang]
+        return not have[lang] or not have_queries[lang]
       end, ensure_installed)
       if #missing > 0 then
-        ts.install(missing):await(function() end)
+        ts.install(missing, { force = true }):await(function() end)
       end
 
       -- installable parsers
