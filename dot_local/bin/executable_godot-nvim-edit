@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Godot external-editor bridge: open the clicked script in the nvim instance
+# already serving this project, or spawn one in a new wezterm window.
+# Wired via Godot editor settings:
+#   text_editor/external/use_external_editor = true
+#   text_editor/external/exec_path  = ~/.local/bin/godot-nvim-edit
+#   text_editor/external/exec_flags = "{project}" "{file}" {line} {col}
+# The nvim side (plugins/lang/godot.lua) serves a pipe named by a hash of the
+# canonical project path
+set -euo pipefail
+
+# godot launches this with a bare GUI environment
+export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+
+project=${1:?project dir}
+file=${2:?file}
+line=${3:-0}
+col=${4:-0}
+[[ $line =~ ^[0-9]+$ ]] || line=0
+[[ $col =~ ^[0-9]+$ && $col -ge 1 ]] || col=1
+
+# canonicalize exactly like the nvim side so the hashes agree
+project=$(cd "$project" && pwd -P)
+
+pipe="${XDG_CACHE_HOME:-$HOME/.cache}/godot-nvim/$(printf %s "$project" | shasum -a 256 | cut -c1-12).pipe"
+
+# probe before editing: a failed --remote falls back to editing locally, which
+# would launch an invisible nvim inside the godot process
+if nvim --server "$pipe" --remote-expr 1 >/dev/null 2>&1; then
+  # tab drop: reuse the tab already showing the file, otherwise a new tab
+  nvim --server "$pipe" --remote-tab "$file"
+  # nvim's --remote does not support vim's +{cmd} form, jump separately
+  if (( line >= 1 )); then
+    nvim --server "$pipe" --remote-send "<C-\\><C-n>:call cursor($line,$col)<CR>"
+  fi
+  open -a WezTerm
+  exit 0
+fi
+
+# no live nvim for this project: spawn one at the workspace root so exrc,
+# just.lua, and the pipe server all come up as if opened by hand
+root=$project
+[[ -e "$project/../Cargo.toml" ]] && root=$(cd "$project/.." && pwd -P)
+
+cmd=(nvim)
+(( line >= 1 )) && cmd+=("+call cursor($line,$col)")
+cmd+=("$file")
+
+# join the running wezterm gui if there is one, otherwise launch a new one
+if wezterm cli spawn --new-window --cwd "$root" -- "${cmd[@]}" >/dev/null 2>&1; then
+  open -a WezTerm
+else
+  wezterm start --cwd "$root" -- "${cmd[@]}" >/dev/null 2>&1 &
+fi
