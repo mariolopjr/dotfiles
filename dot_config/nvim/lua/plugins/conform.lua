@@ -71,6 +71,7 @@ return {
         css = { "stylelint" },
         lua = { "stylua" },
         go = { "gofmt" },
+        gdshader = { "clang_format" },
         just = { "just" },
         python = { "isort", "ruff_format" },
         rust = { "rustfmt" },

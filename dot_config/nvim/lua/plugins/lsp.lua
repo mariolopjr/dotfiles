@@ -89,6 +89,12 @@ return {
         root_markers = { "main.ledger", ".git" },
       })
 
+      vim.lsp.config("gdshader_lsp", {
+        cmd = { "gdshader-lsp" },
+        filetypes = { "gdshader" },
+        root_markers = { "project.godot", ".git" },
+      })
+
       -- chezmoi.vim gives lua template sources the compound filetype lua.chezmoitmpl
       vim.lsp.config("lua_ls", {
         filetypes = { "lua", "lua.chezmoitmpl" },
@@ -98,6 +104,7 @@ return {
         "clangd",
         "codebook",
         "fish_lsp",
+        "gdshader_lsp",
         "gopls",
         "jsonls",
         "just",

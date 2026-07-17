@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Fetch the Godot export templates matching an installed editor version.
+# Runs as the mise postinstall for the godot tool (reads $MISE_TOOL_VERSION) and
+# can be ran manually with the version tag as $1. Skips when the templates are
+# already present unless FORCE=1
+set -euo pipefail
+
+tag="${1:-${MISE_TOOL_VERSION:-}}"
+if [ -z "$tag" ]; then
+  echo "godot-fetch-templates: no version, pass a tag or set MISE_TOOL_VERSION" >&2
+  exit 1
+fi
+
+# Godot names the templates dir with a dot before the status, the release tag
+# uses a dash: 4.7.1-stable -> 4.7.1.stable
+name="${tag/-/.}"
+
+case "$(uname -s)" in
+  Darwin) base="$HOME/Library/Application Support/Godot/export_templates" ;;
+  *) base="${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates" ;;
+esac
+dest="$base/$name"
+
+if [ "${FORCE:-0}" != "1" ] && [ -d "$dest" ] && [ -n "$(ls -A "$dest" 2>/dev/null)" ]; then
+  echo "godot-fetch-templates: $name already present, skipping"
+  exit 0
+fi
+
+tpz="Godot_v${tag}_export_templates.tpz"
+url="https://github.com/godotengine/godot/releases/download/${tag}/${tpz}"
+sums_url="https://github.com/godotengine/godot/releases/download/${tag}/SHA512-SUMS.txt"
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+sha512() {
+  if command -v sha512sum >/dev/null 2>&1; then
+    sha512sum "$1" | awk '{print $1}'
+  else
+    shasum -a 512 "$1" | awk '{print $1}'
+  fi
+}
+
+echo "godot-fetch-templates: downloading $tpz"
+curl -fsSL "$url" -o "$tmp/$tpz"
+
+# Verify against the release SHA512-SUMS when it is published
+if curl -fsSL "$sums_url" -o "$tmp/SHA512-SUMS.txt" 2>/dev/null; then
+  expected="$(grep -F "$tpz" "$tmp/SHA512-SUMS.txt" | awk '{print $1}' | head -1)"
+  if [ -n "$expected" ]; then
+    if [ "$expected" != "$(sha512 "$tmp/$tpz")" ]; then
+      echo "godot-fetch-templates: SHA512 mismatch for $tpz" >&2
+      exit 1
+    fi
+    echo "godot-fetch-templates: sha512 verified"
+  fi
+fi
+
+# The .tpz is a zip carrying a top-level templates/ dir
+echo "godot-fetch-templates: extracting into $dest"
+mkdir -p "$dest"
+unzip -q "$tmp/$tpz" -d "$tmp/extracted"
+mv "$tmp/extracted/templates/"* "$dest/"
+echo "godot-fetch-templates: done, $name"

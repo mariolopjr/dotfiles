@@ -59,6 +59,7 @@ return {
         return {
           dap = { adapter = adapter },
           tools = {
+            test_executor = "background",
             float_win_config = {
               border = "rounded",
               max_width = 90,
@@ -110,10 +111,16 @@ return {
     end,
   },
   {
-    -- crate version hints in Cargo.toml
     "saecki/crates.nvim",
     tag = "stable",
     event = { "BufRead Cargo.toml" },
-    opts = {},
+    opts = {
+      lsp = {
+        enabled = true,
+        actions = true,
+        completion = true,
+        hover = true,
+      },
+    },
   },
 }
