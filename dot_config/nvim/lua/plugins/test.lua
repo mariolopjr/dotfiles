@@ -128,6 +128,9 @@ return {
       local adapters = {
         vstest,
         require("neotest-golang")({}),
+        -- godot-rust in-engine itests. Must load before the rust adapter so it claims
+        -- the itest! files
+        require("neotest-godot-itest"),
       }
 
       -- rustaceanvim carries its own adapter

@@ -12,3 +12,5 @@ dotnet = "{{ vars.dotnet_version }}"
 "dotnet:roslyn-language-server" = { version = "latest", prerelease = true }
 "npm:@agentclientprotocol/claude-agent-acp" = "latest"
 "go:github.com/go-delve/delve/cmd/dlv" = "latest"
+"cargo:cargo-instruments" = "latest"
+"cargo:flamegraph" = "latest"

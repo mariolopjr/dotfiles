@@ -42,6 +42,73 @@ vim.keymap.set("n", "<leader>dd", function()
   vim.cmd.RustLsp("debuggables")
 end, { silent = true, buffer = bufnr, desc = "[D]ebug [D]ebuggables" })
 
+vim.keymap.set("n", "<leader>cR", function()
+  vim.cmd.RustLsp("runnables")
+end, { silent = true, buffer = bufnr, desc = "[C]ode [R]unnables" })
+
+vim.keymap.set(
+  "n",
+  "<leader>cs",
+  function()
+    vim.cmd.RustLsp("ssr")
+  end,
+  { silent = true, buffer = bufnr, desc = "[C]ode [S]tructural search replace" }
+)
+
+vim.keymap.set("n", "<leader>ck", function()
+  vim.cmd.RustLsp({ "moveItem", "up" })
+end, { silent = true, buffer = bufnr, desc = "[C]ode move item up" })
+
+vim.keymap.set("n", "<leader>cj", function()
+  vim.cmd.RustLsp({ "moveItem", "down" })
+end, { silent = true, buffer = bufnr, desc = "[C]ode move item down" })
+
+vim.keymap.set("n", "<leader>cT", function()
+  vim.cmd.RustLsp("relatedTests")
+end, { silent = true, buffer = bufnr, desc = "[C]ode related [T]ests" })
+
+vim.keymap.set("n", "<leader>cc", function()
+  vim.cmd.RustLsp("openCargo")
+end, { silent = true, buffer = bufnr, desc = "[C]ode open [C]argo.toml" })
+
+vim.keymap.set("n", "<leader>cC", function()
+  vim.cmd.RustLsp("flyCheck")
+end, { silent = true, buffer = bufnr, desc = "[C]ode cargo [C]heck" })
+
+vim.keymap.set("n", "<leader>cJ", function()
+  vim.cmd.RustLsp("joinLines")
+end, { silent = true, buffer = bufnr, desc = "[C]ode [J]oin lines" })
+
+vim.keymap.set("n", "<leader>cS", function()
+  vim.cmd.RustLsp("syntaxTree")
+end, { silent = true, buffer = bufnr, desc = "[C]ode [S]yntax tree" })
+
+vim.keymap.set("n", "<leader>cvm", function()
+  vim.cmd.RustLsp({ "view", "mir" })
+end, { silent = true, buffer = bufnr, desc = "[C]ode [v]iew [m]ir" })
+
+vim.keymap.set("n", "<leader>cvh", function()
+  vim.cmd.RustLsp({ "view", "hir" })
+end, { silent = true, buffer = bufnr, desc = "[C]ode [v]iew [h]ir" })
+
+vim.keymap.set("n", "<leader>cg", function()
+  -- rustaceanvim renders the graph through graphviz
+  if vim.fn.executable("dot") == 0 then
+    vim.notify("crateGraph needs graphviz (dot) on PATH", vim.log.levels.WARN)
+    return
+  end
+  vim.cmd.RustLsp("crateGraph")
+end, { silent = true, buffer = bufnr, desc = "[C]ode crate [G]raph" })
+
+vim.keymap.set("n", "<leader>cw", function()
+  vim.cmd.RustLsp("reloadWorkspace")
+end, { silent = true, buffer = bufnr, desc = "[C]ode reload [W]orkspace" })
+
+-- re-run the last runnable without the picker
+vim.keymap.set("n", "<leader>c.", function()
+  vim.cmd.RustLsp("run")
+end, { silent = true, buffer = bufnr, desc = "[C]ode run last runnable" })
+
 vim.keymap.set("n", "<leader>ci", function()
   local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
   vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })

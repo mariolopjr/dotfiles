@@ -10,6 +10,17 @@ return {
         return {
           NormalFloat = { bg = c.base },
           FloatBorder = { bg = c.base, fg = c.blue },
+          -- rust-analyzer marks unsafe usages with the `unsafe` semantic token
+          -- modifier
+          ["@lsp.mod.unsafe.rust"] = { fg = c.maroon },
+          ["@lsp.typemod.keyword.unsafe.rust"] = { fg = c.maroon, bold = true },
+          ["@lsp.typemod.function.unsafe.rust"] = {
+            fg = c.maroon,
+            underline = true,
+          },
+          ["@lsp.typemod.operator.unsafe.rust"] = { fg = c.maroon },
+          -- inactive cfg blocks stay readable but dimmed
+          DiagnosticUnnecessary = { fg = c.overlay1 },
         }
       end,
       integrations = {

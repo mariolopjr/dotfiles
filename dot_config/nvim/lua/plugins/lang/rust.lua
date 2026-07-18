@@ -78,6 +78,21 @@ return {
                 workspace = {
                   symbol = { search = { limit = 2048 } },
                 },
+                -- typeHints, parameterHints and chainingHints are on by
+                -- default
+                inlayHints = {
+                  bindingModeHints = { enable = true },
+                  closureReturnTypeHints = { enable = "with_block" },
+                  closureCaptureHints = { enable = true },
+                  discriminantHints = { enable = "fieldless" },
+                  expressionAdjustmentHints = { enable = "reborrow" },
+                  lifetimeElisionHints = {
+                    enable = "skip_trivial",
+                    useParameterNames = true,
+                  },
+                  implicitDrops = { enable = true },
+                  rangeExclusiveHints = { enable = true },
+                },
               },
             },
             -- rust-analyzer defaults to `cargo check --all-targets`, which builds
@@ -122,5 +137,36 @@ return {
         hover = true,
       },
     },
+    config = function(_, opts)
+      require("crates").setup(opts)
+
+      -- dependency management keymaps, only in Cargo.toml buffers so they do
+      -- not shadow the .rs `<leader>c` maps
+      vim.api.nvim_create_autocmd("BufRead", {
+        group = vim.api.nvim_create_augroup("crates-keymaps", { clear = true }),
+        pattern = "Cargo.toml",
+        callback = function(ev)
+          local crates = require("crates")
+          local function map(lhs, rhs, desc)
+            vim.keymap.set(
+              "n",
+              lhs,
+              rhs,
+              { silent = true, buffer = ev.buf, desc = desc }
+            )
+          end
+          map("<leader>cu", crates.update_crate, "[C]rate [U]pdate")
+          map("<leader>cU", crates.upgrade_all_crates, "[C]rate [U]pgrade all")
+          map("<leader>cv", crates.show_versions_popup, "[C]rate [V]ersions")
+          map("<leader>cF", crates.show_features_popup, "[C]rate [F]eatures")
+          map(
+            "<leader>cD",
+            crates.show_dependencies_popup,
+            "[C]rate [D]ependencies"
+          )
+          map("<leader>co", crates.open_documentation, "[C]rate [O]pen docs")
+        end,
+      })
+    end,
   },
 }

@@ -55,6 +55,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
   callback = function(args)
     local buf = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
     map(
       "n",
       "gK",
@@ -89,6 +90,34 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>ch", function()
       vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
+
+    -- call and type hierarchy, bound only for servers that support them
+    if
+      client and client:supports_method("textDocument/prepareCallHierarchy")
+    then
+      map(
+        "n",
+        "<leader>lc",
+        vim.lsp.buf.incoming_calls,
+        { desc = "Incoming [C]alls", buffer = buf }
+      )
+      map(
+        "n",
+        "<leader>lo",
+        vim.lsp.buf.outgoing_calls,
+        { desc = "[O]utgoing Calls", buffer = buf }
+      )
+    end
+    if
+      client and client:supports_method("textDocument/prepareTypeHierarchy")
+    then
+      map("n", "<leader>lt", function()
+        vim.lsp.buf.typehierarchy("subtypes")
+      end, { desc = "[T]ype Hierarchy: Subtypes", buffer = buf })
+      map("n", "<leader>lT", function()
+        vim.lsp.buf.typehierarchy("supertypes")
+      end, { desc = "Type Hierarchy: Super[T]ypes", buffer = buf })
+    end
   end,
 })
 
@@ -99,7 +128,11 @@ local function diagnostic_goto(next, severity)
       count = (next and 1 or -1) * vim.v.count1,
       severity = severity and vim.diagnostic.severity[severity] or nil,
       on_jump = function(_, buf)
-        vim.diagnostic.open_float({ bufnr = buf, scope = "cursor", focus = false })
+        vim.diagnostic.open_float({
+          bufnr = buf,
+          scope = "cursor",
+          focus = false,
+        })
       end,
     })
   end
