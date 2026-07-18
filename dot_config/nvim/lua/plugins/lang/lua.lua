@@ -15,6 +15,18 @@ return {
         { path = "lazydev.nvim", words = { "lazydev" } },
         { path = "snacks.nvim", words = { "Snacks" } },
         { path = "wezterm-types", mods = { "wezterm" } },
+        -- Renoise tool API
+        {
+          path = vim.fs.normalize("~/.local/share/luals/renoise-definitions"),
+          words = { "renoise" },
+        },
+        -- pattrns phrase scripts, trigger with a `-- pattrns` comment at the top
+        {
+          path = vim.fs.normalize(
+            "~/.local/share/luals/pattrns-types/types/pattrns"
+          ),
+          words = { "pattrns" },
+        },
       },
     },
   },

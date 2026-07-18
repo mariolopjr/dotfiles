@@ -93,6 +93,24 @@ return {
                   implicitDrops = { enable = true },
                   rangeExclusiveHints = { enable = true },
                 },
+                cargo = {
+                  -- separate target dir so a terminal `cargo build` and
+                  -- rust-analyzer stop stalling on the same target/ lock. RA
+                  -- uses target/rust-analyzer, the cargo cli keeps target/debug,
+                  -- so `just run` and the profiling recipes are separate
+                  targetDir = true,
+                },
+                imports = {
+                  granularity = { group = "module" },
+                  prefix = "crate",
+                },
+                lens = {
+                  implementations = { enable = true },
+                  references = {
+                    adt = { enable = true },
+                    trait = { enable = true },
+                  },
+                },
               },
             },
             -- rust-analyzer defaults to `cargo check --all-targets`, which builds
@@ -105,13 +123,17 @@ return {
               local settings = rs.load_rust_analyzer_settings(project_root, {
                 default_settings = default_settings,
               })
+              local ra = settings["rust-analyzer"]
+              if vim.g.rustanalyzer_features ~= nil then
+                ra.cargo = ra.cargo or {}
+                ra.cargo.features = vim.g.rustanalyzer_features
+              end
               for _, name in ipairs({ ".cargo/config.toml", ".cargo/config" }) do
                 local f = io.open((project_root or ".") .. "/" .. name, "r")
                 if f then
                   local body = f:read("*a")
                   f:close()
                   if body and body:match('target%s*=%s*"[^"]*none[^"]*"') then
-                    local ra = settings["rust-analyzer"]
                     ra.cargo = ra.cargo or {}
                     ra.cargo.allTargets = false
                     break

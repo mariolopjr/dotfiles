@@ -120,5 +120,14 @@ vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, {
   desc = "[C]ode [L]ens run",
 })
 
+-- whole-workspace clippy/check into the quickfix list
+vim.keymap.set("n", "<leader>cq", function()
+  require("util.cargo_qf").run("clippy")
+end, { silent = true, buffer = bufnr, desc = "[C]ode clippy [Q]uickfix" })
+
+vim.keymap.set("n", "<leader>cQ", function()
+  require("util.cargo_qf").run("check")
+end, { silent = true, buffer = bufnr, desc = "[C]ode check [Q]uickfix" })
+
 -- the capability provider tracks attach and refresh itself, no autocmds needed
 vim.lsp.codelens.enable(true, { bufnr = bufnr })

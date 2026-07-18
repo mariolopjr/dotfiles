@@ -27,3 +27,20 @@ type = "file"
 url = "https://raw.githubusercontent.com/mrjones2014/smart-splits.nvim/ba2850ff3d3b09785a7105c69d06a12117d4b97d/plugin/init.lua"
 refreshPeriod = "8760h"
 {{- end }}
+
+# Renoise Lua API defs (LuaCATS) for lua_ls
+[".local/share/luals/renoise-definitions"]
+type = "archive"
+url = "https://github.com/renoise/definitions/archive/refs/heads/master.tar.gz"
+exact = true
+stripComponents = 1
+refreshPeriod = "8760h"
+
+# pattrns phrase-script type stubs (types/pattrns subtree only)
+[".local/share/luals/pattrns-types"]
+type = "archive"
+url = "https://github.com/renoise/pattrns/archive/refs/heads/master.tar.gz"
+exact = true
+stripComponents = 1
+include = ["*/types/**", "types/**"]
+refreshPeriod = "8760h"

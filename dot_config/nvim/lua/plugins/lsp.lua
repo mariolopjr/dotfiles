@@ -34,20 +34,33 @@ return {
       { "<leader>li", "<cmd>checkhealth vim.lsp<CR>", desc = "LSP [I]nfo" },
     },
     config = function()
+      local vtext = {
+        prefix = function(diagnostic)
+          return icons[diagnostic.severity] or "●"
+        end,
+        spacing = 4,
+        source = "if_many", -- show source if multiple
+      }
       vim.diagnostic.config({
         underline = true,
         update_in_insert = false,
         float = { border = "rounded" },
-        virtual_text = {
-          prefix = function(diagnostic)
-            return icons[diagnostic.severity] or "●"
-          end,
-          spacing = 4,
-          source = "if_many", -- show source if multiple
-        },
+        virtual_text = vtext,
         signs = { text = icons },
         severity_sort = true,
       })
+
+      -- toggle full-width inline diagnostics (native virtual_lines) against the
+      -- compact virtual_text, the error text renders under the line
+      local inline = false
+      vim.keymap.set("n", "<leader>cx", function()
+        inline = not inline
+        vim.diagnostic.config({
+          virtual_text = inline and false or vtext,
+          virtual_lines = inline and true or false,
+        })
+        vim.notify("diagnostics: " .. (inline and "inline" or "compact"))
+      end, { desc = "Toggle inline diagnostics" })
 
       -- rename-aware workspace file operations for every server
       vim.lsp.config("*", {
