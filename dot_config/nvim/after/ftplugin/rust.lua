@@ -131,3 +131,9 @@ end, { silent = true, buffer = bufnr, desc = "[C]ode check [Q]uickfix" })
 
 -- the capability provider tracks attach and refresh itself, no autocmds needed
 vim.lsp.codelens.enable(true, { bufnr = bufnr })
+
+-- markdown_inline is injected into doc comments in after/queries/rust/injections.scm
+-- so intra-doc links like [`parse`] display as their link text. an empty
+-- concealcursor reveals the full markup whenever the cursor is on that line
+vim.opt_local.conceallevel = 2
+vim.opt_local.concealcursor = ""
