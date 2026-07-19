@@ -25,3 +25,9 @@ require("util.coverage").setup()
 
 -- LSP hover float styling, set up after lazy for the same reason as above
 require("hoverboard").setup()
+
+-- profiler navigation, set up after lazy so the snacks picker is available
+require("profile").setup()
+
+-- :CargoClippy / :CargoCheck load cargo diagnostics into the quickfix list
+require("util.cargo_qf").setup()

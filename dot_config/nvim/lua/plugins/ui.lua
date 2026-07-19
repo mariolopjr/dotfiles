@@ -63,6 +63,7 @@ return {
         { "<leader>l", group = "[L]SP" },
         { "<leader>o", group = "[O]bsidian", mode = { "n", "x" } },
         { "<leader>p", group = "[P]lugins" },
+        { "<leader>P", group = "[P]rofile" },
         { "<leader>r", group = "[R]un" },
         { "<leader>s", group = "[S]earch" },
         { "<leader>S", group = "[S]ession" },
