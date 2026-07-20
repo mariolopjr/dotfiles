@@ -71,6 +71,7 @@ return {
         { "<leader>T", group = "[T]ests" },
         { "<leader>x", group = "[x] Todos" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+        { "gs", group = "[S]urround", mode = { "n", "x" } },
       },
     },
   },

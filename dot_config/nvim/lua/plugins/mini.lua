@@ -8,14 +8,67 @@ return {
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
-      require("mini.ai").setup({ n_lines = 500 })
+      --
+      -- the treesitter specs mirror the ]f/]c/]a motions in plugins/treesitter.lua,
+      -- so the same letter jumps to and selects the same thing
+      --
+      -- f is the definition, not the call, to match ]f/[f. That displaces the
+      -- builtin function-call textobject, so it moves to F
+      local ai = require("mini.ai")
+
+      -- @parameter covers more nodes than the pattern spec (macro token trees,
+      -- use lists, struct literals), but only where a textobjects query exists
+      -- Fall back so json/yaml/ron/just/ledger keep argument selection
+      local ts_arg = ai.gen_spec.treesitter({
+        a = "@parameter.outer",
+        i = "@parameter.inner",
+      })
+      local pattern_arg = ai.gen_spec.argument()
+
+      ai.setup({
+        n_lines = 500,
+        custom_textobjects = {
+          a = function(ai_type, id, opts)
+            local ok, regions = pcall(ts_arg, ai_type, id, opts)
+            if ok and type(regions) == "table" and #regions > 0 then
+              return regions
+            end
+            return pattern_arg
+          end,
+          f = ai.gen_spec.treesitter({
+            a = "@function.outer",
+            i = "@function.inner",
+          }),
+          F = ai.gen_spec.treesitter({
+            a = "@call.outer",
+            i = "@call.inner",
+          }),
+          c = ai.gen_spec.treesitter({
+            a = "@class.outer",
+            i = "@class.inner",
+          }),
+          o = ai.gen_spec.treesitter({
+            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+          }),
+        },
+      })
 
       -- add/delete/replace surroundings (brackets, quotes, etc.)
       --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require("mini.surround").setup()
+      -- - gsaiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+      -- - gsd'   - [S]urround [D]elete [']quotes
+      -- - gsr)'  - [S]urround [R]eplace [)] [']
+      require("mini.surround").setup({
+        mappings = {
+          add = "gsa",
+          delete = "gsd",
+          find = "gsf",
+          find_left = "gsF",
+          highlight = "gsh",
+          replace = "gsr",
+        },
+      })
 
       -- fast autopairs
       require("mini.pairs").setup()
