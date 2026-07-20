@@ -5,6 +5,7 @@
 ---   cobertura `dotnet test --collect:"XPlat Code Coverage"`
 ---   go `go test -coverprofile`
 ---   lcov `cargo llvm-cov --lcov`, and whatever else can be asked for it
+---   llvm json `cargo llvm-cov --json`, the only one carrying regions
 ---
 --- Every report found under the project root is merged, so a solution whose
 --- godot tests and libs tests report separately still reads as one picture
@@ -26,6 +27,8 @@ local ns = vim.api.nvim_create_namespace("coverage")
 --- @field hits integer times the line was executed
 --- @field btotal integer branch paths on the line
 --- @field btaken integer branch paths that were taken
+--- @field rtotal integer regions starting on the line
+--- @field rcovered integer regions starting on the line that were entered
 
 --- @alias CoverageFiles table<string, table<integer, CoverageLine>>
 
@@ -86,6 +89,11 @@ local defaults = {
       "coverage/lcov.info",
       "coverage/*.lcov",
       "target/llvm-cov/lcov.info",
+    },
+    llvm_json = {
+      "coverage.json",
+      "coverage/coverage.json",
+      "target/llvm-cov/coverage.json",
     },
   },
 }
@@ -216,7 +224,7 @@ local function record(files, path, lnum)
   end
   local rec = lines[lnum]
   if not rec then
-    rec = { hits = 0, btotal = 0, btaken = 0 }
+    rec = { hits = 0, btotal = 0, btaken = 0, rtotal = 0, rcovered = 0 }
     lines[lnum] = rec
   end
   return rec
@@ -244,6 +252,23 @@ local function add_branch(files, path, lnum, btotal, btaken, accumulate)
   else
     rec.btotal = math.max(rec.btotal, btotal)
     rec.btaken = math.max(rec.btaken, btaken)
+  end
+end
+
+--- a region is a span of source with a counter of its own, llvm opens one
+--- wherever the count can diverge, so a closure body and the right hand side of
+--- `&&` each get theirs. Several therefore start on one line and they add up
+---
+--- Attributed to the line the region starts on, which keeps a file's total
+--- equal to the one llvm prints, every region counted exactly once, and puts
+--- the mark on the line the construct is written on
+--- @param files CoverageFiles
+--- @param entered boolean
+local function add_region(files, path, lnum, entered)
+  local rec = record(files, path, lnum)
+  rec.rtotal = rec.rtotal + 1
+  if entered then
+    rec.rcovered = rec.rcovered + 1
   end
 end
 
@@ -276,6 +301,11 @@ local function merge(into, from)
       cur.hits = cur.hits + rec.hits
       cur.btotal = math.max(cur.btotal, rec.btotal)
       cur.btaken = math.max(cur.btaken, rec.btaken)
+      -- regions merge the way branches do and for the same reason, two reports
+      -- can each have entered a different region on the line and their union
+      -- cannot be recovered from the counts alone
+      cur.rtotal = math.max(cur.rtotal, rec.rtotal)
+      cur.rcovered = math.max(cur.rcovered, rec.rcovered)
     end
   end
   for path, entries in pairs(from.methods) do
@@ -321,6 +351,12 @@ local function classify(rec)
     return "uncovered"
   end
   if rec.btotal > 0 and rec.btaken < rec.btotal then
+    return "partial"
+  end
+  -- the line ran but something written on it did not, a closure that was never
+  -- invoked or the right hand side of a `&&` that short circuited. Neither is a
+  -- branch, so this is the only thing that catches them
+  if rec.rtotal > 0 and rec.rcovered < rec.rtotal then
     return "partial"
   end
   return "covered"
@@ -716,11 +752,167 @@ local function parse_lcov(content, root)
   return { files = files, methods = methods, groups = groups }
 end
 
+--- llvm states a file's line coverage as segments rather than as lines. A
+--- segment sets the count from its column onwards and the lines between two of
+--- them inherit it, so the lines have to be walked back out
+---
+--- This is llvm's own LineCoverageStats walk. It reproduces the DA records the
+--- lcov exporter writes for the same profile exactly, which is what keeps a
+--- json report and an lcov one saying the same thing about the same file
+--- @param segs table[] [line, col, count, has_count, region_entry, gap]
+--- @return table<integer, integer> line to hit count
+local function segment_lines(segs)
+  local out = {}
+  if #segs == 0 then
+    return out
+  end
+
+  table.sort(segs, function(a, b)
+    if a[1] == b[1] then
+      return a[2] < b[2]
+    end
+    return a[1] < b[1]
+  end)
+
+  --- a gap region is the filler llvm emits between two regions, it carries a
+  --- count but never speaks for the line it lands on
+  local function opens(seg)
+    return not seg[6] and seg[4] and seg[5]
+  end
+
+  --- the last segment of the previous line that had any, it is still in force
+  --- over a line that opens nothing of its own
+  local wrapped, current, index = nil, {}, 1
+
+  for lnum = segs[1][1], segs[#segs][1] do
+    if #current > 0 then
+      wrapped = current[#current]
+    end
+    current = {}
+    while index <= #segs and segs[index][1] == lnum do
+      current[#current + 1] = segs[index]
+      index = index + 1
+    end
+
+    local opened = 0
+    for _, seg in ipairs(current) do
+      if opens(seg) then
+        opened = opened + 1
+      end
+    end
+
+    -- a line opening a skipped region is code the compiler was told to leave
+    -- out, a cfg'd out block, and the report says nothing about it at all
+    local skipped = #current > 0 and not current[1][4] and current[1][5]
+    local mapped = not skipped
+      and ((wrapped ~= nil and wrapped[4]) or opened > 0)
+
+    if mapped then
+      local count = wrapped and wrapped[3] or 0
+      for _, seg in ipairs(current) do
+        if opens(seg) then
+          count = math.max(count, seg[3])
+        end
+      end
+      out[lnum] = count
+    end
+  end
+
+  return out
+end
+
+--- llvm's own json export, `cargo llvm-cov --json`
+---
+--- The only format that carries regions, which is the counter llvm actually
+--- instruments. lcov has no record for one, so a closure that was never invoked
+--- and a short circuited `&&` are invisible in every other format, including
+--- to branch coverage, which emits no record for either
+---
+--- Lines, branches and methods are read from the same file too, so a project
+--- that writes only the json still gets everything the lcov reader gives
+--- @param content string
+--- @param root string
+--- @return CoverageReport
+local function parse_llvm_json(content, root)
+  local files, methods, groups = {}, {}, {}
+
+  local ok, report = pcall(vim.json.decode, content)
+  -- coverage.json is a generic enough name that something else can answer to
+  -- it, the export names itself and anything that does not is not ours
+  if
+    not ok
+    or type(report) ~= "table"
+    or report.type ~= "llvm.coverage.json.export"
+  then
+    return { files = files, methods = methods, groups = groups }
+  end
+
+  local crates = cargo_crates(root)
+
+  --- @param name string
+  --- @return string
+  local function resolve(name)
+    return is_absolute(name) and vim.fs.normalize(name)
+      or vim.fs.normalize(root .. "/" .. name)
+  end
+
+  for _, data in ipairs(report.data or {}) do
+    for _, file in ipairs(data.files or {}) do
+      if file.filename then
+        local path = resolve(file.filename)
+        groups[path] = groups[path] or crate_for(path, crates)
+
+        local segments = file.segments or {}
+        for lnum, hits in pairs(segment_lines(segments)) do
+          add_line(files, path, lnum, hits)
+        end
+
+        for _, seg in ipairs(segments) do
+          -- has_count is checked so that a skipped region, which segment_lines
+          -- deliberately leaves unmapped, cannot conjure a line record here and
+          -- read back as an uncovered line
+          if seg[5] and seg[4] then
+            add_region(files, path, seg[1], seg[3] > 0)
+          end
+        end
+
+        -- one record per condition carrying both of its outcomes, and several
+        -- conditions can sit on one line, so they accumulate
+        for _, br in ipairs(file.branches or {}) do
+          local taken = (br[5] > 0 and 1 or 0) + (br[6] > 0 and 1 or 0)
+          add_branch(files, path, br[1], 2, taken, true)
+        end
+      end
+    end
+
+    for _, fn in ipairs(data.functions or {}) do
+      -- filenames[1] is where the function was written, a later entry is a file
+      -- a macro expanded part of its body into and holds no declaration to mark
+      local name = (fn.filenames or {})[1]
+      if name then
+        local first
+        for _, region in ipairs(fn.regions or {}) do
+          -- region[6] is a 0 based index into the function's filenames
+          if (region[6] or 0) == 0 and (not first or region[1] < first) then
+            first = region[1]
+          end
+        end
+        if first then
+          add_method(methods, resolve(name), first, (fn.count or 0) > 0)
+        end
+      end
+    end
+  end
+
+  return { files = files, methods = methods, groups = groups }
+end
+
 local parsers = {
   opencover = parse_opencover,
   cobertura = parse_cobertura,
   go = parse_go,
   lcov = parse_lcov,
+  llvm_json = parse_llvm_json,
 }
 
 --- @param buf integer?
@@ -949,15 +1141,20 @@ local function render(buf)
     if lnum >= 1 and lnum <= last then
       local kind = classify(rec)
       -- a partial line is the only one holding a number the gutter cannot say,
-      -- how many of its paths were taken
+      -- how many of its paths were taken, and a line can be partial for both
+      -- reasons at once, an untested condition next to a closure nothing called
       local virt = nil
       if M.config.branch_virt_text and kind == "partial" then
-        virt = {
-          {
-            ("%d/%d branches"):format(rec.btaken, rec.btotal),
-            hlgroups.partial,
-          },
-        }
+        local parts = {}
+        if rec.btotal > 0 and rec.btaken < rec.btotal then
+          parts[#parts + 1] = ("%d/%d branches"):format(rec.btaken, rec.btotal)
+        end
+        if rec.rtotal > 0 and rec.rcovered < rec.rtotal then
+          parts[#parts + 1] = ("%d/%d regions"):format(rec.rcovered, rec.rtotal)
+        end
+        if #parts > 0 then
+          virt = { { table.concat(parts, ", "), hlgroups.partial } }
+        end
       end
       pcall(vim.api.nvim_buf_set_extmark, buf, ns, lnum - 1, 0, {
         sign_text = M.config.signs[kind],
@@ -1081,7 +1278,11 @@ end
 --- @class CoverageStats
 --- @field lines CoverageMetric
 --- @field branches CoverageMetric
+--- @field regions CoverageMetric
 --- @field methods CoverageMetric
+
+--- every metric a report can speak about, in the order they are printed
+local metrics = { "lines", "branches", "regions", "methods" }
 
 --- line coverage counts a partially covered line as covered, it did run, which
 --- is the same definition cobertura's line-rate and opencover's sequenceCoverage
@@ -1093,6 +1294,7 @@ local function summarise(lines, methods)
   local stats = {
     lines = { covered = 0, total = 0 },
     branches = { covered = 0, total = 0 },
+    regions = { covered = 0, total = 0 },
     methods = { covered = 0, total = 0 },
   }
 
@@ -1103,6 +1305,8 @@ local function summarise(lines, methods)
     end
     stats.branches.total = stats.branches.total + rec.btotal
     stats.branches.covered = stats.branches.covered + rec.btaken
+    stats.regions.total = stats.regions.total + rec.rtotal
+    stats.regions.covered = stats.regions.covered + rec.rcovered
   end
 
   for _, visited in pairs(methods or {}) do
@@ -1121,12 +1325,8 @@ end
 --- @return string
 local function format_stats(stats)
   local parts = {}
-  for _, metric in ipairs({
-    { "lines", stats.lines },
-    { "branches", stats.branches },
-    { "methods", stats.methods },
-  }) do
-    local label, m = metric[1], metric[2]
+  for _, label in ipairs(metrics) do
+    local m = stats[label]
     if m.total > 0 then
       parts[#parts + 1] = ("%s %.1f%% (%d/%d)"):format(
         label,
@@ -1164,6 +1364,7 @@ function M.load(opts)
       or content:match("<coverage") and "cobertura"
       or content:match("^mode:") and "go"
       or (content:match("^SF:") or content:match("\nSF:")) and "lcov"
+      or content:match("llvm%.coverage%.json%.export") and "llvm_json"
     if not format then
       return vim.notify(
         "coverage: unrecognised report format in " .. path,
@@ -1334,7 +1535,7 @@ function M.stats(buf)
   local total = summarise(nil, nil)
   for path, lines in pairs(state.files) do
     local stats = summarise(lines, state.methods[path])
-    for _, key in ipairs({ "lines", "branches", "methods" }) do
+    for _, key in ipairs(metrics) do
       total[key].covered = total[key].covered + stats[key].covered
       total[key].total = total[key].total + stats[key].total
     end

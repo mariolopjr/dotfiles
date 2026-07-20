@@ -8,7 +8,8 @@ local M = {}
 local ns = vim.api.nvim_create_namespace("coverage-summary")
 
 -- worst first
-local sorts = { "lines", "branches", "methods", "uncovered", "dead", "name" }
+local sorts =
+  { "lines", "branches", "regions", "methods", "uncovered", "dead", "name" }
 
 local view = {
   --- roll the files up under the assembly they were compiled into
@@ -195,10 +196,11 @@ local function totals(rows)
   local sum = {
     lines = { covered = 0, total = 0 },
     branches = { covered = 0, total = 0 },
+    regions = { covered = 0, total = 0 },
     methods = { covered = 0, total = 0 },
   }
   for _, row in ipairs(rows) do
-    for _, key in ipairs({ "lines", "branches", "methods" }) do
+    for _, key in ipairs({ "lines", "branches", "regions", "methods" }) do
       sum[key].covered = sum[key].covered + row.stats[key].covered
       sum[key].total = sum[key].total + row.stats[key].total
     end
@@ -246,6 +248,12 @@ local function render()
       (" (%d/%d)   "):format(total.branches.covered, total.branches.total),
       "Comment",
     },
+    { "regions ", "Comment" },
+    { pct_text(percent(total.regions)), hl_for(percent(total.regions)) },
+    {
+      (" (%d/%d)   "):format(total.regions.covered, total.regions.total),
+      "Comment",
+    },
     { "methods ", "Comment" },
     { pct_text(percent(total.methods)), hl_for(percent(total.methods)) },
     {
@@ -286,11 +294,12 @@ local function render()
 
   push({
     {
-      ("  %-" .. width .. "s  %-" .. BAR .. "s  %6s  %6s  %6s  %5s  %5s"):format(
+      ("  %-" .. width .. "s  %-" .. BAR .. "s  %6s  %6s  %6s  %6s  %5s  %5s"):format(
         "FILE",
         "COVERAGE",
         "LINES",
         "BRANCH",
+        "REGION",
         "METHOD",
         "UNCOV",
         "DEAD"
@@ -324,6 +333,11 @@ local function render()
       {
         pct_text(percent(stats.branches)),
         hl_for(percent(stats.branches)),
+      },
+      { "  " },
+      {
+        pct_text(percent(stats.regions)),
+        hl_for(percent(stats.regions)),
       },
       { "  " },
       {
