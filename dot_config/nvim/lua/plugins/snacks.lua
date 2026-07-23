@@ -180,12 +180,22 @@ return {
       { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
       { "<leader>gc", function() Snacks.picker.git_log() end, desc = "Git Log" },
       { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
-      -- claude cli
+      -- claude cli, alt+c toggles, alt+q quits the focused tab
       { "<leader>aC", function() require("util.claude").toggle() end, desc = "[C]laude Toggle", mode = { "n", "v" } },
       { "<leader>aQ", function() require("util.claude").quit() end, desc = "Claude [Q]uit" },
       { "<M-c>", function() require("util.claude").toggle() end, desc = "Claude Toggle", mode = { "n", "t" } },
       -- floating shell terminal
       { "<M-t>", function() require("util.terminal").toggle() end, desc = "Terminal Toggle", mode = { "n", "t" } },
+      -- alt+1..9 switch tabs of the focused float, or claude tabs from the editor
+      { "<M-1>", function() require("util.floats").switch(1) end, desc = "Float Tab 1", mode = { "n", "t" } },
+      { "<M-2>", function() require("util.floats").switch(2) end, desc = "Float Tab 2", mode = { "n", "t" } },
+      { "<M-3>", function() require("util.floats").switch(3) end, desc = "Float Tab 3", mode = { "n", "t" } },
+      { "<M-4>", function() require("util.floats").switch(4) end, desc = "Float Tab 4", mode = { "n", "t" } },
+      { "<M-5>", function() require("util.floats").switch(5) end, desc = "Float Tab 5", mode = { "n", "t" } },
+      { "<M-6>", function() require("util.floats").switch(6) end, desc = "Float Tab 6", mode = { "n", "t" } },
+      { "<M-7>", function() require("util.floats").switch(7) end, desc = "Float Tab 7", mode = { "n", "t" } },
+      { "<M-8>", function() require("util.floats").switch(8) end, desc = "Float Tab 8", mode = { "n", "t" } },
+      { "<M-9>", function() require("util.floats").switch(9) end, desc = "Float Tab 9", mode = { "n", "t" } },
       -- zen / zoom, zoom maximizes the current window, zen is distraction free
       { "<leader>z", function() Snacks.zen.zoom() end, desc = "[Z]oom (maximize window)" },
       { "<leader>Z", function() Snacks.zen() end, desc = "[Z]en Mode" },
