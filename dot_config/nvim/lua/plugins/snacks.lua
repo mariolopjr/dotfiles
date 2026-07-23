@@ -75,6 +75,16 @@ return {
       gitbrowse = {},
       indent = { enabled = true },
       input = { enabled = true },
+      lazygit = {
+        -- override snacks edit command so that lazygit is not killed when the
+        -- file is opened for editing
+        config = {
+          os = {
+            edit = "nvim --server \"$NVIM\" --remote-expr \"v:lua.require'util.lazygit'.edit('{{filename}}')\"",
+            editAtLine = "nvim --server \"$NVIM\" --remote-expr \"v:lua.require'util.lazygit'.edit('{{filename}}', {{line}})\"",
+          },
+        },
+      },
       notifier = { enabled = true },
       picker = {
         actions = {
@@ -86,7 +96,10 @@ return {
             local value = item.data or item.text
             local reg = vim.v.register
             vim.fn.setreg(reg, value)
-            Snacks.notify(("Yanked to register `%s`: %s"):format(reg, value), { title = "Snacks Picker" })
+            Snacks.notify(
+              ("Yanked to register `%s`: %s"):format(reg, value),
+              { title = "Snacks Picker" }
+            )
           end,
         },
         sources = {

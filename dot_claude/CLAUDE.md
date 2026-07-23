@@ -16,3 +16,4 @@ I am a scientist who needs facts, not diplomacy. Every interaction must prioriti
 - **No em dashes.** No em dashes
 - **No e.g.** Rarely is there a need for e.g.
 - **No witty comments.** Keep comments concise and to the point, no wittiness, no over-explaining. As an example, if the code avoids the heap, do not add `this avoids the heap` as it's not necessary
+- **Comments carry information, not narration.** Explain the what and why plainly; no ceremonial framing, no metaphors for plain mechanics, no filler for rhythm

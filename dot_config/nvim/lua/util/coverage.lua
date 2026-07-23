@@ -17,6 +17,8 @@
 ---     summary_exclude = { "/addons/", "/thirdparty/" },
 ---     -- searched on top of the default report locations
 ---     reports = { opencover = { "artifacts/coverage.xml" } },
+---     -- never descended into on top of the defaults
+---     skip_dirs = { ".godot", "third_party" },
 ---   }
 
 local M = {}
@@ -68,6 +70,9 @@ local defaults = {
   summary_hide_external = true,
   -- exclude generated code
   summary_exclude = { "/obj/", "/bin/", ".g.cs", "/target/" },
+  -- never descended into while searching, by name at any depth. A glob that
+  -- names one outright is still searched, `target/llvm-cov/coverage.json`
+  skip_dirs = { ".git", "node_modules", "vendor", "bin", "obj", "target" },
   -- globs searched under the project root and every match is merged
   reports = {
     opencover = {
@@ -212,6 +217,75 @@ end
 --- @return boolean
 local function within(path, root)
   return path == root or path:sub(1, #root + 1) == root .. "/"
+end
+
+--- how far below its anchor a `**` reaches, the same limit vim's own `**` has
+local max_depth = 100
+
+--- the leading wildcard-free directories of a glob, where its walk starts
+---
+--- Anchoring there keeps the skip list away from the part of a pattern that is
+--- spelled out, `target/llvm-cov/**/*.json` starts inside target and only what
+--- lies below it can be skipped
+--- @param glob string
+--- @return string prefix empty when the first segment already holds a wildcard
+--- @return string rest matched against the names found below the anchor
+local function split_glob(glob)
+  local segments = vim.split(glob, "/", { plain = true })
+  local prefix = {}
+  while #segments > 1 and not segments[1]:find("[*?%[{]") do
+    prefix[#prefix + 1] = table.remove(segments, 1)
+  end
+  return table.concat(prefix, "/"), table.concat(segments, "/")
+end
+
+--- every file under `root` a glob matches, without descending into the
+--- directories a report is never written to
+---
+--- vim's `**` enumerates every directory under the root before it filters
+--- @param root string
+--- @param glob string relative to root, `**` spans zero or more segments
+--- @param depth integer levels searched below the glob's wildcard-free prefix
+--- @return string[] absolute paths
+local function walk(root, glob, depth)
+  local prefix, rest = split_glob(glob)
+  local ok, pattern = pcall(vim.glob.to_lpeg, rest)
+  if not ok then
+    -- a pattern lpeg rejects, `**` glued onto a name, is left to vim
+    local matches = vim.fn.glob(vim.fs.joinpath(root, glob), true, true)
+    return vim.tbl_map(vim.fs.normalize, matches)
+  end
+
+  local skip = {}
+  for _, dir in ipairs(M.config.skip_dirs or {}) do
+    skip[dir] = true
+  end
+  -- a directory the glob names outright is searched wherever it sits, so a
+  -- project keeping its reports inside a skipped one can still say so
+  for _, segment in ipairs(vim.split(glob, "/", { plain = true })) do
+    skip[segment] = nil
+  end
+
+  local start = vim.fs.joinpath(root, prefix)
+  local found = {}
+  local iter = vim.fs.dir(start, {
+    depth = depth,
+    -- handed the path relative to `start`, not a bare directory name
+    skip = function(dir)
+      return not skip[vim.fs.basename(dir)]
+    end,
+  })
+  for name, type in iter do
+    if (type == "file" or type == "link") and pattern:match(name) then
+      local path = vim.fs.normalize(vim.fs.joinpath(start, name))
+      -- a symlink is a report if it resolves to one. Symlinked directories are
+      -- not walked into, follow is off, so a cycle costs nothing
+      if type == "file" or (vim.uv.fs_stat(path) or {}).type == "file" then
+        found[#found + 1] = path
+      end
+    end
+  end
+  return found
 end
 
 --- @param files CoverageFiles
@@ -520,28 +594,8 @@ end
 --- @param basename string
 --- @return string[] absolute paths
 local function manifests(root, basename)
-  local skip = {
-    [".git"] = true,
-    ["node_modules"] = true,
-    ["vendor"] = true,
-    ["bin"] = true,
-    ["obj"] = true,
-    ["target"] = true,
-  }
-
-  local found = {}
-  local iter = vim.fs.dir(root, {
-    depth = 4,
-    skip = function(dir)
-      return not skip[dir]
-    end,
-  })
-  for name, type in iter do
-    if type == "file" and vim.fs.basename(name) == basename then
-      found[#found + 1] = vim.fs.normalize(root .. "/" .. name)
-    end
-  end
-  return found
+  -- deeper than this is a fixture or a vendored copy, not the project's own
+  return walk(root, "**/" .. basename, 4)
 end
 
 --- every go.mod under the root, longest module path first, so the most specific
@@ -1000,8 +1054,16 @@ local function discover(root)
     local paths = {}
     local seen = {}
     for _, glob in ipairs(globs) do
-      for _, path in ipairs(vim.fn.glob(root .. "/" .. glob, true, true)) do
-        path = vim.fs.normalize(path)
+      -- only a `**` is worth expanding by hand, every other pattern is anchored
+      -- to a directory and vim answers it in well under a millisecond
+      local matches
+      if glob:find("**", 1, true) then
+        matches = walk(root, glob, max_depth)
+      else
+        local expanded = vim.fn.glob(root .. "/" .. glob, true, true)
+        matches = vim.tbl_map(vim.fs.normalize, expanded)
+      end
+      for _, path in ipairs(matches) do
         if not seen[path] then
           seen[path] = true
           paths[#paths + 1] = path
@@ -1009,6 +1071,9 @@ local function discover(root)
       end
     end
     if #paths > 0 then
+      -- a walk yields in filesystem order, sort so a reload sees the same list
+      -- and newest_per_project's first-seen tie-break stays put
+      table.sort(paths)
       found[format] = paths
     end
   end

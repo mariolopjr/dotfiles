@@ -28,6 +28,8 @@ function M.open()
     border = "rounded",
     title = " todo ",
     title_pos = "center",
+    footer = " ? todo menu   q close ",
+    footer_pos = "center",
     -- snacks opens `file` as a read only preview, checkmate needs to edit it
     bo = { modifiable = true, readonly = false },
     keys = {
