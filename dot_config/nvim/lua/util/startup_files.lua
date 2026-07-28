@@ -87,29 +87,24 @@ function M.record()
   write(list)
 end
 
---- Dashboard section generator mirroring Snacks.dashboard.sections.recent_files
---- @param opts? { limit?: number }
---- @return fun(): table[]
-function M.section(opts)
-  opts = opts or {}
-  local limit = opts.limit or 5
-  return function()
-    local ret = {}
-    for _, file in ipairs(read()) do
-      if vim.fn.filereadable(file) == 1 then
-        ret[#ret + 1] = {
-          file = file,
-          icon = "file",
-          action = ":e " .. vim.fn.fnameescape(file),
-          autokey = true,
-        }
-        if #ret >= limit then
-          break
-        end
-      end
+--- Snacks picker finder over the recorded files, most recent first
+--- @param _ table picker opts, unused
+--- @param ctx table finder context carrying the active filter
+--- @return table[]
+function M.finder(_, ctx)
+  local current = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
+  local items = {}
+  for _, file in ipairs(read()) do
+    local path = vim.fs.normalize(file)
+    if
+      path ~= current
+      and vim.fn.filereadable(path) == 1
+      and ctx.filter:match({ file = path, text = path })
+    then
+      items[#items + 1] = { file = path, text = path, recent = true }
     end
-    return ret
   end
+  return items
 end
 
 return M

@@ -37,7 +37,7 @@ return {
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
             { icon = " ", key = "p", desc = "Projects", action = ":lua Snacks.picker.projects()" },
             { icon = " ", key = "v", desc = "Vaults", action = ":ObsidianVaults" },
-            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
             { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
@@ -55,16 +55,9 @@ return {
             icon = " ",
             title = "Projects",
             section = "projects",
+            limit = 15,
             indent = 2,
             padding = 1,
-          },
-          {
-            icon = " ",
-            title = "Recent Files",
-            indent = 2,
-            padding = 1,
-            -- only files opened directly on the command line (nvim file.txt)
-            require("util.startup_files").section({ limit = 5 }),
           },
           { section = "startup" },
         },
@@ -124,6 +117,35 @@ return {
             -- for ledger files, transactions are Event-kind symbols
             -- so opt ledger out of the default kind filter
             filter = { ledger = true },
+          },
+          recent = {
+            -- default to files opened directly on the command line (nvim file.txt)
+            -- rather than everything that ever landed in oldfiles, M-e falls back
+            -- to the full oldfiles list
+            direct = true,
+            toggles = { direct = "E" },
+            finder = function(opts, ctx)
+              if opts.direct then
+                return require("util.startup_files").finder(opts, ctx)
+              end
+              return require("snacks.picker.source.recent").files(opts, ctx)
+            end,
+            win = {
+              input = {
+                keys = {
+                  ["<a-e>"] = {
+                    "toggle_direct",
+                    mode = { "i", "n" },
+                    desc = "Toggle Directly Edited",
+                  },
+                },
+              },
+              list = {
+                keys = {
+                  ["<a-e>"] = "toggle_direct",
+                },
+              },
+            },
           },
         },
         win = {
