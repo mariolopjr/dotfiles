@@ -26,7 +26,7 @@ local function find(source)
 end
 
 --- Buffer 0 allows vim.fs.root map a special buffer to the cwd
---- @param path string?
+--- @param path string|integer?
 --- @return string|integer
 local function source(path)
   if path ~= nil and path ~= "" then
@@ -35,11 +35,18 @@ local function source(path)
   return 0
 end
 
+--- Locate the godot project covering a path
+--- @param path string|integer? file, directory, or buffer, defaults to the buffer
+--- @return { project: string, workspace: string }?
+function M.find(path)
+  return find(source(path))
+end
+
 --- The godot project directory path
---- @param path string? file or directory, defaults to the current buffer
+--- @param path string|integer? file, directory, or buffer, defaults to the buffer
 --- @return string?
 function M.root(path)
-  local found = find(source(path))
+  local found = M.find(path)
   return found and found.project or nil
 end
 
