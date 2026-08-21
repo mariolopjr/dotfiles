@@ -61,6 +61,7 @@
     }
   },
   "effortLevel": "xhigh",
+  "outputStyle": "Concise",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "agentPushNotifEnabled": true

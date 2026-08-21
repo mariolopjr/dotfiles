@@ -125,12 +125,22 @@ return {
         return dotnet and vstest_root(path) or nil
       end
 
+      -- a graphics.gd project is a go module so neotest-golang attaches to it
+      -- as well, so this avoids tests registering twice
+      local golang = require("neotest-golang")({})
+      local golang_root = golang.root
+      golang.root = function(path)
+        if require("util.go").graphics_root(path) then
+          return nil
+        end
+        return golang_root(path)
+      end
+
       local adapters = {
         vstest,
-        require("neotest-golang")({}),
-        -- godot-rust in-engine itests. Must load before the rust adapter so it claims
-        -- the itest! files
-        require("neotest-godot-itest"),
+        -- graphics.gd tests run inside Godot
+        require("neotest-graphicsgd"),
+        golang,
       }
 
       -- rustaceanvim carries its own adapter
