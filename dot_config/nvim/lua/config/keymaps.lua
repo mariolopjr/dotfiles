@@ -88,8 +88,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
     end, { desc = "[C]ode Fix [A]ll (whole document)", buffer = buf })
     map("n", "<leader>ch", function()
-      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = buf })
+      vim.lsp.inlay_hint.enable(not enabled, { bufnr = buf })
     end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
+
+    local hints_off = vim.b[buf]._lsp_enabled_inlay_hint == false
+      or vim.g._lsp_enabled_inlay_hint == false
+    if
+      client
+      and not hints_off
+      and client:supports_method("textDocument/inlayHint")
+    then
+      vim.lsp.inlay_hint.enable(true, { bufnr = buf })
+    end
 
     -- call and type hierarchy, bound only for servers that support them
     if
