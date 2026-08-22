@@ -91,6 +91,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end, { desc = "[C]ode Toggle Inlay [H]ints", buffer = buf })
 
+    -- enable inlay hints for clients that support it
+    if client and client:supports_method("textDocument/inlayHint") then
+      vim.lsp.inlay_hint.enable(true, { bufnr = buf })
+    end
+
     -- call and type hierarchy, bound only for servers that support them
     if
       client and client:supports_method("textDocument/prepareCallHierarchy")
