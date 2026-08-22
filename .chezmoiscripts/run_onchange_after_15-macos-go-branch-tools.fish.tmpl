@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/opt/homebrew/bin/fish
+
+if not type -q go
+    echo "go-branch-tools: go is not installed, skipping" >&2
+    exit 0
+end
+
+# graphics.gd's build tool
+go install graphics.gd/cmd/gd@release
+{{ end -}}

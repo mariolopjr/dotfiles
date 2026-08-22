@@ -70,7 +70,7 @@ return {
         cs = { "csharpier" },
         css = { "stylelint" },
         lua = { "stylua" },
-        go = { "gofmt" },
+        go = { "goimports", "gofumpt" },
         gdshader = { "clang_format" },
         just = { "just" },
         python = { "isort", "ruff_format" },
