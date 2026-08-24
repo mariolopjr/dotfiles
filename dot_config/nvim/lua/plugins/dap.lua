@@ -68,6 +68,60 @@ return {
         args = { "--interpreter=vscode" },
       }
 
+      -- go debugs through delve. A package or test binary can be launched directly.
+      -- A graphics.gd (Godot) game is requires `gd run` to build to Go side as
+      -- a c-shared library that the `godot` process loads
+      local function dlv()
+        local found = vim.fn.exepath("dlv")
+        return found ~= "" and found or "dlv"
+      end
+
+      dap.adapters.go = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = dlv(),
+          args = { "dap", "-l", "127.0.0.1:${port}" },
+        },
+      }
+
+      dap.configurations.go = {
+        {
+          type = "go",
+          request = "launch",
+          name = "Launch package",
+          program = "${fileDirname}",
+        },
+        {
+          type = "go",
+          request = "launch",
+          name = "Launch package with args",
+          program = "${fileDirname}",
+          args = function()
+            return require("dap.utils").splitstr(vim.fn.input("Args: "))
+          end,
+        },
+        {
+          type = "go",
+          request = "launch",
+          mode = "test",
+          name = "Debug test file",
+          program = "${fileDirname}",
+        },
+        {
+          -- the godot process holds the game, `gd run` has to be running
+          type = "go",
+          request = "attach",
+          mode = "local",
+          name = "Attach to a running godot (graphics.gd)",
+          processId = function()
+            return require("dap.utils").pick_process({
+              filter = "godot",
+            })
+          end,
+        },
+      }
+
       -- breakpoint icons
       vim.api.nvim_set_hl(
         0,
