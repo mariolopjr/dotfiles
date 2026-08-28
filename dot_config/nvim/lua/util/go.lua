@@ -118,9 +118,9 @@ end
 --- @return string?
 function M.graphics_root(source)
   local found = godot.find(source)
-  -- gdscript keeps project.godot at the workspace root, graphics.gd nests it
-  -- in graphics/
-  if not found or found.project == found.workspace then
+  -- gdscript keeps project.godot at the workspace root and godot-rust puts it
+  -- in godot/, only graphics.gd nests it in graphics/
+  if not found or found.layout ~= "graphics" then
     return nil
   end
   return vim.fs.root(found.workspace, { "go.mod" })

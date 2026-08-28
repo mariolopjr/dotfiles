@@ -122,6 +122,32 @@ return {
         },
       }
 
+      -- rust debugs through codelldb, gdext compiles the crate into a cdylib
+      -- that the godot process dlopens so the debugger has to attach to the
+      -- game process. Registered under a different key to not clobber keys
+      -- registered by rustaceanvim
+      dap.adapters.rust = function(callback)
+        callback(require("util.rust").adapter())
+      end
+
+      -- rustaceanvim appends a `Cargo: <target>` entry per debuggable once
+      -- rust-analyzer has attached so this stays the first entry in the list
+      dap.configurations.rust = {
+        {
+          -- on macOS the hardened runtime blocks the attach until godot has
+          -- been re-signed with get-task-allow
+          type = "rust",
+          request = "attach",
+          name = "Attach to a running godot (godot-rust)",
+          cwd = function()
+            return require("util.rust").godot_root(0) or vim.fn.getcwd()
+          end,
+          pid = function()
+            return require("dap.utils").pick_process({ filter = "godot" })
+          end,
+        },
+      }
+
       -- breakpoint icons
       vim.api.nvim_set_hl(
         0,

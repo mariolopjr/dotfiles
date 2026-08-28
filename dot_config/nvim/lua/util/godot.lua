@@ -1,25 +1,30 @@
---- util.godot: opens a godot project in the godot editor
+--- util.godot: locating a godot project and opening the editor on it
 
 local M = {}
 
---- project.godot exists at the workspace root (gdscript) or in a graphics/ subdir
---- (graphics.gd/golang)
+--- @alias util.godot.Layout "root"|"graphics"|"godot"
+
+--- Where project.godot exists
+--- @type { [1]: string, [2]: util.godot.Layout }[]
 local markers = {
-  "project.godot",
-  "graphics/project.godot",
+  { "project.godot", "root" },
+  { "graphics/project.godot", "graphics" },
+  { "godot/project.godot", "godot" },
 }
 
 --- Locate the godot project
 --- @param source string|integer file, directory, or buffer number
---- @return { project: string, workspace: string }?
+--- @return { project: string, workspace: string, layout: util.godot.Layout }?
 local function find(source)
-  for _, marker in ipairs(markers) do
+  for _, entry in ipairs(markers) do
+    local marker, layout = entry[1], entry[2]
     local project = vim.fs.root(source, marker)
     if project then
       local sub = vim.fs.dirname(marker)
       return {
         project = project,
         workspace = sub ~= "." and vim.fs.dirname(project) or project,
+        layout = layout,
       }
     end
   end
@@ -37,7 +42,7 @@ end
 
 --- Locate the godot project covering a path
 --- @param path string|integer? file, directory, or buffer, defaults to the buffer
---- @return { project: string, workspace: string }?
+--- @return { project: string, workspace: string, layout: util.godot.Layout }?
 function M.find(path)
   return find(source(path))
 end

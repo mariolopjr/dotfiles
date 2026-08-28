@@ -930,11 +930,27 @@ local function parse_llvm_json(content, root)
           end
         end
 
-        -- one record per condition carrying both of its outcomes, and several
-        -- conditions can sit on one line, so they accumulate
+        local spans, folded = {}, {}
         for _, br in ipairs(file.branches or {}) do
-          local taken = (br[5] > 0 and 1 or 0) + (br[6] > 0 and 1 or 0)
-          add_branch(files, path, br[1], 2, taken, true)
+          local key = ("%d:%d:%d:%d"):format(br[1], br[2], br[3], br[4])
+          local span = spans[key]
+          if not span then
+            span = { line = br[1], true_path = false, false_path = false }
+            spans[key] = span
+            -- kept in the order llvm wrote them, pairs() over the keys would
+            -- attribute a line's branches in a different order every run
+            folded[#folded + 1] = span
+          end
+          span.true_path = span.true_path or br[5] > 0
+          span.false_path = span.false_path or br[6] > 0
+        end
+
+        -- several conditions can still sit on one line, so the folded spans
+        -- accumulate
+        for _, span in ipairs(folded) do
+          local taken = (span.true_path and 1 or 0)
+            + (span.false_path and 1 or 0)
+          add_branch(files, path, span.line, 2, taken, true)
         end
       end
     end

@@ -141,6 +141,8 @@ return {
         -- graphics.gd tests run inside Godot
         require("neotest-graphicsgd"),
         golang,
+        -- godot-rust in-engine itests
+        require("neotest-godot-itest"),
       }
 
       -- rustaceanvim carries its own adapter
