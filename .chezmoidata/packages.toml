@@ -7,6 +7,7 @@ brews = [
   "bacon",
   "bat",
   "bottom",
+  "bun",
   "cargo-deny",
   "cargo-generate",
   "cargo-llvm-cov",

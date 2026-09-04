@@ -1,0 +1,14 @@
+#!/bin/bash
+# allow tracking relevant pi settings
+set -euo pipefail
+
+managed=$(cat <<'JSON'
+{{ includeTemplate "pi-settings.json" . }}
+JSON
+)
+
+existing=$(cat)
+[ -n "$existing" ] || existing='{}'
+
+printf '%s' "$existing" \
+  | jq --argjson m "$managed" 'reduce ($m | keys_unsorted[]) as $k (.; .[$k] = $m[$k])'

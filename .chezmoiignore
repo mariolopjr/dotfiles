@@ -1,6 +1,19 @@
 README.md
 TODO.md
+renovate.json
 {{- if ne .chezmoi.os "darwin" }}
 .zshrc
+.zshenv
 Library
 {{- end }}
+
+.pi/agent/npm
+.pi/agent/auth.json
+.pi/agent/models-store.json
+.pi/agent/sessions
+.pi/agent/agent-memory
+.pi/agent/missions
+.pi/agent/extensions/subagent/state
+.pi-lens/*.log
+.pi-lens/instances.json
+.pi/agent/extensions/pi-permission-system/logs

@@ -1,0 +1,18 @@
+{{ if and (eq .chezmoi.os "darwin") (not (env "CI")) -}}
+#!/bin/bash
+# settings: {{ includeTemplate "pi-settings.json" . | sha256sum }}
+set -euo pipefail
+
+export PATH="$HOME/.bun/bin:$PATH"
+if ! command -v bun >/dev/null 2>&1; then
+  echo "pi: bun is not installed, skipping" >&2
+  exit 0
+fi
+
+bun install -g @earendil-works/pi-coding-agent
+
+jq -r '.packages[]' "$HOME/.pi/agent/settings.json" | while read -r pkg; do
+  [ -n "$pkg" ] || continue
+  pi install "$pkg"
+done
+{{ end -}}
