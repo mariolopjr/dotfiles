@@ -1,8 +1,6 @@
 README.md
 TODO.md
 {{- if ne .chezmoi.os "darwin" }}
-.hammerspoon
-.hammerspoon/Spoons/EmmyLua.spoon
 .zshrc
 Library
 {{- end }}

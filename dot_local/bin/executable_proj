@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Project sessions
+# Pick a directory under ~/Code and attach its tmux session, creating the nvim, agent, and run tabs
+#
+# usage: proj [directory]
+# bound to prefix+w in tmux
+
+set -euo pipefail
+
+root="${PROJ_ROOT:-$HOME/Code}"
+
+if [ $# -gt 0 ]; then
+  dir=$(cd "$1" && pwd)
+else
+  if command -v fd >/dev/null 2>&1; then
+    # --follow or a symlinked project dir counts as type l and is skipped
+    list=$(fd --type d --min-depth 1 --max-depth 1 --follow --base-directory "$root")
+  else
+    list=$(cd "$root" && find -L . -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+  fi
+  pick=$(printf '%s\n' "$list" | sort | fzf --prompt 'project: ' --height 100% --reverse) || exit 0
+  [ -z "$pick" ] && exit 0
+  dir="$root/$pick"
+fi
+
+name=$(basename "$dir" | tr '.: ' '___')
+
+if ! tmux has-session -t "=$name" 2>/dev/null; then
+  tmux new-session  -d -s "$name" -c "$dir" -n nvim
+  tmux new-window   -d -t "=$name:" -c "$dir" -n agent
+  tmux new-window   -d -t "=$name:" -c "$dir" -n run
+  tmux send-keys  -t "=$name:agent" 'pi' Enter
+  tmux select-window -t "=$name:nvim"
+  # -S sources the mini.sessions file
+  if [ -f "$dir/.session.nvim" ]; then
+    tmux send-keys -t "=$name:nvim" 'nvim -S .session.nvim' Enter
+  else
+    tmux send-keys -t "=$name:nvim" 'nvim' Enter
+  fi
+fi
+
+if [ -n "${TMUX:-}" ]; then
+  tmux switch-client -t "=$name"
+else
+  # -d detaches any other client first
+  tmux attach-session -d -t "=$name"
+fi

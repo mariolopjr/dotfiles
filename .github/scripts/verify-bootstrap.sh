@@ -30,9 +30,9 @@ for f in \
   .config/fish/config.fish \
   .config/nvim/init.lua \
   .config/nvim/lazy-lock.json \
-  .config/wezterm/wezterm.lua \
+  .config/tmux/tmux.conf \
   .config/mise/config.toml \
-  .hammerspoon/init.lua; do
+  .config/karabiner/assets/complex_modifications/caps_lock.json; do
   if [ -e "$HOME/$f" ]; then
     ok "$f"
   else

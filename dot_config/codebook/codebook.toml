@@ -1,4 +1,6 @@
 words = [
     "Neovim",
+    "coreclr",
+    "exrc",
     "justfile",
 ]

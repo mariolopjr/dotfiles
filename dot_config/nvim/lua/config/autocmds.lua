@@ -26,8 +26,8 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 })
 
 -- report neovim's cwd to the terminal via OSC 7
--- wezterm uses this for the tab name, and new panes
--- will also open in that directory
+-- tmux uses this for pane_current_path, so new panes and windows
+-- open in that directory
 vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
   desc = "Emit OSC 7 with the current working directory",
   group = vim.api.nvim_create_augroup("osc7-cwd", { clear = true }),
@@ -83,5 +83,13 @@ vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
     then
       vim.cmd("silent! update")
     end
+  end,
+})
+
+vim.api.nvim_create_autocmd("VimResized", {
+  desc = "Equalize splits in every tab when the terminal is resized",
+  group = vim.api.nvim_create_augroup("resize-splits", { clear = true }),
+  callback = function()
+    require("util.windows").equalize()
   end,
 })

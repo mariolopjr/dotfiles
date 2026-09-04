@@ -1,0 +1,32 @@
+{
+  "title": "Slow quit",
+  "rules": [
+    {
+      "description": "Hold Cmd+Q for 3 seconds to quit",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "q",
+            "modifiers": {
+              "mandatory": [
+                "command"
+              ]
+            }
+          },
+          "to_if_held_down": [
+            {
+              "key_code": "q",
+              "modifiers": [
+                "left_command"
+              ]
+            }
+          ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 3000
+          }
+        }
+      ]
+    }
+  ]
+}

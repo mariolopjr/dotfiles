@@ -18,6 +18,7 @@ brews = [
   "curl",
   "dfu-util",
   "dockutil",
+  "et",
   "f3",
   "fd",
   "fish",
@@ -53,6 +54,7 @@ brews = [
   "smartmontools",
   "stylua",
   "terminal-notifier",
+  "tmux",
   "tracy",
   "tree-sitter-cli",
   "vscode-langservers-extracted",
@@ -61,12 +63,13 @@ brews = [
 ]
 casks = [
   "carbon-copy-cloner",
-  "claude",
+  "codex",
   "crossover",
   "discord",
   "font-jetbrains-mono",
   "font-jetbrains-mono-nerd-font",
-  "hammerspoon",
+  "ghostty",
+  "karabiner-elements",
   "little-snitch",
   "loopback",
   "micro-snitch",
@@ -78,7 +81,6 @@ casks = [
   "slack",
   "starsector",
   "steam",
-  "wezterm@nightly",
 ]
 mas = [
   { name = "Amphetamine", id = 937984704 },
