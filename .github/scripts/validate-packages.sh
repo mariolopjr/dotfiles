@@ -23,16 +23,27 @@ chezmoi data --source "$PWD" --format json >"$data"
 
 # macOS ships bash 3.2, so no mapfile
 taps=()
+tap_urls=()
 brews=()
 casks=()
 mas_ids=()
 
-while IFS= read -r line; do taps+=("$line"); done < <(jq -r '.packages.darwin.taps[]?' "$data")
-# a brew is either a bare name or { name, args } for extras like HEAD
-while IFS= read -r line; do brews+=("$line"); done < <(jq -r '.packages.darwin.brews[]? | if type == "object" then .name else . end' "$data")
-# shared casks plus every host-specific list
+while IFS=$'\t' read -r name url; do
+  taps+=("$name")
+  tap_urls+=("$url")
+done < <(jq -r '[.packages.darwin.taps[]?, (.packages.darwin.hosts[]?.taps[]?)]
+  | .[]
+  | if type == "object" then [.name, .url // ""] else [., ""] end
+  | @tsv' "$data")
+# A brew is either a bare name or { name, args } for extras like HEAD.
+while IFS= read -r line; do brews+=("$line"); done < <(jq -r '[.packages.darwin.brews[]?, (.packages.darwin.hosts[]?.brews[]?)]
+  | unique[]
+  | if type == "object" then .name else . end' "$data")
+# Shared casks plus every host-specific list
 while IFS= read -r line; do casks+=("$line"); done < <(jq -r '[.packages.darwin.casks[]?, (.packages.darwin.hosts[]?.casks[]?)] | unique[]' "$data")
-while IFS= read -r line; do mas_ids+=("$line"); done < <(jq -r '.packages.darwin.mas[]? | "\(.id)\t\(.name)"' "$data")
+while IFS= read -r line; do mas_ids+=("$line"); done < <(jq -r '[.packages.darwin.mas[]?, (.packages.darwin.hosts[]?.mas[]?)]
+  | unique[]
+  | "\(.id)\t\(.name)"' "$data")
 
 curl -fsSL https://formulae.brew.sh/api/formula.json -o "$cache/formula.json"
 curl -fsSL https://formulae.brew.sh/api/cask.json -o "$cache/cask.json"
@@ -55,18 +66,24 @@ check() {
   state="${row%%$'\t'*}"
   detail="${row#*$'\t'}"
   case "$state" in
-    ok) ;;
-    deprecated) warn "$name is deprecated${detail:+ (${detail})}" ;;
-    disabled) bad "$name is disabled and can no longer be installed${detail:+ (${detail})}" ;;
-    missing) bad "$name does not exist in $kind" ;;
+  ok) ;;
+  deprecated) warn "$name is deprecated${detail:+ (${detail})}" ;;
+  disabled) bad "$name is disabled and can no longer be installed${detail:+ (${detail})}" ;;
+  missing) bad "$name does not exist in $kind" ;;
   esac
 }
 
 # taps testing comes first
 # tapping proves the tap is reachable and works
 echo "==> taps (${#taps[@]})"
-for t in "${taps[@]}"; do
-  if brew tap "$t" >/dev/null 2>&1; then
+for i in "${!taps[@]}"; do
+  t="${taps[$i]}"
+  url="${tap_urls[$i]}"
+  tap_args=("$t")
+  if [[ -n "$url" ]]; then
+    tap_args+=("$url")
+  fi
+  if brew tap "${tap_args[@]}" >/dev/null 2>&1; then
     note "$t"
   else
     bad "tap $t could not be tapped"
@@ -106,8 +123,8 @@ for entry in "${mas_ids[@]}"; do
   # mas installs by id. The name is only a label so only flag a real rename
   actual="$(jq -r '.results[0].trackName' <<<"$result")"
   case "$actual" in
-    "$name"* | "") ;;
-    *) warn "id $id is now named \"$actual\", packages.toml says \"$name\"" ;;
+  "$name"* | "") ;;
+  *) warn "id $id is now named \"$actual\", packages.toml says \"$name\"" ;;
   esac
 done
 

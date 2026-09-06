@@ -10,5 +10,8 @@ brew bundle --file=/dev/stdin <<EOF
 {{ range .packages.darwin.mas -}}
 mas "{{ .name }}", id: {{ .id }}
 {{ end -}}
+{{ range dig .chezmoi.hostname "mas" (list) .packages.darwin.hosts -}}
+mas "{{ .name }}", id: {{ .id }}
+{{ end -}}
 EOF
 {{ end -}}

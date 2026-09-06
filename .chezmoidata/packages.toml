@@ -1,6 +1,7 @@
 # Scripts in .chezmoiscripts iterate this data, edit here then `chezmoi apply`
 
 [packages.darwin]
+taps = []
 brews = [
   "age",
   "bacon",
@@ -78,14 +79,6 @@ casks = [
 ]
 mas = [
   { name = "Amphetamine", id = 937984704 },
-  { name = "GoodLinks", id = 1474335294 },
-  { name = "Keynote", id = 361285480 },
-  { name = "Mela", id = 1568924476 },
-  { name = "MusicBox", id = 1614730313 },
-  { name = "Numbers", id = 361304891 },
-  { name = "Pages", id = 361309726 },
-  { name = "PCalc", id = 403504866 },
-  { name = "Photomator", id = 1444636541 },
   { name = "StopTheMadness Pro", id = 6471380298 },
   { name = "uBlock Origin Lite", id = 6745342698 },
 ]
@@ -101,10 +94,20 @@ casks = [
   "mpluginmanager",
   "nvidia-geforce-now"
 ]
+mas = [
+  { name = "GoodLinks", id = 1474335294 },
+  { name = "Keynote", id = 361285480 },
+  { name = "Mela", id = 1568924476 },
+  { name = "MusicBox", id = 1614730313 },
+  { name = "Numbers", id = 361304891 },
+  { name = "Pages", id = 361309726 },
+  { name = "PCalc", id = 403504866 },
+  { name = "Photomator", id = 1444636541 },
+]
 
 [packages.darwin.hosts.winterfell]
-taps = ["jundot/omlx"]
-casks = ["omlx"]
+taps = [{ name = "jundot/omlx", url = "https://github.com/jundot/omlx" }]
+brews = ["jundot/omlx/omlx"]
 
 # Global rust
 [rust]

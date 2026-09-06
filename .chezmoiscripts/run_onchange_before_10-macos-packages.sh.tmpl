@@ -6,13 +6,34 @@
 
 # Trust non-official taps before bundling
 {{ range .packages.darwin.taps -}}
-brew trust "{{ . }}"
-{{ end }}
+brew trust "{{ if kindIs "string" . }}{{ . }}{{ else }}{{ .name }}{{ end }}"
+{{ end -}}
+{{ range dig .chezmoi.hostname "taps" (list) .packages.darwin.hosts -}}
+brew trust "{{ if kindIs "string" . }}{{ . }}{{ else }}{{ .name }}{{ end }}"
+{{ end -}}
 brew bundle --file=/dev/stdin <<EOF
 {{ range .packages.darwin.taps -}}
+{{ if kindIs "string" . -}}
 tap "{{ . }}"
+{{ else -}}
+tap "{{ .name }}", "{{ .url }}"
+{{ end -}}
+{{ end -}}
+{{ range dig .chezmoi.hostname "taps" (list) .packages.darwin.hosts -}}
+{{ if kindIs "string" . -}}
+tap "{{ . }}"
+{{ else -}}
+tap "{{ .name }}", "{{ .url }}"
+{{ end -}}
 {{ end -}}
 {{ range .packages.darwin.brews -}}
+{{ if kindIs "string" . -}}
+brew "{{ . }}"
+{{ else -}}
+brew "{{ .name }}"{{ with .args }}, args: [{{ range $i, $a := . }}{{ if $i }}, {{ end }}"{{ $a }}"{{ end }}]{{ end }}
+{{ end -}}
+{{ end -}}
+{{ range dig .chezmoi.hostname "brews" (list) .packages.darwin.hosts -}}
 {{ if kindIs "string" . -}}
 brew "{{ . }}"
 {{ else -}}
