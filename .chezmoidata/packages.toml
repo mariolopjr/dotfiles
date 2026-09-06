@@ -1,7 +1,7 @@
 # Scripts in .chezmoiscripts iterate this data, edit here then `chezmoi apply`
 
 [packages.darwin]
-taps = []
+taps = [{ name = "jundot/omlx", url = "https://github.com/jundot/omlx" }]
 brews = [
   "age",
   "bacon",
@@ -32,6 +32,7 @@ brews = [
   "glow",
   "hyperfine",
   "jq",
+  "jundot/omlx/omlx",
   "just",
   "just-lsp",
   "lazygit",
@@ -105,9 +106,7 @@ mas = [
   { name = "Photomator", id = 1444636541 },
 ]
 
-[packages.darwin.hosts.winterfell]
-taps = [{ name = "jundot/omlx", url = "https://github.com/jundot/omlx" }]
-brews = ["jundot/omlx/omlx"]
+# [packages.darwin.hosts.winterfell]
 
 # Global rust
 [rust]
