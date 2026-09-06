@@ -1,7 +1,6 @@
 # Scripts in .chezmoiscripts iterate this data, edit here then `chezmoi apply`
 
 [packages.darwin]
-taps = ["osx-cross/arm"]
 brews = [
   "age",
   "bacon",
@@ -70,17 +69,11 @@ casks = [
   "font-jetbrains-mono",
   "font-jetbrains-mono-nerd-font",
   "ghostty",
-  "karabiner-elements",
   "little-snitch",
   "loopback",
   "micro-snitch",
-  "motu-m-series",
-  "mpluginmanager",
-  "nvidia-geforce-now",
   "rectangle-pro",
-  "silicon-app",
   "slack",
-  "starsector",
   "steam",
 ]
 mas = [
@@ -98,8 +91,20 @@ mas = [
 ]
 
 # Host-specific additions, keyed by hostname
+[packages.darwin.hosts.dragonstone]
+taps = ["osx-cross/arm"]
+casks = [
+  "adobe-digital-editions",
+  "calibre",
+  "karabiner-elements",
+  "motu-m-series"
+  "mpluginmanager",
+  "nvidia-geforce-now",
+]
+
 [packages.darwin.hosts.winterfell]
-casks = ["ableton-live-suite", "adobe-digital-editions", "calibre"]
+taps = ["jundot/omlx"]
+casks = ["omlx"]
 
 # Global rust
 [rust]
