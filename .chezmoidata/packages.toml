@@ -99,7 +99,7 @@ casks = [
   "karabiner-elements",
   "motu-m-series"
   "mpluginmanager",
-  "nvidia-geforce-now",
+  "nvidia-geforce-now"
 ]
 
 [packages.darwin.hosts.winterfell]
