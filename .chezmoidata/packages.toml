@@ -97,7 +97,7 @@ casks = [
   "adobe-digital-editions",
   "calibre",
   "karabiner-elements",
-  "motu-m-series"
+  "motu-m-series",
   "mpluginmanager",
   "nvidia-geforce-now"
 ]
