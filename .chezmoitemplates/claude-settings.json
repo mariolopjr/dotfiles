@@ -35,6 +35,31 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/ponytail.sh",
+            "timeout": 5,
+            "statusMessage": "Loading ponytail mode..."
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/ponytail.sh --subagent",
+            "timeout": 5,
+            "statusMessage": "Loading ponytail mode..."
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Write",
@@ -101,7 +126,6 @@
     "gopls-lsp@claude-plugins-official": true,
     "modern-go-guidelines@goland-claude-marketplace": false,
     "superpowers@claude-plugins-official": true,
-    "ponytail@ponytail": true,
     "codex@openai-codex": true
   },
   "extraKnownMarketplaces": {
@@ -109,12 +133,6 @@
       "source": {
         "source": "github",
         "repo": "JetBrains/go-modern-guidelines"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
       }
     },
     "openai-codex": {

@@ -84,7 +84,7 @@ passes the same charter, the second one is wasted spend — keep them apart.
 > Review the diff at `<RANGE>` for over-engineering only. User focus:
 > `<FOCUS>`. Read-only, and do all of it yourself — do not spawn subagents.
 >
-> Invoke the `ponytail:ponytail-review` skill and follow it exactly: one line
+> Invoke the `ponytail-review` skill and follow it exactly: one line
 > per finding, `<file>:L<line>: <tag> <what>. <replacement>.` with tags
 > `delete:` / `stdlib:` / `native:` / `yagni:` / `shrink:`, ending with
 > `net: -<N> lines possible.` — or `Lean already. Ship.` if there is nothing

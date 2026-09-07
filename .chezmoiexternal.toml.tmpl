@@ -23,3 +23,16 @@ type = "archive"
 url = "https://github.com/leonardomso/rust-skills/archive/{{ .versions.rust_skills }}.tar.gz"
 stripComponents = 1
 include = ["*/SKILL.md", "*/rules/**", "*/LICENSE"]
+
+# ponytail ruleset, vendored rather than installed as a plugin
+[".claude/ponytail"]
+type = "archive"
+url = "https://github.com/DietrichGebert/ponytail/archive/refs/tags/{{ .versions.ponytail }}.tar.gz"
+stripComponents = 1
+include = ["*/skills/ponytail/SKILL.md", "*/LICENSE"]
+
+[".claude/skills/ponytail-review"]
+type = "archive"
+url = "https://github.com/DietrichGebert/ponytail/archive/refs/tags/{{ .versions.ponytail }}.tar.gz"
+stripComponents = 3
+include = ["*/skills/ponytail-review/SKILL.md"]

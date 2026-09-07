@@ -2,3 +2,6 @@
 [versions]
 # renovate: datasource=git-refs packageName=https://github.com/leonardomso/rust-skills currentValue=master
 rust_skills = "fd2a861ab0406a4ac536a55274d14ea6fd1ca9c9"
+# renovate: datasource=github-releases packageName=DietrichGebert/ponytail
+# Vendored instead of installed as a plugin, dot_claude/hooks/ponytail.sh reads it
+ponytail = "v4.9.0"
