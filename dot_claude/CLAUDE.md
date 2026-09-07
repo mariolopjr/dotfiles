@@ -3,7 +3,6 @@
 Use Claude Code's native tools and workflow
 
 - Read relevant files before editing
-- Prefer Read/Edit/Write/Grep/Glob over Bash `cat`, `sed`, `find`, `grep`
 - Batch independent tool calls in one message
 - Run smallest relevant validation after a change
 - No subagents, workflows, or deep research unless asked

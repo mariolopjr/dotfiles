@@ -75,6 +75,7 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
+  "disableClaudeAiConnectors": true,
   "skillOverrides": {
     "keybindings-help": "user-invocable-only",
     "fewer-permission-prompts": "user-invocable-only",
@@ -83,7 +84,13 @@
     "workflow-authoring": "user-invocable-only",
     "run": "user-invocable-only",
     "init": "user-invocable-only",
-    "security-review": "user-invocable-only"
+    "security-review": "user-invocable-only",
+    "claude-api": "user-invocable-only",
+    "dataviz": "user-invocable-only",
+    "design": "user-invocable-only",
+    "update-config": "user-invocable-only",
+    "artifact-capabilities": "user-invocable-only",
+    "artifact-diagramming": "user-invocable-only"
   },
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
