@@ -2,7 +2,7 @@
 description: Four decorrelated review passes over one diff (built-in code review, requirements alignment, over-engineering, adversarial), merged into one numbered P0/P1/P2 report
 argument-hint: '[--base <ref>] [--passes 1,2,3,4 | --no-ponytail] [focus text]'
 disable-model-invocation: true
-allowed-tools: Agent, Skill, Read, Glob, Grep, TaskOutput, ReportFindings, Bash(git:*), Bash(node:*), Bash(ls:*)
+allowed-tools: Agent, Skill, Read, Glob, Grep, TaskOutput, TaskStop, ReportFindings, Bash(git:*), Bash(node:*), Bash(ls:*)
 ---
 
 Run four independent read-only reviews of the same diff and merge them into
@@ -101,13 +101,21 @@ passes the same charter, the second one is wasted spend — keep them apart.
 **Pass 4 — "why shouldn't this ship?"** (`Bash`, `run_in_background: true`):
 
 ```bash
-node "$(ls -d ~/.claude/plugins/cache/openai-codex/codex/*/scripts/codex-companion.mjs | sort -V | tail -1)" adversarial-review [--base <ref>] <FOCUS>
+node "$(ls -d ~/.claude/plugins/cache/openai-codex/codex/*/scripts/codex-companion.mjs | sort -V | tail -1)" adversarial-review [--base <ref>] "The sandbox is read-only: build tools cannot write their output directories, so do not run builds, tests, or linters. Review by reading the diff, and never raise a build or test failure you could not actually run as a finding." <FOCUS>
 ```
 
 A different model family is the entire point of this pass — never substitute
 a Claude subagent for it. It takes no `--model`; pin one in
 `~/.codex/config.toml` if you want. Do not paraphrase its findings when
 merging — carry the file, lines, and recommendation across intact.
+
+The read-only note is not optional decoration. The plugin hardcodes
+`sandbox: "read-only"` when it starts the thread (`codex-companion.mjs`,
+`executeReviewRun`), and an explicit thread parameter beats `sandbox_mode` in
+`~/.codex/config.toml`, so no config or CLI flag makes this pass able to
+build. Without the note codex spends a turn discovering that and then reports
+"tests unverified" as if it were a property of the change. Passes 1 and 2 run
+the build and the suite; this one reads.
 
 ## 3. Merge
 
@@ -132,6 +140,13 @@ Merge rules, in order:
    in the entry.
 5. **Drop anything with no `file:line`.** Every pass was told to ground its
    findings; an ungrounded one did not follow instructions.
+
+**Then close the panes.** Every pass is one-shot: nothing here messages a
+pass again after the merge, and `/review-fix` spawns its own agents. Once the
+merged report is written, `TaskStop` each named teammate that ran —
+`rg-code-review`, `rg-requirements`, `rg-ponytail` — to close its tmux pane.
+Only after the report is written; never stop a pass whose output you have not
+read. Pass 4 is a background Bash task, not a teammate — leave it alone.
 
 ## 4. Output
 
@@ -159,6 +174,7 @@ net: -<N> lines possible (pass 3)
 
 ### Next
 Fix: /review-fix <indices | all-p0>   (batches, verifies, decides on round 2)
+Re-check: /review-gauntlet --base <git merge-base HEAD main> --no-ponytail   (after the fixes land)
 ```
 
 `BLOCK` if any P0. `OK with notes` if any P1. `OK` otherwise.
@@ -175,8 +191,13 @@ list — patching each spot leaves the design that produced them intact.
 A second round only means something if the diff changed between rounds, and
 this command changes nothing — round two would re-review identical bytes and
 re-emit identical findings. The second round is the `Re-check` line: fix the
-P0s, then re-run with `--base` at the pre-fix SHA so the passes see only the
-fix diff, which is where a fix-induced bug actually lives.
+P0s, then re-run at the merge base of the branch and its integration branch,
+the same base round 1 used, so the passes see the whole body of work with the
+fixes folded in. A pre-fix base shows the guards and tests without the code
+they guard. Pass the SHA from `git merge-base HEAD main`, not `--base main`:
+step 1's three-dot range resolves the merge base itself, but pass 4 shells out
+to codex on a two-dot `git diff <base>`, where a `main` that moved ahead reads
+as spurious deletions.
 
 <!-- ponytail: no internal review->fix->review loop; report-only makes round 2
      a no-op. If this command ever applies fixes, add the loop then, capped at

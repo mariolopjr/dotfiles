@@ -2,7 +2,7 @@
 description: Apply selected findings from a /review-gauntlet report in batches, verify each landed, and decide whether round 2 is required
 argument-hint: '<indices | all-p0 | all-p1 | all> [--no-commit]'
 disable-model-invocation: true
-allowed-tools: Agent, Read, Edit, Write, Glob, Grep, Bash(git:*), Bash(ls:*)
+allowed-tools: Agent, TaskStop, Read, Edit, Write, Glob, Grep, Bash(git:*), Bash(ls:*)
 ---
 
 Apply findings from the most recent `/review-gauntlet` report in this
@@ -109,6 +109,11 @@ gets trusted. That judgment is round 2's job.
 
 Any `untouched` finding that was not recorded `rejected` in step 3 is a
 silently skipped fix. Surface it loudly.
+
+**Then close the pane.** The bookkeeping pass is one-shot: nothing here
+messages it again, and round 2 spawns its own agents. Once its report is in
+hand, `TaskStop` `rf-bookkeeping` to close its tmux pane. Only after you have
+read its output.
 
 ## 5. Decide on round 2 — by rule
 
