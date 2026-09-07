@@ -29,7 +29,11 @@ if ! tmux has-session -t "=$name" 2>/dev/null; then
   tmux new-session  -d -s "$name" -c "$dir" -n nvim
   tmux new-window   -d -t "=$name:" -c "$dir" -n agent
   tmux new-window   -d -t "=$name:" -c "$dir" -n run
-  tmux send-keys  -t "=$name:agent" 'pi' Enter
+  # claude sets the terminal title on every turn; the env var and the window
+  # options together keep the tab named "agent"
+  tmux set-window-option -t "=$name:agent" automatic-rename off
+  tmux set-window-option -t "=$name:agent" allow-rename off
+  tmux send-keys  -t "=$name:agent" 'CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1 claude' Enter
   tmux select-window -t "=$name:nvim"
   # -S sources the mini.sessions file
   if [ -f "$dir/.session.nvim" ]; then

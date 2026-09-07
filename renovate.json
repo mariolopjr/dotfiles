@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.chezmoidata/versions\\.toml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) packageName=(?<packageName>\\S+) currentValue=(?<currentValue>\\S+)\\s+\\S+ = \"(?<currentDigest>[0-9a-f]{40})\""
+      ]
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 ---
-globs: "**/*.gd"
+paths:
+  - "**/*.gd"
+  - "**/*.tscn"
+  - "**/*.tres"
+  - "project.godot"
 ---
 
 # GDScript

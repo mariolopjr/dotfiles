@@ -16,3 +16,10 @@ url = "https://github.com/vadimcn/codelldb/releases/latest/download/codelldb-dar
 stripComponents = 1
 refreshPeriod = "8760h"
 {{- end }}
+
+# rust-skills for claude
+[".claude/skills/rust-skills"]
+type = "archive"
+url = "https://github.com/leonardomso/rust-skills/archive/{{ .versions.rust_skills }}.tar.gz"
+stripComponents = 1
+include = ["*/SKILL.md", "*/rules/**", "*/LICENSE"]

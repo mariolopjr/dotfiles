@@ -1,0 +1,37 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+# Install every plugin marked enabled in the managed Claude settings.
+
+set -euo pipefail
+
+command -v claude >/dev/null || exit 0
+
+markets={{ (includeTemplate "claude-settings.json" . | fromJson).extraKnownMarketplaces | toJson | quote }}
+plugins={{ (includeTemplate "claude-settings.json" . | fromJson).enabledPlugins | toJson | quote }}
+
+wanted=$(printf '%s' "$plugins" | jq -r 'to_entries[] | select(.value) | .key')
+[ -n "$wanted" ] || exit 0
+
+# install resolves plugin@marketplace only against marketplaces already checked out
+printf '%s' "$markets" |
+  jq -r 'to_entries[] | select(.value.source.source == "github") | .value.source.repo' |
+  while IFS= read -r repo; do
+    [ -n "$repo" ] || continue
+    claude plugin marketplace add "$repo" >/dev/null 2>&1 || true
+  done
+claude plugin marketplace update >/dev/null 2>&1 || true
+
+installed="$HOME/.claude/plugins/installed_plugins.json"
+
+while IFS= read -r plugin; do
+  [ -n "$plugin" ] || continue
+  if [ -f "$installed" ] &&
+    jq -e --arg p "$plugin" '.plugins | has($p)' "$installed" >/dev/null; then
+    continue
+  fi
+  echo "claude: installing plugin $plugin"
+  # -y: chezmoi scripts have no TTY, which install requires for url-sourced plugins
+  claude plugin install "$plugin" --scope user -y
+done <<<"$wanted"
+{{ end -}}

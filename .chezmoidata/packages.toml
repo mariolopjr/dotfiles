@@ -12,6 +12,7 @@ brews = [
   "cargo-generate",
   "cargo-llvm-cov",
   "cargo-nextest",
+  "ccusage",
   "chezmoi",
   "codebook-lsp",
   "container",
@@ -110,6 +111,6 @@ mas = [
 
 # Global rust
 [rust]
-toolchain = "1.97.0"
+toolchain = "1.98.0"
 components = ["rust-src", "llvm-tools-preview"]
 

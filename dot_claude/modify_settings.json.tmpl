@@ -1,9 +1,9 @@
 #!/bin/bash
-# allow tracking relevant pi settings
+# allow tracking relevant claude settings
 set -euo pipefail
 
 managed=$(cat <<'JSON'
-{{ includeTemplate "pi-settings.json" . }}
+{{ includeTemplate "claude-settings.json" . }}
 JSON
 )
 

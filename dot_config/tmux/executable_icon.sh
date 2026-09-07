@@ -14,7 +14,7 @@ glyph() {
     node|npm|npx|bun|deno)           printf '' ;;
     go|gopls|dlv)                    printf '' ;;
     ssh|mosh)                        printf '󰌘' ;;
-    pi|omp|opencode|codex|claude)    printf '󰚩' ;;
+    claude)                          printf '󰛄' ;;
     *)                               return 1 ;;
   esac
 }
