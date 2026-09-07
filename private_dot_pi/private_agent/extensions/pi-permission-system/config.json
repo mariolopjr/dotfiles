@@ -9,6 +9,7 @@
       "*.env.*": "deny",
       "~/.ssh/*": "deny"
     },
+    "contact_supervisor": "allow",
     "edit": "allow",
     "fetch_content": "allow",
     "find": "allow",
@@ -24,6 +25,7 @@
     "read": "allow",
     "read_symbol": "allow",
     "skill_manage": "allow",
+    "structured_output": "allow",
     "subagent": "allow",
     "subagent_supervisor": "allow",
     "symbol_search": "allow",

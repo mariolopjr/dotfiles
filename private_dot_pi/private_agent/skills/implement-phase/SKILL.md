@@ -5,8 +5,8 @@ description: Orchestrate implementation of a named phase, task, or task list int
 
 # Implement Phase
 
-Load `ponytail-subagents`, `pi-subagents`, and `ponytail` before dispatching.
-Parent remains orchestrator and final decision-maker.
+Use `ponytail-subagents`, `@gotgenes/pi-subagents`, and `ponytail` before
+dispatching. Parent remains orchestrator and final decision-maker.
 
 ## Input
 
@@ -28,10 +28,10 @@ Create exactly one integration branch from `main`: `agent/<derived-slug>`. Prese
 unrelated working-tree changes. Use a dedicated integration worktree when current
 worktree is dirty. This is only final branch.
 
-Independent write lanes use separate worktrees and temporary branches. Each worker
-commits only its owned changes. Parent reviews and cherry-picks accepted commits onto
-integration branch in dependency order. Never allow concurrent writers on same files
-or a dependency chain.
+Independent write lanes require configured `@gotgenes/pi-subagents-worktrees`.
+Each worker commits only owned changes. Parent reviews and integrates accepted branches
+onto integration branch in dependency order. Without companion, keep writers serial.
+Never allow concurrent writers on same files or a dependency chain.
 
 ## Execution
 
@@ -42,8 +42,9 @@ or a dependency chain.
 3. Route a worker to `openai-codex/gpt-5.6-luna:xhigh` only when task is one small,
    fully specified change with a bounded source seam. Route all other workers,
    scouting, and review to `openai-codex/gpt-5.6-terra:high`.
-4. Give every implementation worker `skill: "ponytail"`, owned paths, constraints,
-   acceptance criteria, focused validation, commit requirement, and stop conditions.
+4. Give every implementation worker Ponytail constraints, owned paths, acceptance
+   criteria, focused validation, commit requirement, and stop conditions. Child
+   sessions inherit parent skills; `skill` spawn arguments are unsupported.
 5. Apply Ponytail: reuse existing code, standard library, native features, and
    installed dependencies; fix root causes; add no speculative abstractions or
    unrelated cleanup.
