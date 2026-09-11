@@ -2,7 +2,7 @@
 description: Apply selected findings from a /review-gauntlet report in batches, verify each landed, and decide whether round 2 is required
 argument-hint: '<indices | all-p0 | all-p1 | all> [--no-commit]'
 disable-model-invocation: true
-allowed-tools: Agent, TaskStop, Read, Edit, Write, Glob, Grep, Bash(git:*), Bash(ls:*)
+allowed-tools: Agent, SendMessage, TaskStop, Read, Edit, Write, Glob, Grep, Bash(git:*), Bash(ls:*)
 ---
 
 Apply findings from the most recent `/review-gauntlet` report in this
@@ -101,6 +101,20 @@ Dispatch one `Agent` (`general-purpose`, `model: "haiku"`,
 > This is a mechanical bookkeeping check. Do NOT judge whether any fix is
 > correct, sufficient, or safe — you are checking that edits landed where
 > they were claimed, nothing more. Never write `looks good`.
+>
+> Write your full report to `<OUT>` in ONE Write call, whose last line is
+> exactly `--- END OF REPORT ---`. Then reply to me with three lines and
+> nothing else: the counts of `addressed`, `untouched` and `outside-radius`,
+> how many findings you checked, and that path. Do not paste the report into
+> your reply.
+
+Name `<OUT>` yourself before dispatching — `<scratchpad>/rf-bookkeeping.md` —
+and hand it over verbatim. A teammate's closing message is relayed through a
+channel that silently truncates a long report, and a truncated bookkeeping
+report is the worst one to lose: an `untouched` finding that never arrives
+reads as a fix that landed. Read the file, check the sentinel, and check the
+count against your selection. Anything missing, `SendMessage` the pass for the
+rest before you stop it. Never accept the three-line reply as the report.
 
 Haiku is scoped to bookkeeping on purpose. Judging whether a fix actually
 closes a hole takes the capability that found it; a light model asked that
@@ -110,10 +124,10 @@ gets trusted. That judgment is round 2's job.
 Any `untouched` finding that was not recorded `rejected` in step 3 is a
 silently skipped fix. Surface it loudly.
 
-**Then close the pane.** The bookkeeping pass is one-shot: nothing here
-messages it again, and round 2 spawns its own agents. Once its report is in
-hand, `TaskStop` `rf-bookkeeping` to close its tmux pane. Only after you have
-read its output.
+**Then close the pane.** Once its report is read and whole, `TaskStop`
+`rf-bookkeeping` to close its tmux pane. Round 2 spawns its own agents, so
+nothing here needs it again — but a pass you stop can no longer be asked for a
+missing tail, so read the file first.
 
 ## 5. Decide on round 2 — by rule
 

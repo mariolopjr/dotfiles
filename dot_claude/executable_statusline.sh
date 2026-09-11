@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Claude Code status line
-# Layout: <dir> · <branch> · PR#<n> · <model> · ctx <bar> <pct>% · 5h <bar> <pct>%
+# Layout: <dir> · <branch> · PR#<n> · <model> · ↑<in> ↓<out> · ch <pct>% · $<cost> (est) · ctx <pct>%/<size> · <pct>% (<time>) · <pct>% (<day/time>)
 # Reads the session JSON on stdin. The PR lookup hits the network, so it is
 # cached per repo+branch and refreshed in the background to keep this fast.
 # Inside the neovim float the dir and branch are dropped
@@ -12,8 +12,16 @@ eval "$(printf '%s' "$input" | jq -r '
   @sh "MODEL=\(.model.display_name // "?")",
   @sh "DIR=\(.workspace.current_dir // .cwd // "")",
   @sh "CTX=\((.context_window.used_percentage // -1) | floor)",
+  @sh "CTX_PCT=\((.context_window.used_percentage // -1) * 10 | round / 10)",
+  @sh "CTX_SIZE=\(.context_window.context_window_size // -1)",
+  @sh "COST=\(.cost.total_cost_usd // -1)",
+  @sh "CACHE_HIT=\((.prompt_cache.hit_ratio // -1) * 100 | round)",
+  @sh "TRANSCRIPT=\(.transcript_path // "")",
+  @sh "SESSION=\(.session_id // "")",
   @sh "FIVE=\((.rate_limits.five_hour.used_percentage // -1) | floor)",
-  @sh "RESET=\((.rate_limits.five_hour.resets_at // -1) | floor)"
+  @sh "WEEK=\((.rate_limits.seven_day.used_percentage // -1) | floor)",
+  @sh "RESET=\((.rate_limits.five_hour.resets_at // -1) | floor)",
+  @sh "WEEK_RESET=\((.rate_limits.seven_day.resets_at // -1) | floor)"
 ')"
 
 # colors
@@ -37,19 +45,13 @@ lvlcol() { # pct -> severity color
   fi
 }
 
-bar() { # pct width -> colored filled/empty block bar
-  local pct=$1 w=${2:-10} i filled empty col s
-  (( pct < 0 )) && pct=0
-  (( pct > 100 )) && pct=100
-  filled=$(( (pct * w + 50) / 100 ))
-  empty=$(( w - filled ))
-  col=$(lvlcol "$pct")
-  s="$col"
-  for ((i=0; i<filled; i++)); do s+="█"; done
-  s+="$DIM"
-  for ((i=0; i<empty; i++)); do s+="░"; done
-  s+="$RST"
-  printf '%s' "$s"
+compact_tokens() {
+  LC_ALL=C awk -v n="$1" 'BEGIN {
+    if (n >= 1000000) { n /= 1000000; suffix = "m" }
+    else if (n >= 1000) { n /= 1000; suffix = "k" }
+    s = sprintf("%.1f", n); sub(/\.0$/, "", s)
+    printf "%s%s", s, suffix
+  }'
 }
 
 # directory, skipped in the nvim float
@@ -98,19 +100,66 @@ fi
 # model
 add "${BLUE}${MODEL}${RST}"
 
-# context window bar
-if [ "$CTX" -ge 0 ] 2>/dev/null; then
-  add "${DIM}ctx${RST} $(bar "$CTX" 8) $(lvlcol "$CTX")${CTX}%${RST}"
+# ponytail: scan the main transcript each refresh; add incremental caching if large sessions lag.
+# Repeated content blocks share a message ID; keep the last usage for each response.
+if [ -r "$TRANSCRIPT" ]; then
+  totals=$(jq -Rrn --arg session "$SESSION" '
+    reduce (inputs | fromjson? |
+      select(.type == "assistant" and .isSidechain != true) |
+      select($session == "" or .sessionId == $session) |
+      .message | select(.id != null and .usage != null)) as $m
+      ({}; .[$m.id] = $m.usage) |
+    if length == 0 then empty else
+      reduce .[] as $u ({i: 0, o: 0};
+        .i += (($u.input_tokens // 0) + ($u.cache_creation_input_tokens // 0) + ($u.cache_read_input_tokens // 0)) |
+        .o += ($u.output_tokens // 0)) |
+      "\(.i) \(.o)"
+    end
+  ' < "$TRANSCRIPT" 2>/dev/null)
+  if [ -n "$totals" ]; then
+    read -r token_in token_out <<< "$totals"
+    add "${DIM}↑${RST}$(compact_tokens "$token_in") ${DIM}↓${RST}$(compact_tokens "$token_out")"
+  fi
 fi
 
-# 5-hour rolling usage bar, with shorthand reset clock time in parens
+if [ "$CACHE_HIT" -ge 0 ] 2>/dev/null; then
+  add "${DIM}ch${RST} ${CACHE_HIT}%"
+fi
+
+if [ "$COST" != -1 ]; then
+  add "\$$(LC_ALL=C printf '%.3f' "$COST") ${DIM}(est)${RST}"
+fi
+
+# context window usage
+if [ "$CTX" -ge 0 ] 2>/dev/null; then
+  seg="${DIM}ctx${RST} $(lvlcol "$CTX")${CTX_PCT}%${RST}"
+  if [ "$CTX_SIZE" -gt 0 ] 2>/dev/null; then
+    seg+="${DIM}/$(compact_tokens "$CTX_SIZE")${RST}"
+  fi
+  add "$seg"
+fi
+
+# 5-hour rolling usage, with shorthand reset clock time in parens
 if [ "$FIVE" -ge 0 ] 2>/dev/null; then
-  seg="${DIM}5h${RST} $(bar "$FIVE" 6) $(lvlcol "$FIVE")${FIVE}%${RST}"
+  seg="$(lvlcol "$FIVE")${FIVE}%${RST}"
   if [ "$RESET" -gt 0 ] 2>/dev/null; then
     (( RESET > 100000000000 )) && RESET=$(( RESET / 1000 ))   # ms -> s safety
     rt=$(date -r "$RESET" '+%-I:%M%p' 2>/dev/null || date -d "@$RESET" '+%-I:%M%p' 2>/dev/null)
     if [ -n "$rt" ]; then
       rt=$(printf '%s' "$rt" | tr 'APM' 'apm'); rt=${rt%m}   # 3:45PM -> 3:45p
+      seg+=" ${DIM}(${rt})${RST}"
+    fi
+  fi
+  add "$seg"
+fi
+
+if [ "$WEEK" -ge 0 ] 2>/dev/null; then
+  seg="$(lvlcol "$WEEK")${WEEK}%${RST}"
+  if [ "$WEEK_RESET" -gt 0 ] 2>/dev/null; then
+    (( WEEK_RESET > 100000000000 )) && WEEK_RESET=$(( WEEK_RESET / 1000 ))
+    rt=$(date -r "$WEEK_RESET" '+%a %-I:%M%p' 2>/dev/null || date -d "@$WEEK_RESET" '+%a %-I:%M%p' 2>/dev/null)
+    if [ -n "$rt" ]; then
+      rt=${rt/AM/a}; rt=${rt/PM/p}
       seg+=" ${DIM}(${rt})${RST}"
     fi
   fi

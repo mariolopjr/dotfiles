@@ -11,13 +11,13 @@ Use Claude Code's native tools and workflow
 - State what is broken, missing, unverified, or failed plainly
 - Do not claim a check passed unless it ran
 
-## ponytail + superpowers
+## ponytail + process
 
-Ponytail is for writing and reviewing code. Superpowers owns process. On conflict, process wins
+Ponytail governs the diff. `/brainstorm`, `/plan`, `/execute` govern process and run only when invoked. On conflict, process wins
 
 - Apply ponytail when producing or reviewing a diff: ladder, YAGNI, stdlib before dependency, shortest working diff, `ponytail:` comment on a deliberate corner cut
-- Do not apply ponytail to planning or exploration. `brainstorming` asks its questions, `writing-plans` writes the full plan, Plan and Explore agents run unmodified. Terse output rules do not truncate a plan, spec, or review report
-- `test-driven-development` writes a real failing test then the suite. Ponytail `one runnable check, no frameworks` does not override it
+- Do not apply ponytail to planning or exploration. Terse output rules do not truncate a plan, spec, or review report
+- Behavior change: failing test first, then the code. Ponytail `one runnable check, no frameworks` does not override it
 - Never simplify away validation, error handling, security, accessibility
 
 ## Communication

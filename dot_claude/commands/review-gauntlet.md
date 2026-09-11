@@ -2,7 +2,7 @@
 description: Four decorrelated review passes over one diff (built-in code review, requirements alignment, over-engineering, adversarial), merged into one numbered P0/P1/P2 report
 argument-hint: '[--base <ref>] [--passes 1,2,3,4 | --no-ponytail] [focus text]'
 disable-model-invocation: true
-allowed-tools: Agent, Skill, Read, Glob, Grep, TaskOutput, TaskStop, ReportFindings, Bash(git:*), Bash(node:*), Bash(ls:*)
+allowed-tools: Agent, Skill, Read, Glob, Grep, SendMessage, TaskOutput, TaskStop, ReportFindings, Bash(git:*), Bash(node:*), Bash(ls:*)
 ---
 
 Run four independent read-only reviews of the same diff and merge them into
@@ -32,6 +32,68 @@ git diff --shortstat
 - Any text left after the flags is the user's focus. Pass it to the selected
   passes verbatim; never rewrite it.
 
+## 1b. Establish the domain profile
+
+Before firing any pass:
+
+```bash
+ls project.godot Cargo.toml package.json pyproject.toml go.mod 2>/dev/null
+sed -n 1,20p README.md 2>/dev/null
+```
+
+If `.claude/review-profile.md` exists, use it verbatim and skip detection.
+Otherwise write two lines, `<PROFILE>`, and hand them to every pass unchanged:
+
+```
+Domain: <what this repo is, one sentence>. The expensive failures here are
+<3-5 concrete ones, named>.
+Out of scope: <categories this repo has no surface for>. Do not report them.
+```
+
+A category is out of scope only when the repo has **no surface** for it — no
+listener, no credential, no untrusted input, no multi-user state. Uncertain
+means in scope. Never put memory safety, data loss, or input validation out of
+scope; a game corrupts saves and parses mod files like anything else.
+
+Single-player Godot game, for example: out of scope are auth, permissions,
+tenant isolation, CSRF, injection, rate limiting, secret rotation. In scope are
+save-file corruption on interrupted write, frame-time regressions in `_process`,
+signals still connected to a freed node, resources leaked across scene changes.
+
+This exists because pass 4's prompt template is not yours. The plugin ships
+`prompts/adversarial-review.md` with a fixed attack-surface list that opens on
+auth and tenant isolation, and interpolates your focus text into `{{USER_FOCUS}}`
+with an instruction to weight it heavily. `<PROFILE>` is the only lever that
+reorders that list, so it goes in the focus slot of all four passes.
+
+## 1c. Give every Claude pass a file to write to
+
+A teammate's closing message is relayed through a channel that silently
+truncates a long report, and that has cost whole findings mid-merge. Pass 4
+never loses one because it writes to its own task output file, so give the
+three Claude passes the same treatment.
+
+Name one path per pass before firing, directly in your session's scratchpad
+directory, and hand each path to its pass verbatim. Never let a pass choose
+its own path:
+
+```
+<OUT1> = <scratchpad>/rg-pass1-code-review.md
+<OUT2> = <scratchpad>/rg-pass2-requirements.md
+<OUT3> = <scratchpad>/rg-pass3-ponytail.md
+```
+
+Every Claude pass prompt ends with this, `<OUTn>` filled in:
+
+> Write your full report to `<OUTn>` in ONE Write call, whose last line is
+> exactly `--- END OF REPORT ---`. Then reply to me with three lines and
+> nothing else: your verdict, how many findings you filed, and that path. Do
+> not paste the report into your reply.
+
+The three-line reply is the liveness signal. A pass that dies before writing
+leaves no file, and only the reply distinguishes that from a pass with nothing
+to report.
+
 ## 2. Fire all four passes in one message
 
 They are independent read-only passes over the same range, so they run
@@ -43,21 +105,31 @@ passes the same charter, the second one is wasted spend — keep them apart.
 **Pass 1 — "is this code wrong?"** (`Agent`, `general-purpose`,
 `model: "opus"`, `name: "rg-code-review"`):
 
+> `<PROFILE>`
+>
 > Invoke the `code-review` skill at effort `high` against `<RANGE>`, with
 > focus: `<FOCUS>`. Do NOT pass `--fix` or `--comment` — this is report-only.
 >
-> Return its findings to me as text: file, line, severity, the defect, and
-> the concrete failure scenario. Include each finding's CONFIRMED/PLAUSIBLE
-> verdict if the skill's verify pass assigned one. Do not drop the
-> PLAUSIBLE ones; I need them for corroboration scoring.
+> Report its findings as text: file, line, severity, the defect, and the
+> concrete failure scenario. Include each finding's CONFIRMED/PLAUSIBLE
+> verdict if the skill's verify pass assigned one, and say so explicitly if it
+> assigned none. Do not drop the PLAUSIBLE ones; I need them for corroboration
+> scoring.
+>
+> Write your full report to `<OUT1>` in ONE Write call, whose last line is
+> exactly `--- END OF REPORT ---`. Then reply to me with three lines and
+> nothing else: your verdict, how many findings you filed, and that path. Do
+> not paste the report into your reply.
 
 **Pass 2 — "is this the thing we agreed to build?"** (`Agent`,
 `general-purpose`, `model: "opus"`, `name: "rg-requirements"`):
 
+> `<PROFILE>`
+>
 > Review the diff at `<RANGE>` against its **stated requirements** — the plan
 > file, task text, issue, or commit messages in range. User focus: `<FOCUS>`.
-> Find the requirements yourself; check `docs/superpowers/plans/`,
-> `docs/superpowers/specs/`, and the commit bodies.
+> Find the requirements yourself; check `docs/plans/`,
+> `docs/specs/`, and the commit bodies.
 >
 > Another reviewer is already scanning these lines for bugs. Do not duplicate
 > that. Your charter is alignment and completeness:
@@ -77,10 +149,17 @@ passes the same charter, the second one is wasted spend — keep them apart.
 > Every finding needs `file:line` and a concrete consequence.
 > Severity: P0 blocks merge. P1 fix before release. P2 note only.
 > Lead with what the change genuinely gets right, briefly.
+>
+> Write your full report to `<OUT2>` in ONE Write call, whose last line is
+> exactly `--- END OF REPORT ---`. Then reply to me with three lines and
+> nothing else: your verdict, how many findings you filed, and that path. Do
+> not paste the report into your reply.
 
 **Pass 3 — "what can be deleted?"** (`Agent`, `general-purpose`,
 `model: "sonnet"`, `name: "rg-ponytail"`):
 
+> `<PROFILE>`
+>
 > Review the diff at `<RANGE>` for over-engineering only. User focus:
 > `<FOCUS>`. Read-only, and do all of it yourself — do not spawn subagents.
 >
@@ -97,11 +176,16 @@ passes the same charter, the second one is wasted spend — keep them apart.
 > Then map each finding to a severity: P2 by default. P1 only for a whole
 > speculative subsystem or an added dependency that the stdlib already
 > covers. Never P0 — nothing here blocks a merge.
+>
+> Write your full report to `<OUT3>` in ONE Write call, whose last line is
+> exactly `--- END OF REPORT ---`. Then reply to me with three lines and
+> nothing else: your verdict, how many findings you filed, and that path. Do
+> not paste the report into your reply.
 
 **Pass 4 — "why shouldn't this ship?"** (`Bash`, `run_in_background: true`):
 
 ```bash
-node "$(ls -d ~/.claude/plugins/cache/openai-codex/codex/*/scripts/codex-companion.mjs | sort -V | tail -1)" adversarial-review [--base <ref>] "The sandbox is read-only: build tools cannot write their output directories, so do not run builds, tests, or linters. Review by reading the diff, and never raise a build or test failure you could not actually run as a finding." <FOCUS>
+node "$(ls -d ~/.claude/plugins/cache/openai-codex/codex/*/scripts/codex-companion.mjs | sort -V | tail -1)" adversarial-review [--base <ref>] "<PROFILE>" "The sandbox is read-only: build tools cannot write their output directories, so do not run builds, tests, or linters. Review by reading the diff, and never raise a build or test failure you could not actually run as a finding." <FOCUS>
 ```
 
 A different model family is the entire point of this pass — never substitute
@@ -119,7 +203,13 @@ the build and the suite; this one reads.
 
 ## 3. Merge
 
-Wait for all four. Then emit ONE list, flat-numbered `[1]`, `[2]`, `[3]`…
+Wait for all four. Read `<OUT1>`, `<OUT2>`, `<OUT3>` and pass 4's task output
+file, and check that each report ends with its sentinel line and carries the
+number of findings its reply claimed. A file that is missing, unterminated, or
+short of that count is an incomplete pass: `SendMessage` that pass for the rest
+and merge only once every report is whole. Never merge from a three-line reply.
+
+Then emit ONE list, flat-numbered `[1]`, `[2]`, `[3]`…
 in a single index space, ordered P0 first, then P1, then P2. One index space
 so the user can say "fix 1, 4, 9" without ambiguity.
 
@@ -140,13 +230,20 @@ Merge rules, in order:
    in the entry.
 5. **Drop anything with no `file:line`.** Every pass was told to ground its
    findings; an ungrounded one did not follow instructions.
+6. **Drop findings that presuppose surface this repo does not have** — the
+   `Out of scope` line of `<PROFILE>`. A finding that names a real code path
+   stays even if its category is listed; only drop the ones whose premise is
+   infrastructure that is not here. One line each under Deferred, so a wrong
+   profile is visible rather than silent.
 
 **Then close the panes.** Every pass is one-shot: nothing here messages a
 pass again after the merge, and `/review-fix` spawns its own agents. Once the
 merged report is written, `TaskStop` each named teammate that ran —
 `rg-code-review`, `rg-requirements`, `rg-ponytail` — to close its tmux pane.
 Only after the report is written; never stop a pass whose output you have not
-read. Pass 4 is a background Bash task, not a teammate — leave it alone.
+read. A report on disk outlives its pane, so a stop can no longer destroy
+findings, but a pass you stop can no longer be asked for a missing tail either.
+Pass 4 is a background Bash task, not a teammate — leave it alone.
 
 ## 4. Output
 

@@ -20,7 +20,12 @@
   "preferredNotifChannel": "terminal_bell",
   "permissions": {
     "defaultMode": "auto",
-    "allow": [],
+    "allow": [
+      "Read(//tmp/claude-*/**)",
+      "Read(//private/tmp/claude-*/**)",
+      "Edit(//tmp/claude-*/**)",
+      "Edit(//private/tmp/claude-*/**)"
+    ],
     "deny": [
       "Read(**/.env*)",
       "Read(**/env.php*)",
@@ -125,7 +130,7 @@
     "frontend-design@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
     "modern-go-guidelines@goland-claude-marketplace": false,
-    "superpowers@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": false,
     "codex@openai-codex": true
   },
   "extraKnownMarketplaces": {
